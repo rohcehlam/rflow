@@ -1,11 +1,43 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 function buildMenu(){
-	echo "<div id=\"menucontainer\">\n";
+        if (isset($_SESSION['MM_Username'])) {
+            echo "<div id='menucontainer' style='float:left;'>\n";
+            echo "	<div id=\"menunav\">\n";
+            echo "		<ul>\n";
+            echo "			<li><a href=\"../rfas/rfas.php\">RFCs</a></li>\n";
+            echo "			<li><a href=\"../statusReports/statusReports.php\">Status Reports</a></li>\n";
+            echo "			<li><a href=\"../maintenances/maintenances.php\">Maintenance Notifications</a></li>\n";
+            echo "			<li><a href=\"../supportRequests/supportRequests.php\">Support Requests</a></li>\n";
+            echo "			<li><a href=\"../userPortals/myPortal.php\">My Portal</a></li>\n";
+            echo "		</ul>\n";
+                                echo "<div style='float:right;'>"
+                                . "<img src='../images/masflight-logo.png' alt='masFlight' height='50'>"
+                                . "</div>";
+            
+            echo "	</div>\n";
+            echo "	<div id=\"menu_inner\">\n";
+            echo "	</div>\n";
+            echo "</div>\n";
+        }else{
+            echo "<div id='menucontainer' style='float:left;'>\n";
+            echo "	<div id=\"menunav\">\n";
+            echo "		<ul>\n";
+            echo "			<li><a href=\"../userPortals/index.php\">User Portals</a></li>\n";
+            echo "		</ul>\n";
+                                echo "<div style='float:right;'>"
+                                . "<img src='../images/masflight-logo.png' alt='masFlight' height='50'>"
+                                . "</div>";            
+            echo "	</div>\n";
+            echo "	<div id=\"menu_inner\">\n";
+            echo "	</div>\n";
+            echo "</div>\n";            
+        }
+        
+        /*echo "<div id=\"menucontainer\">\n";
 	echo "	<div id=\"menunav\">\n";
 	echo "		<ul>\n";
 	echo "			<li><a href=\"../rfas/rfas.php\" rel=\"cman\">Change Management</a></li>\n";
-        //echo " <li><a href=\"../statusGrapher/statusGrapher.php\" rel=\"support\">Support</a></li>\n";
 	echo "			<li><a href=\"../statusReports/statusReports.php\" rel=\"reporting\">Reporting</a></li>\n";
 	echo "		</ul>\n";
 	echo "	</div>\n";
@@ -14,19 +46,16 @@ function buildMenu(){
 	echo "			<li><a href=\"../rfas/rfas.php\">RFCs</a></li>\n";
 	echo "			<li><a href=\"../maintenances/maintenances.php\">Maintenance Notifications</a></li>\n";
 	echo "		</ul>\n";
-	/*echo " <ul id=\"support\" class=\"innercontent\">\n";
-	echo " <li><a href=\"../statusGrapher/statusGrapher.php\">Status Grapher</a></li>\n";
-	echo " </ul>\n";*/
 	echo "		<ul id=\"reporting\" class=\"innercontent\">\n";
 	echo "			<li><a href=\"../statusReports/statusReports.php\">Status Reports</a></li>\n";
 	echo "		</ul>\n";
 	echo "	</div>\n";
-	echo "</div>\n";
+	echo "</div>\n";*/
+    
 }
-
 function buildHeader($rootPage, $parentPageText, $page, $pageText, $addText) {
 	echo "<table align=\"left\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\"><tr><td class=\"jstime\"><script type=\"text/javascript\">document.write(TODAY);</script></td>\n";
-	echo "<td class=\"breadcrumbs\"><a title=\"Operations Homepage\" href=\"/#\">Home</a> &raquo; ";
+	echo "<td class=\"breadcrumbs\"><a title=\"My Portal\" href=\"../userPortals/myPortal.php\">My Portal</a> &raquo; ";
 		if ($parentPageText != null) {
 			echo "<a title=\"" . $parentPageText . "\" href=\"" . $rootPage . "s.php\">" . $parentPageText . "</a> &raquo; " . $pageText;
 		} else {
@@ -35,7 +64,11 @@ function buildHeader($rootPage, $parentPageText, $page, $pageText, $addText) {
 	echo "</td>\n";
 	echo "<td class=\"add\">";
 	if ($addText != null) {
-		echo "<img src=\"../images/icons/add.gif\" alt=\"Add\" /><a title=\"" . $addText . "\" href=\"" . $rootPage . ".php?function=add\">" . $addText . "</a>";
+		echo "<a  class='btn btn-app' title=\"" . $addText . "\" href=\"" . $rootPage . ".php?function=add\"><img style='margin-right:5px;' src=\"../images/icons/add.gif\" alt=\"Add\" />" . $addText . "</a>";
+                
+                /*echo "<a class='btn btn-app btn-edit-usr' href='".$rootPage.".php?function=add'  title='$addText'>
+                    <i class='fa fa-users'></i> Add Users
+                </a>";*/
 	}
 	echo "</td></tr></table>";
 }
@@ -63,10 +96,8 @@ function sudoAuth($linkedPage, $linkText, $icon) {
 	if (!isset($_GET['sudo_auth'])) {
 		$_GET['sudo_auth'] = null;
 	}
-
 	global $sudo;
 	$sudo = $_GET['sudo_auth'];
-
 	if (isset($sudo) && ($sudo == "admin")) {
 		echo "&nbsp;<img src=\"../images/icons/" . $icon . ".gif\" alt=\"" . $icon . "\" /><a title=\"" . $linkText . "\" href=\"" . $linkedPage . ".php?sudo_auth=admin\">" . $linkText . "</a>";
 	}
@@ -92,10 +123,8 @@ function sudoAuthDataOLD($linkedPage, $linkedText, $tdth, $icon, $param) {
 	if (!isset($_GET['sudo_auth'])) {
 		$_GET['sudo_auth'] = null;
 	}
-
 	global $sudo;
 	$sudo = $_GET['sudo_auth'];
-
 	if (isset($sudo) && ($sudo == "admin")) {
 		if ($tdth == "th") {
 			echo "<th></th>";
@@ -107,7 +136,6 @@ function sudoAuthDataOLD($linkedPage, $linkedText, $tdth, $icon, $param) {
 function sudoAuthData($linkedPage, $linkedText, $tdth, $icon, $param) {
 	global $sudo;
 	$sudo = $_SESSION['MM_Username'];
-
 	if (isset($sudo)) {
 		if ($tdth == "th") {
 			echo "<th";
@@ -122,11 +150,11 @@ function sudoAuthData($linkedPage, $linkedText, $tdth, $icon, $param) {
 		}
 	}
 }
-function buildFooter($colspan, $year="2008", $version="2.0") {
+function buildFooter($colspan, $year="2015", $version="1.1") {
 	if ($colspan!="0") {
-		echo "<tr><td colspan=\"" . $colspan . "\" class=\"footer\">&copy; " . $year . " masflight, Inc.<br />Version " . $version . "</td></tr>\n";
+		echo "<tr><td colspan=\"" . $colspan . "\" class=\"footer\">&copy; " . $year . " Marks Systems Inc, -  masFlight<br/> Technical Support. Version " . $version . "</td></tr>\n";
 	} else {
-		echo "<div class=\"footer\">&copy; " . $year . "Masflight, Inc.<br />Version " . $version . "</div>\n";
+		echo "<div class=\"footer\">&copy; " . $year . "  Marks Systems Inc, -  masFlight<br/> Technical Support. Version " . $version . "</div>\n";
 	}
 }
 function sentSuccessful($message) {
@@ -183,9 +211,7 @@ function buildTitle($remainder, $company="masflight: ") {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "")
 {
   $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-
   $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
   switch ($theType) {
     case "text":
       $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
@@ -216,8 +242,8 @@ function login() {
 function noRecords($recordset) {
 	echo "<div class=\"norecords\">There are no " . $recordset . " for the filtering specified.</div>";
 }
-function tab($tabname,$tabtext) {
-	echo "<span class=\"";
+function tab($tabname,$tabtext) {	
+        echo "<span class=\"";
 		if (isset($_GET['' . $tabname . ''])) { echo "tabfor"; } else { echo "tabbak"; }
 	echo "\" id=\"tab_" . $tabname . "\"><a href=\"#tab" . $tabname . "\" onclick=\"return showTab('" . $tabname . "')\">" . $tabtext . "</a></span>\n";
 }
@@ -235,4 +261,3 @@ function determineState($var, $trueState, $trueAction, $falseAction) {
 		echo $falseAction;
 	}
 }
-?>
