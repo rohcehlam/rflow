@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_rsMyProjects" value="name:projectID;datatype:int,name:projectName;datatype:string,name:status;datatype:string,name:application;datatype:string,name:customer;datatype:string,name:organizingEngineerID;datatype:int,name:targetDate;datatype:string,name:wrm;datatype:int,name:ticket;datatype:int" />
+	<infoitem key="UD_rsSupportRequests" value="name:escalationID;datatype:int,name:dateEscalated;datatype:string,name:application;datatype:string,name:subject;datatype:string,name:assignedTo;datatype:int,name:status;datatype:string,name:ticket;datatype:int,name:customer;datatype:string,name:targetDate;datatype:string" />
+	<infoitem key="UD_rsPendingMaintenances" value="name:maintenanceNotifsID;datatype:int,name:reason;datatype:string,name:startTime;datatype:string,name:startDate;datatype:string" />
+	<infoitem key="UD_rsEmployeeInfo" value="name:employeeID;datatype:int,name:firstName;datatype:string,name:displayName;datatype:string" />
+	<infoitem key="UD_rsUnassignedSupportRequests" value="name:escalationID;datatype:int,name:dateEscalated;datatype:string,name:application;datatype:string,name:subject;datatype:string,name:assignedTo;datatype:int,name:status;datatype:string,name:ticket;datatype:int,name:customer;datatype:string,name:targetDate;datatype:string" />
+	<infoitem key="UD_rsMyProjectTasks" value="name:projectEventID;datatype:int,name:projectEvent;datatype:string,name:projectID;datatype:int,name:projectName;datatype:string,name:order;datatype:real,name:engineerID;datatype:int,name:displayName;datatype:string,name:targetDate;datatype:string,name:status;datatype:string" />
+</info>
