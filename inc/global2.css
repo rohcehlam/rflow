@@ -1,0 +1,419 @@
+body {
+	background-color: #E0E0E0;
+	margin-left: 0px;
+	margin-top: 3px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	color: #666666;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+/* Table containing the header */
+.header {
+	border-width: 0px;
+	background-color: #D5EDB3;
+}
+/* Table cell containing the javascript-generated date within the header */
+.jstime {
+	font-family: Arial, Helvetica, sans-serif;
+	width: 118px;
+	background-color: #D5EDB3;
+	padding-left: 13px;
+}
+/* Table cell containing the breadcrumbs within the header */
+.breadcrumbs {
+	color: #7F9358;
+	font-weight: bold;
+	width: 445px;
+	height: 37px;
+	background-color: #D5EDB3;
+}
+/* Table cell containing the "Add xxx" link within the header */
+td.add {
+	color: #7F9358;
+	width: 210px;
+	vertical-align: middle;
+	background-color: #D5EDB3;
+	text-align: right;
+	padding-right: 13px;
+}
+/* Encases the entire body of the page containing text (except the header) */
+.casing {
+	width: 795px;
+	border: 1px solid #CCCCCC;
+	padding: 1px;
+	background-color: #FFFFFF;
+}
+div.login {
+	text-align: right;
+	margin-right: 4px;
+	margin-top: 17px;
+	margin-bottom: 7px;
+}
+td,
+th {
+	color: #666666;
+}
+a {
+	color: #000000;
+}
+a:hover {
+	color: #B7D300;
+}
+/* Div containing the footer */
+.footer {
+	text-align: center;
+	color: #D5EDB3;
+	background-color: #7F9358;
+	padding-bottom: 2px;
+/*	margin-top: 10px;
+	background-image: url(../images/gradient.png);
+	background-attachment: fixed; */
+}
+.contrast {
+	text-align: right;
+	color: #D5EDB3;
+	background-color: #7F9358;
+}
+a img {
+	border-width: 0px;
+}
+.icon img {
+	border: 0px;
+	vertical-align: baseline;
+}
+.phone img {
+	float: left;
+}
+td.add img,
+td.icon img {
+	margin-bottom: -3px;
+}
+a.update {
+	font-size: 10px;
+}
+/* There are three basic functions to any given page: Add, Update or View data. Each of these types are built using tables.  These tables are styled using this class. */
+table.add,
+table.update {
+	margin-top: 15px;
+	border: 1px solid #000000;
+	background-color: #FFFFFF;
+}
+table.view,
+table.viewSmall {
+	margin-top: 15px;
+	border: 1px solid #000000;
+	background-color: #FFFFFF;
+	width: 75%;
+}
+table.viewLarge {
+	border: 1px solid #000000;
+	background-color: #FFFFFF;
+	width: 100%;
+}
+table.login {
+	margin-top: 10px;
+	border: 1px solid #000000;
+	background-color: #FFFFFF;
+}
+/* Same as the class above, except for cells contained within those tables. */
+table.add td,
+table.update td,
+table.view td {
+	padding: 2px;
+}
+/* Pages that list data (i.e. statusReports.php) use this class with the table tag */
+.data {
+	border: 1px solid #B7D300;
+	width: 97%;
+	border-collapse: collapse;
+	margin-top: 10px;
+}
+/* Same as the data class, except for headers of the table -- NOTE: the borders are very carefully designed in this style to create an even border effect. Modifying this could create overlapping borders in some browsers. */
+.data th {
+	border-right: 1px solid #B7D300;
+	border-bottom: 1px solid #B7D300;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	padding-right: 4px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	padding-left: 4px;
+	color: #000000;
+	text-align: center;
+}
+/* Same as the data class, except for cells of the table */
+.data td {
+	padding-right: 4px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	padding-left: 4px;
+	color: #000000;
+}
+/* rows containing a submit button */
+.button {
+	text-align: center;
+	background-color: #D5EDB3;
+}
+/* Tables that use the 'data' class also use the 'odd' class to style odd numbered rows.  This creates an alternating color effect for rows. */
+.odd {
+	background-color: #D5EDB3;
+}
+.bar {
+	width: 80%;
+	border-width: 0px;
+}
+#tabs {
+	padding: 5px;
+	margin-top: 10px;
+}
+#tabscontent {
+  margin: 0px;
+  padding: 0.5em;
+  border: 2px groove #C0C0C0;
+  width: 88%;
+/*  background-color: #F8F8FF; */
+}
+/* The selected tab (or that appears in the foreground) */
+.tabfor {
+  padding: 0.2em 0.2em 0.07em 0.2em;
+  margin: 0px 0.2em 0px 0.8em;
+/*  border-top: 2px ridge #C0C0C0;
+  border-left: 2px ridge #C0C0C0;
+  border-right: 2px ridge #C0C0C0;
+  border-bottom: 2px solid #F8F8FF;
+  background-color: #F8F8FF; */
+  background-image:url(../n3xt/images/Untitled-1.png);
+  font-size: 14px;
+  text-decoration: none;
+  color: #000000;
+}
+/* All non-selected (backgrouund) tabs */
+.tabbak {
+  padding: 0.2em 0.2em 0px 0.2em;
+  margin: 0 0.2em 0 0.8em;
+  border-top: 2px ridge #C0C0C0;
+  border-left: 2px ridge #C0C0C0;
+  border-right: 2px ridge #C0C0C0;
+  background-color: #E0E0E0;
+  font-size: 14px;
+  text-decoration: none;
+  color: #000000;
+}
+/* Table containing the next/previous links when navigating lists of data */
+.pagination {
+	margin-top: 17px;
+	margin-bottom: 17px;
+	border-width: 0px;
+	text-align: center;
+	width: 50%;
+}
+/* Cells within the "pagination" table */
+.pagination td {
+	text-align: center;
+	width: 23%;
+}
+/* Contains the text "Viewing X through Y of Z XXX" immediately following the 'data' table on pages such as, statusReports.php, mops.php, etc. */
+#count {
+	margin-top: 17px;
+	margin-bottom: 17px;
+	text-align: center;
+}
+.phoneDetail {
+	vertical-align: top;
+}
+.important {
+	color: red;
+}
+/* Some pages provide an interface for sending data via email. This styles the header for this section. */
+.recipients {
+	font-weight: bold;
+	background-color: #D5EDB3;
+	text-align: center;
+	color: #7F9358;
+	vertical-align: top;
+	height: 31px;
+}
+/* Formats the text contained within a div that is displayed when successfully submitting data via a form (i.e. adding, updating, etc.) */
+.successful {
+  background-color:  yellow;
+  font-size: 12px;
+  color: #000000;
+  margin-top: 6px;
+  font-weight: bold;
+}
+.problem {
+  background-color:  orange;
+  font-size: 12px;
+  color: #000000;
+  margin-top: 10px;
+  font-weight: bold;
+}
+/* Formats the contents of label tags (typically used on pages containing forms -- i.e. statusReportAdd.php, appAdd.php, etc.) */
+label {
+	font-weight: bold;
+	vertical-align: middle;
+}
+label input {
+	vertical-align: bottom;
+}
+.required {
+	color: #7F9358;
+	cursor: default;
+}
+/* Keeps the calendar image appearing inline with date combo-boxes -- you'll be sorry if you change this */
+.cal img {
+	margin-bottom: -3px;
+}
+.topItem {
+  background: #467BF2;
+  text-decoration: none;
+  font-weight:bold;
+}
+.dropMenu {
+  background:#D9D9D9;
+  border-top:1px solid #467BF2;
+  border-left:1px solid #92B1F8;
+  border-right:1px solid #92B1F8;
+  border-bottom:1px solid #92B1F8;
+}
+.subMenu {
+   display:none;
+}
+.subItem {
+   padding-left:5px;
+   cursor:pointer;
+   font-weight:bold;
+   text-decoration:none;
+   color:black;
+}
+.subItem a {
+   text-decoration:none;
+   color:black;
+}
+/* Rows used to separate content visually */
+tr.spacer {
+	background-color: #E0E0E0;
+}
+tr.spacer td {
+	height: 5px;
+}
+.title {
+	font-size: 14px;
+	text-align: center;
+	font-weight: bold;
+	background-color: #D5EDB3;
+}
+.section {
+	font-size: 12px;
+	text-align: center;
+	font-weight: bold;
+	background-color: #D5EDB3;
+}
+h2 {
+	font-size: 16px;
+	margin-left: 15px;
+	color: #000000;
+}
+h3 {
+	margin-left: 10px;
+	color: #000000;
+}
+.asap {
+	background-color: #FFFFFF;
+}
+.escalationCleared {
+	background-color: #33CC00;
+}
+.escalationDegreeOne {
+	background-color: #FFFFFF;
+}
+.escalationDegreeTwo {
+	background-color: #FFFF00;
+}
+.escalationDegreeThree {
+	background-color: #FF9900;
+}
+.escalationDegreeFour {
+	background-color: #FF0000;
+}
+.data .edit {
+	width: 12px;
+}
+.data .delete {
+	width: 20px;
+}
+#adminmenu {
+	width: 95%;
+	text-align: center;
+}
+#adminmenu span {
+	padding: 0.1em;
+	margin: 0.1em;
+	border-width: 0px;
+	font-size: 14px;
+	text-decoration: none;
+	color: #000000;
+}
+#projectevents {
+	border: 1px dotted #000000;
+	width: 90%;
+	margin-top: 10px;
+}
+#projectevents .title {
+	color: #D5EDB3;
+	background-color: #7F9358;
+	text-align: center;
+}
+#projectevents .add {
+	text-align: right;
+	margin-right: 5px;
+}
+#projectevents .add img {
+	margin-bottom: -3px;
+	text-decoration: none;
+}
+.milestone {
+	font-weight: bold;
+}
+.dependency {
+	text-indent: 15px;
+}
+ul.dependency {
+	margin-left: 25px;
+}
+caption {
+	font-size: 18px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.xreference {
+	border: 1px solid #000000;
+	width: 75%;
+	margin-bottom: 15px;
+}
+table.xreference caption {
+	font-size: 13px;
+	background-color: #000000;
+	color: #D5EDB3;
+	font-weight: bold;
+}
+.xreference th {
+	border-right: 1px solid #B7D300;
+	border-bottom: 1px solid #B7D300;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	padding-right: 4px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	padding-left: 4px;
+	color: #000000;
+	text-align: center;
+}
+.norecords {
+	margin-top: 15px;
+	text-align: center;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 16px;
+}

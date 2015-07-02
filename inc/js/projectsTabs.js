@@ -1,0 +1,9 @@
+var tabs = new Array();
+tabs[0] = "none";
+tabs[1] = "app";
+tabs[2] = "customer";
+tabs[3] = "engineer";
+tabs[4] = "projecttype";
+tabs[5] = "projMan";
+tabs[6] = "ticket";
+tabs[7] = "wrm";

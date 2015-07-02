@@ -1,0 +1,82 @@
+#menucontainer{
+	position:relative;
+	color:#E0E0E0;
+	width:100%;
+	font-family:Helvetica,Arial,Verdana,sans-serif;
+	background-color: #3f5566;
+}
+#menunav{
+	position:relative;
+	height:27px;
+	font-size:12px;
+	text-transform:uppercase;
+	font-weight:bold;
+/*	background:	#7EABCD url(../images/menu/dolphin_bg.gif) repeat-x bottom left; */
+	background-color: #2f3f4c;
+}
+#menunav ul{
+	margin:0;
+	padding:0;
+	list-style-type:none;
+	float:left;
+}
+#menunav ul li,
+.innercontent li {
+	display:block;
+	float:left;
+	margin: 0 1px;
+	font-size: 12px;
+}
+#menunav ul li a {
+	color:#EAF3F8;
+	text-decoration:none;
+	display: block;
+	float: left;
+	padding:10px 10px 0 10px;
+	height:21px;
+}
+#menunav ul li a:hover{
+	color: #FFFFFF;
+/*	background: url(../images/menu/dolphin_bg-OVER.gif) repeat-x bottom left; */
+	background-color: #FFFFFF;
+	display:block;
+	float: left;
+	padding:12px 0 0 20px;
+	cursor:pointer;
+	height: 27px;
+}
+#menunav ul li a.current,
+#menunav ul li a.current:hover{
+	color: #FFFFFF;
+/*	background: #003300 url(../images/menu/dolphin_left-ON.gif) repeat-x bottom left; */
+	background-color: #3f5566;
+	line-height:273%;
+	display:block;
+	float: left;
+	padding:0 10px 0 10px;
+	height: 27px;
+}
+#menu_inner{
+	color: #FFFFFF;
+	font-size: 80%;
+	height: 2.3em;
+}
+#menu_inner a:link,
+#menu_inner a:visited,
+#menu_inner a:active{
+	color: #FFFFFF;
+}
+.innercontent{
+	display: none;
+	list-style-type:none;
+}
+#menu_inner .innercontent li a {
+	display:block;
+	float: left;
+	color: #7EABCD;
+	text-decoration:none;
+	padding: 0 10px 0 10px;
+}
+#menu_inner .innercontent li a:hover {
+	color: #FFFF00;
+}
