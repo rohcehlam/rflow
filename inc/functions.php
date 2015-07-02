@@ -1,6 +1,5 @@
 <?php
-//error_reporting(E_ALL);
-error_reporting(0);
+error_reporting(E_ALL & ~E_NOTICE);
 function buildMenu(){
         if (isset($_SESSION['MM_Username'])) {
             echo "<div id='menucontainer' style='float:left;'>\n";
@@ -54,7 +53,6 @@ function buildMenu(){
 	echo "</div>\n";*/
     
 }
-
 function buildHeader($rootPage, $parentPageText, $page, $pageText, $addText) {
 	echo "<table align=\"left\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\"><tr><td class=\"jstime\"><script type=\"text/javascript\">document.write(TODAY);</script></td>\n";
 	echo "<td class=\"breadcrumbs\"><a title=\"My Portal\" href=\"../userPortals/myPortal.php\">My Portal</a> &raquo; ";
@@ -98,10 +96,8 @@ function sudoAuth($linkedPage, $linkText, $icon) {
 	if (!isset($_GET['sudo_auth'])) {
 		$_GET['sudo_auth'] = null;
 	}
-
 	global $sudo;
 	$sudo = $_GET['sudo_auth'];
-
 	if (isset($sudo) && ($sudo == "admin")) {
 		echo "&nbsp;<img src=\"../images/icons/" . $icon . ".gif\" alt=\"" . $icon . "\" /><a title=\"" . $linkText . "\" href=\"" . $linkedPage . ".php?sudo_auth=admin\">" . $linkText . "</a>";
 	}
@@ -127,10 +123,8 @@ function sudoAuthDataOLD($linkedPage, $linkedText, $tdth, $icon, $param) {
 	if (!isset($_GET['sudo_auth'])) {
 		$_GET['sudo_auth'] = null;
 	}
-
 	global $sudo;
 	$sudo = $_GET['sudo_auth'];
-
 	if (isset($sudo) && ($sudo == "admin")) {
 		if ($tdth == "th") {
 			echo "<th></th>";
@@ -142,7 +136,6 @@ function sudoAuthDataOLD($linkedPage, $linkedText, $tdth, $icon, $param) {
 function sudoAuthData($linkedPage, $linkedText, $tdth, $icon, $param) {
 	global $sudo;
 	$sudo = $_SESSION['MM_Username'];
-
 	if (isset($sudo)) {
 		if ($tdth == "th") {
 			echo "<th";
@@ -218,9 +211,7 @@ function buildTitle($remainder, $company="masflight: ") {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "")
 {
   $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-
   $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
   switch ($theType) {
     case "text":
       $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
@@ -270,4 +261,3 @@ function determineState($var, $trueState, $trueAction, $falseAction) {
 		echo $falseAction;
 	}
 }
-?>
