@@ -8,7 +8,8 @@ $pageNum_rsServers = 0;
 if (isset($_GET['pageNum_rsServers'])) {
   $pageNum_rsServers = $_GET['pageNum_rsServers'];
 }
-$startRow_rsServers = $pageNum_rsServers * $maxRows_rsServers;<a href="servers.php">Mobile365: View Servers</a>
+$startRow_rsServers = $pageNum_rsServers * $maxRows_rsServers;
+?><a href="servers.php">Mobile365: View Servers</a><?php
 
 $varDatacenter_rsServers = "1";
 if (isset($_GET['datacenter'])) {

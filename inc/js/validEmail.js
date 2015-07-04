@@ -5,8 +5,9 @@ function emailcheck(cur) {
 		return false
 	}
 }
-
+/*
 <form onsubmit="return emailcheck(this)">
 <input type="text" size="20" name="email">
 <input type="submit" value="Submit!">
 </form>
+*/

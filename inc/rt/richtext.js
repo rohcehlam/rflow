@@ -44,7 +44,7 @@ function initRTE(imgPath, incPath, css) {
 	includesPath = incPath;
 	cssFile = css;
 	
-	if (isRichText) document.writeln('<style type="text/css">@import "' ../../n3xt/inc/rt/+ includesPath + 'rte.css";</style>');
+	if (isRichText) document.writeln('<style type="text/css">@import "../../n3xt/inc/rt/'+ includesPath + 'rte.css";</style>');
 	
 	//for testing standard textarea, uncomment the following line
 	//isRichText = false;
@@ -148,7 +148,7 @@ function writeRichText(rte, html, width, height, buttons, readOnly) {
 			document.writeln('</table>');
 		}
 		document.writeln('<iframe id="' + rte + '" name="' + rte + '" width="' + width + 'px" height="' + height + 'px" src="' + includesPath + 'blank.htm"></iframe>');
-		if (!readOnly) document.writeln('<br /><label><input type="checkbox" id="chkSrc' + rte + '" onclick="toggleHTMLSrc(\'' + rte + '\');" /> View Source</label>');
+		if (!readOnly) document.writeln('<br /><label><input type="checkbox" id="chkSrc' + rte + '" onclick="toggleHTMLSrc(\'' + rte + '\');" />ï¿½View Source</label>');
 		document.writeln('<iframe width="154" height="104" id="cp' + rte + '" src="' + includesPath + 'palette.htm" marginwidth="0" marginheight="0" scrolling="no" style="visibility:hidden; position: absolute;"></iframe>');
 		document.writeln('<input type="hidden" id="hdn' + rte + '" name="' + rte + '" value="" />');
 		document.writeln('</div>');
@@ -255,7 +255,7 @@ function updateRTE(rte) {
 		}
 		
 		//if there is no content (other than formatting) set value to nothing
-		if (stripHTML(oHdnMessage.value.replace(" ", " ")) == "" 
+		if (stripHTML(oHdnMessage.value.replace("ï¿½", " ")) == "" 
 			&& oHdnMessage.value.toLowerCase().search("<hr") == -1
 			&& oHdnMessage.value.toLowerCase().search("<img") == -1) oHdnMessage.value = "";
 		//fix for gecko

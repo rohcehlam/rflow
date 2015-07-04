@@ -1,0 +1,109 @@
+
+/* -------------------- BOOTSTRAP MODIFIED -------------------- */
+.panel-default {
+    border-color: rgba(221, 221, 221, 0) !important ;
+}
+
+.row {
+    margin-right: 0px !important; 
+    margin-left: 0px !important;
+}
+
+.btn-group, .btn-group-vertical{
+      display: inline !important;
+}
+
+.table>tbody>tr>td{
+    padding: 1px !important;
+    vertical-align: middle;
+}
+
+/*DATATABLE*/
+.dataTable thead{
+    background-color: #024E7B;
+    color: #fff;
+}
+
+/*.dataTables_wrapper .row:first-child {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #EFF3F8;
+}*/
+
+
+.bg-info {
+  background-color: #33495D;
+}
+
+.icon-circle {
+  border-radius: 50%;
+}
+
+.icon-wrap-sm {
+  padding: 12px;
+}
+
+.icon-wrap {
+  display: inline-block;
+  padding: 16px;
+  border-radius: 2px;
+}
+
+#dataTables-bigTable_wrapper div.col-sm-12{
+    padding: 0px !important;
+}
+
+#LineChartT{
+    //width: 96% !important;
+}
+
+#KbarChart{
+    //width: 99% !important;
+    //height: 400px !important;
+}
+
+.zoomIn, .zoomOut {
+    background-color:#fff;
+    border:1px solid #ccc;
+    color:#000;
+    width:15px;
+    height:15px;
+    line-height: 15px;
+    text-align:center;
+    border-radius:3px;
+    cursor:pointer;
+    position:absolute;
+    top : 10px;
+    font-weight:bold;
+    left : 10px;
+
+    -webkit-user-select: none; // For Webkit
+    -khtml-user-select: none;
+    -moz-user-select: none; // For Mozilla
+    -o-user-select: none;
+    user-select: none; // Default
+}
+
+.zoomOut {
+    top:30px;
+}
+
+.map {
+    position:relative;
+}
+
+.mapTooltip {
+    position : fixed;
+    background-color : #fff;
+    moz-opacity:0.70;
+    opacity: 0.70;
+    filter:alpha(opacity=70);
+    border-radius:10px;
+    padding : 10px;
+    z-index: 1000;
+    max-width: 200px;
+    display:none;
+    color:#343434;
+}
+
+/* -------------------- BOOTSTRAP MODIFIED -------------------- */
