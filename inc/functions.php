@@ -284,36 +284,70 @@ function determineState($var, $trueState, $trueAction, $falseAction) {
 	}
 }
 
+function build_header() {
+	?>
+	<link rel="shortcut icon" href="../images/logos/favicon.ico" type="image/x-icon" />
+
+	<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<!-- Font Awesome Icons -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<!-- Ionicons -->
+	<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+	<!-- DATA TABLES -->
+	<link href="../bootstrap/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+	<!-- Theme style -->
+	<link href="../bootstrap/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+	<!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
+	<link href="../bootstrap/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+	<link href="../bootstrap/global_app.css" rel="stylesheet" type="text/css" />
+
+	<!-- jQuery 2.1.4 -->
+	<script src="../bootstrap/jQuery/jQuery-2.1.4.min.js"></script>
+	<!-- jQuery UI 1.11.2 -->
+	<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js" type="text/javascript"></script>
+	<!-- Bootstrap 3.3.2 JS -->
+	<script src="../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>    
+
+	<!-- DATA TABES SCRIPT -->
+	<script src="../bootstrap/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+	<script src="../bootstrap/datatables/dataTables.bootstrap.min.js" type="text/javascript"></script>
+
+	<!-- AdminLTE App -->
+	<script src="../bootstrap/app.min.js" type="text/javascript"></script>
+
+	<!-- Global App JS -->
+	<script src="../bootstrap/global_app.js" type="text/javascript"></script>
+
+	<link href="../css/custom.css" rel="stylesheet" type="text/css" />
+	<?php
+}
+
 function build_navbar($active = 0, $extra = '') {
 	?>
-	<nav class="navbar navbar-invers navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<div style="margin-top: 10px; margin-right: 16px;">
-					<img src="../images/masflight-logo.png" height="36px"/>
+	<nav class="navbar navbar-fixed-top">
+		<div class="container-fluid">
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+				<div class="navbar-header">
+					<a href="index.php" class="navbar-brand"><img width="100" src="../images/masflight-logo.png"/></a>
 				</div>
-			</div>
-			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="../userPortals/MyPortal.php">My Portal</a></li>
-					<li<?php echo ($active == 1) ? 'class="active"' : ''; ?>><a href="../rfas/rfas.php">RFCs</a></li>
-					<li<?php echo ($active == 2) ? 'class="active"' : ''; ?>><a href="../statusReports/statusReports.php">Status Reports</a></li>
-					<li<?php echo ($active == 3) ? 'class="active"' : ''; ?>><a href="../maintenances/maintenances.php">Maintenance Notifications</a></li>
-					<li<?php echo ($active == 4) ? 'class="active"' : ''; ?>><a href="../supportRequests/supportRequests.php">Support Requests</a></li>
-					<li<?php echo ($active == 5) ? 'class="active"' : ''; ?>><a href="../projects/projects.php">Projects</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<?php echo $extra; ?>
+					<li<?php echo ($active == 0) ? ' class="active"' : ''; ?>><a href="../userPortals/MyPortal.php">My Portal</a></li>
+					<li<?php echo ($active == 1) ? ' class="active"' : ''; ?>><a href="../rfas/rfas.php">RFCs</a></li>
+					<li<?php echo ($active == 2) ? ' class="active"' : ''; ?>><a href="../statusReports/statusReports.php">Status Reports</a></li>
+					<li<?php echo ($active == 3) ? ' class="active"' : ''; ?>><a href="../maintenances/maintenances.php">Maintenance Notifications</a></li>
+					<li<?php echo ($active == 4) ? ' class="active"' : ''; ?>><a href="../supportRequests/supportRequests.php">Support Requests</a></li>
+					<li<?php echo ($active == 5) ? ' class="active"' : ''; ?>><a href="http://54.144.64.79/masflight_projects/index.php">Projects</a></li>                                
+				</ul>                      
+			</div><!-- /.navbar-collapse -->
+			<!-- Navbar Right Menu -->
+			<div class="navbar-custom-menu">
+				<ul class="nav navbar-nav">
+					<?php echo $extra ?>
 					<li>&nbsp;</li>
 				</ul>
-			</div> <!-- /.nav-collapse -->
-		</div>
+			</div>
+		</div><!-- /.container-fluid -->
 	</nav>
 	<?php
 }
