@@ -16,6 +16,7 @@ $varEmployee_rsMaintenanceNotifs = filter_input(INPUT_GET, 'engineer', FILTER_SA
 $varStatus_rsMaintenanceNotifs = filter_input(INPUT_GET, 'status', FILTER_SANITIZE_SPECIAL_CHARS);
 $varApp_rsMaintenanceNotifs = filter_input(INPUT_GET, 'app', FILTER_SANITIZE_SPECIAL_CHARS);
 $varsummary_rsMaintenanceNotifs = filter_input(INPUT_GET, 'summary', FILTER_SANITIZE_SPECIAL_CHARS);
+<<<<<<< HEAD
 $varrequestOrigin_rsMaintenanceNotifs = filter_input(INPUT_GET, 'requestOrigin', FILTER_SANITIZE_SPECIAL_CHARS);
 $varsubapp_rsMaintenanceNotifs = filter_input(INPUT_GET, 'subapp', FILTER_SANITIZE_SPECIAL_CHARS);
 $varorigin_rsMaintenanceNotifs = filter_input(INPUT_GET, 'origin', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -37,6 +38,9 @@ $args = array(
 $my_get = filter_input_array(INPUT_GET, $args);
 //var_dump($my_get);
 
+=======
+
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 if (filter_input(INPUT_GET, 'app', FILTER_SANITIZE_SPECIAL_CHARS)) {
 	$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') AS dateSubmitted, changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') AS windowStartDate 
     FROM changerequests 
@@ -144,7 +148,11 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 			<!-- TABS -->
 			<div id="tabs">
 				<span class="<?php
+<<<<<<< HEAD
 				if ($varApp_rsMaintenanceNotifs || $varEmployee_rsMaintenanceNotifs || $varrequestOrigin_rsMaintenanceNotifs || $varStatus_rsMaintenanceNotifs || $varsubapp_rsMaintenanceNotifs || $varsummary_rsMaintenanceNotifs) {
+=======
+				if ((isset($_GET['app'])) || (isset($_GET['engineer'])) || (isset($_GET['requestOrigin'])) || (isset($_GET['status'])) || (isset($_GET['subapp'])) || (isset($_GET['summary']))) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 					echo "tabbak";
 				} else {
 					echo "tabfor";
@@ -162,14 +170,22 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 					<!-- DETAILS -->
 					<a name="tabnone" id="tabnone"></a>
 					<div id="tabscontent_none"<?php
+<<<<<<< HEAD
 					if (!$varApp_rsMaintenanceNotifs || !$varEmployee_rsMaintenanceNotifs || !$varrequestOrigin_rsMaintenanceNotifs || !$varStatus_rsMaintenanceNotifs || !$varsummary_rsMaintenanceNotifs) {
+=======
+					if ((isset($_GET['app'])) || (isset($_GET['engineer'])) || (isset($_GET['requestOrigin'])) || (isset($_GET['status'])) || (isset($_GET['summary']))) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 						echo " style=\"display: none;\"";
 					}
 					?>>Select a tab to filter the available RFCs</div>
 					<a name="tabapp" id="tabapp"></a>
 
 					<div id="tabscontent_app"<?php
+<<<<<<< HEAD
 					if (!$varApp_rsMaintenanceNotifs) {
+=======
+					if (!isset($_GET['app'])) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 						echo " style=\"display: none;\"";
 					}
 					?>>
@@ -179,15 +195,27 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 								<option value="">Select Application</option>
 								<?php do { ?>
 									<option value="<?php echo $row_rsApps['applicationID'] ?>"<?php
+<<<<<<< HEAD
 									if ($varApp_rsMaintenanceNotifs && ($row_rsApps['applicationID'] == $varApp_rsMaintenanceNotifs)) {
+=======
+									if (isset($_GET['app']) && ($row_rsApps['applicationID'] == $_GET['app'])) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 										echo " selected=\"selected\"";
 									}
 									?>><?php echo $row_rsApps['application'] ?></option>
 											  <?php
+<<<<<<< HEAD
 										  } while ($row_rsApps = $rsApps->fetch_assoc());
 										  if ($rsApps->num_rows > 0) {
 											  $rsApps->data_seek(0);
 											  $row_rsApps = $rsApps->fetch_assoc();
+=======
+										  } while ($row_rsApps = mysql_fetch_assoc($rsApps));
+										  $rows = mysql_num_rows($rsApps);
+										  if ($rows > 0) {
+											  mysql_data_seek($rsApps, 0);
+											  $row_rsApps = mysql_fetch_assoc($rsApps);
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 										  }
 										  ?>
 							</select>
@@ -197,7 +225,11 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 					<a name="taborigin" id="taborigin"></a>
 					<div id="tabscontent_origin"<?php
+<<<<<<< HEAD
 					if ($varorigin_rsMaintenanceNotifs) {
+=======
+					if (!isset($_GET['origin'])) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 						echo " style=\"display: none;\"";
 					}
 					?>>
@@ -205,13 +237,22 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 							Display RFCs for <select name="origin" id="origin">
 								<option value="">Select Origin</option>
 								<option value="Ticket"<?php
+<<<<<<< HEAD
 								if (isset($varorigin_rsMaintenanceNotifs) && ($row_rsRFA['requestOrigin'] == $varEmployee_rsMaintenanceNotifs)) {
+=======
+								if (isset($_GET['origin']) && ($row_rsRFA['requestOrigin'] == $_GET['engineer'])) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 									echo " selected=\"selected\"";
 								}
 								?>><?php echo $row_rsEngineers['displayName'] ?></option>
 							</select>&nbsp;#<input type="text" name="ticket" id="ticket"<?php
+<<<<<<< HEAD
 							if ($varticket_rsMaintenanceNotifs) {
 								echo " value=\"$varticket_rsMaintenanceNotifs\"";
+=======
+							if (isset($_GET['ticket'])) {
+								echo " value=\"" . $_GET['ticket'] . "\"";
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 							}
 							?> size="10" />
 							<input type="submit" name="Submit" value="Submit" />
@@ -220,24 +261,45 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 					<a name="tabengineer" id="tabengineer"></a>
 					<div id="tabscontent_engineer"<?php
+<<<<<<< HEAD
 					if ($varEEmployee_rsMaintenanceNotifs) {
+=======
+					if (!isset($_GET['employee'])) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 						echo " style=\"display: none;\"";
 					}
 					?>>
 						<form action="rfas.php" method="get" name="filterEngineer" id="filterEngineer">
+<<<<<<< HEAD
 							Display RFCs submitted by <select name="engineer" id="engineer">
 								<option value="">Select Engineer</option>
 								<?php do { ?>
 									<option value="<?php echo $row_rsEngineers['employeeID'] ?>"<?php
 									if (isset($varEmployee_rsMaintenanceNotifs) && ($row_rsEngineers['employeeID'] == $varEmployee_rsMaintenanceNotifs)) {
+=======
+							Display RFCs submitted by 
+                                                        <select name="engineer" id="engineer">
+								<option value="">Select Engineer</option>
+								<?php do { ?>
+									<option value="<?php echo $row_rsEngineers['employeeID'] ?>"<?php
+									if (isset($_GET['engineer']) && ($row_rsEngineers['employeeID'] == $_GET['engineer'])) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 										echo " selected=\"selected\"";
 									}
 									?>><?php echo $row_rsEngineers['displayName'] ?></option>
 											  <?php
+<<<<<<< HEAD
 										  } while ($row_rsEngineers = $rsEngineers->fetch_assoc());
 										  if ($rsEngineers->num_rows > 0) {
 											  $rsEngineer->data_seek(0);
 											  $row_rsEngineers = $rsEngineers->fetch_assoc();
+=======
+										  } while ($row_rsEngineers = mysql_fetch_assoc($rsEngineers));
+										  $rows = mysql_num_rows($rsEngineers);
+										  if ($rows > 0) {
+											  mysql_data_seek($rsEngineers, 0);
+											  $row_rsEngineers = mysql_fetch_assoc($rsEngineers);
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 										  }
 										  ?>
 							</select>
@@ -247,14 +309,23 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 					<a name="tabsummary" id="tabsummary"></a>
 					<div id="tabscontent_summary"<?php
+<<<<<<< HEAD
 					if ($varsummary_rsMaintenanceNotifs) {
+=======
+					if (!isset($_GET['summary'])) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 						echo " style=\"display: none;\"";
 					}
 					?>>
 						<form action="rfas.php" method="get" name="filterSummary" id="filterSummary">
 							Display RFCs with the Summary containing <input type="text" name="summary" id="summary"<?php
+<<<<<<< HEAD
 							if ($varsummary_rsMaintenanceNotifs) {
 								echo " value=\"$varsummary_rsMaintenanceNotifs\"";
+=======
+							if (isset($_GET['summary'])) {
+								echo " value=\"" . $_GET['summary'] . "\"";
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 							}
 							?> size="20" />
 							<input type="submit" name="Submit" value="Submit" />
@@ -263,13 +334,18 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 					<a name="tabstatus" id="tabstatus"></a>
 					<div id="tabscontent_status"<?php
+<<<<<<< HEAD
 					if ($varStatus_rsMaintenanceNotifs) {
+=======
+					if (!isset($_GET['status'])) {
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 						echo " style=\"display: none;\"";
 					}
 					?>>
 						<form action="rfas.php" method="get" name="filterStatus" id="filterStatus">
 							Display <select name="status" id="status">
 								<option value="">Select Status</option>
+<<<<<<< HEAD
 								<?php
 								$select_selected = filter_input(INPUT_GET, 'status', FILTER_SANITIZE_SPECIAL_CHARS);
 								$helper_select = array(
@@ -290,11 +366,78 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 									echo "<option value='$key' " . (($select_selected == $key) ? "selected='selected'" : '') . ">$value</option>";
 								}
 								?>
+=======
+								<option value="All"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'All')) {
+									echo " selected=\"selected\"";
+								}
+								?>>All</option>
+								<option value="Pending Approval"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Pending Approval')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Pending Approval</option>
+								<option value="Pre-approved"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Pre-approved')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Pre-approved</option>
+								<option value="Approved"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Approved')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Approved</option>
+								<option value="Declined"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Declined')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Declined</option>
+								<option value="Returned"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Returned')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Returned</option>
+								<option value="Submitted for CAB Approval"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Submitted for CAB Approval')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Submitted for CAB Approval</option>
+								<option value="Approved by CAB"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Approved by CAB')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Approved by CAB</option>
+								<option value="Rejected by CAB"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Rejected by CAB')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Rejected by CAB</option>
+								<option value="Returned by CAB"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Returned by CAB')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Returned by CAB</option>
+								<option value="Completed"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Completed')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Completed</option>
+								<option value="Resolved"<?php
+								if (isset($_GET['status']) && ($_GET['status'] == 'Resolved')) {
+									echo " selected=\"selected\"";
+								}
+								?>>Resolved</option>
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 							</select>&nbsp;Maintenance Notifications
 							<input type="submit" name="Submit" value="Submit" />
 						</form>
 					</div>
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 				</div>
 			</div>                    
 			<?php
@@ -308,6 +451,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 			if ($totalRows_rsChangeRequests > 0) {
 				?>
 				<table class="data" align="center" cellpadding="2" cellspacing="0">
+<<<<<<< HEAD
 					<thead>
 						<tr>
 							<th>Date<br />Submitted</th>
@@ -334,12 +478,43 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 							</tr>
 						<?php } ?>
 					</tbody>
+=======
+					<tr>
+						<th>Date<br />Submitted</th>
+						<th>Submitted By</th>
+						<th>Summary</th>
+						<th>App</th>
+						<th>Status</th>
+						<th>Window</th>
+						<?php sudoAuthData(null, null, "th", "edit", null); ?>
+					</tr>
+					<?php
+					$num = 0;
+					do {
+						$num++;
+						echo "<tr";
+						if ($num % 2) {
+							echo " class=\"odd\"";
+						}
+						echo ">";
+						?>
+						<td><?php echo $row_rsChangeRequests['dateSubmitted']; ?></td>
+						<td><?php echo $row_rsChangeRequests['displayName']; ?></td>
+						<td><?php echo "<a href=\"rfa.php?function=view&amp;rfa=" . $row_rsChangeRequests['changeRequestID'] . "\">" . $row_rsChangeRequests['summary'] . "</a>"; ?></td>
+						<td><?php echo $row_rsChangeRequests['application']; ?></td>
+						<td><?php echo $row_rsChangeRequests['status']; ?></td>
+						<td><?php echo $row_rsChangeRequests['windowStartDate']; ?></td>
+						<?php sudoAuthData("rfa.php", "Update RFA", "td", "edit", "function=update&amp;rfa=" . $row_rsChangeRequests['changeRequestID']); ?>
+						</tr>
+					<?php } while ($row_rsChangeRequests = mysql_fetch_assoc($rsChangeRequests)); ?>
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 				</table>
 
 				<div id="count">Viewing <?php echo ($startRow_rsChangeRequests + 1) ?> through <?php echo min($startRow_rsChangeRequests + $maxRows_rsChangeRequests, $totalRows_rsChangeRequests) ?> of <?php echo $totalRows_rsChangeRequests ?> Change Requests</div>
 				<?php if ($totalRows_rsChangeRequests > 25) { ?>
 					<table class="pagination" width="50%" align="center">
 						<tr>
+<<<<<<< HEAD
 							<td width="23%" align="center"><?php if ($pageNum_rsChangeRequests > 0) { // Show if not first page           ?>
 									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, 0, $queryString_rsChangeRequests); ?>"><img src="../images/icons/first.jpg" alt="First" /></a>
 								<?php } // Show if not first page       ?>
@@ -355,6 +530,23 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 							<td width="23%" align="center"><?php if ($pageNum_rsChangeRequests < $totalPages_rsChangeRequests) { // Show if not last page           ?>
 									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, $totalPages_rsChangeRequests, $queryString_rsChangeRequests); ?>"><img src="../images/icons/final.jpg" alt="Final" /></a>
 								<?php } // Show if not last page       ?>
+=======
+							<td width="23%" align="center"><?php if ($pageNum_rsChangeRequests > 0) { // Show if not first page    ?>
+									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, 0, $queryString_rsChangeRequests); ?>"><img src="../images/icons/first.jpg" alt="First" /></a>
+								<?php } // Show if not first page   ?>
+							</td>
+							<td width="31%" align="center"><?php if ($pageNum_rsChangeRequests > 0) { // Show if not first page    ?>
+									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, max(0, $pageNum_rsChangeRequests - 1), $queryString_rsChangeRequests); ?>"><img src="../images/icons/prev.jpg" alt="Previous" /></a>
+								<?php } // Show if not first page   ?>
+							</td>
+							<td width="23%" align="center"><?php if ($pageNum_rsChangeRequests < $totalPages_rsChangeRequests) { // Show if not last page    ?>
+									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, min($totalPages_rsChangeRequests, $pageNum_rsChangeRequests + 1), $queryString_rsChangeRequests); ?>"><img src="../images/icons/next.jpg" alt="Next" /></a>
+								<?php } // Show if not last page   ?>
+							</td>
+							<td width="23%" align="center"><?php if ($pageNum_rsChangeRequests < $totalPages_rsChangeRequests) { // Show if not last page    ?>
+									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, $totalPages_rsChangeRequests, $queryString_rsChangeRequests); ?>"><img src="../images/icons/final.jpg" alt="Final" /></a>
+								<?php } // Show if not last page   ?>
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 							</td>
 						</tr>
 					</table>

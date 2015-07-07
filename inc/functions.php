@@ -288,7 +288,11 @@ function build_header() {
 	?>
 	<link rel="shortcut icon" href="../images/logos/favicon.ico" type="image/x-icon" />
 
+<<<<<<< HEAD
 	<link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+=======
+	<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 	<!-- Font Awesome Icons -->
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 	<!-- Ionicons -->
@@ -296,6 +300,7 @@ function build_header() {
 	<!-- DATA TABLES -->
 	<link href="../bootstrap/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
 	<!-- Theme style -->
+<<<<<<< HEAD
 	<link href="../css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
 	<!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
 	<link href="../css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
@@ -307,16 +312,36 @@ function build_header() {
 	<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js" type="text/javascript"></script>
 	<!-- Bootstrap 3.3.2 JS -->
 	<script src="../js/bootstrap.min.js" type="text/javascript"></script>    
+=======
+	<link href="../bootstrap/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+	<!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
+	<link href="../bootstrap/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+	<link href="../bootstrap/global_app.css" rel="stylesheet" type="text/css" />
+
+	<!-- jQuery 2.1.4 -->
+	<script src="../bootstrap/jQuery/jQuery-2.1.4.min.js"></script>
+	<!-- jQuery UI 1.11.2 -->
+	<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js" type="text/javascript"></script>
+	<!-- Bootstrap 3.3.2 JS -->
+	<script src="../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>    
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 
 	<!-- DATA TABES SCRIPT -->
 	<script src="../bootstrap/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
 	<script src="../bootstrap/datatables/dataTables.bootstrap.min.js" type="text/javascript"></script>
 
 	<!-- AdminLTE App -->
+<<<<<<< HEAD
 	<script src="../js/app.min.js" type="text/javascript"></script>
 
 	<!-- Global App JS -->
 	<script src="../js/global_app.js" type="text/javascript"></script>
+=======
+	<script src="../bootstrap/app.min.js" type="text/javascript"></script>
+
+	<!-- Global App JS -->
+	<script src="../bootstrap/global_app.js" type="text/javascript"></script>
+>>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 
 	<link href="../css/custom.css" rel="stylesheet" type="text/css" />
 	<?php
