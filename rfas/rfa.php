@@ -274,20 +274,9 @@ if ($my_get['function'] != "add") {
 							}
 							?></td>
 						<td class="contrast" valign="top"><label for="comments">Comments (Include Requester):</label></td>
-<<<<<<< HEAD
 						<td valign="top">
 							<?php //formField("textarea", "comments", $row_rsRFA['comments'], "32", null, "5", "virtual", "14", "n"); ?>
 							<textarea name="comments" id="comments" cols="32" rows="5" tabindex="14" wrap="virtual"><?php echo isset($row_rsRFA['comments']) ? $row_rsRFA['comments'] : ''; ?></textarea>
-=======
-						<td valign="top"><?php //formField("textarea", "comments", $row_rsRFA['comments'], "32", null, "5", "virtual", "14", "n");                           ?>
-							<textarea name="comments" id="comments" cols="32" rows="5" tabindex="14" wrap="virtual">
-								<?php
-								if (isset($row_rsRFA['comments'])) {
-									echo $row_rsRFA['comments'];
-								}
-								?>
-							</textarea>
->>>>>>> d895fb8634f1d191221cd430d11c01a79047570c
 						</td>
 					</tr>
 					<tr class="button"><td colspan="4"><input type="submit" name="submit" id="submit" value="Send RFC" />
