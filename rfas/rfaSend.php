@@ -145,7 +145,7 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		$txtbody .= "Ending: " . $row_rsRFA['windowEndDate'] . " at " . $row_rsRFA['windowEndTime'] . "";
 		$txtbody .= "Description: " . stripslashes(nl2br($row_rsRFA['description'])) . "<br />";
 		$txtbody .= "Risk: " . stripslashes(nl2br($row_rsRFA['risk'])) . "<br />";
-		if ($_POST['comments'] != null) {
+		if ($my_post['comments'] != null) {
 			$txtbody .= "Comments: " . stripslashes(nl2br($row_rsRFA['comments'])) . "<br />";
 		}
 		$subject = "RFC #" . $row_rsRFA['changeRequestID'] . " - " . stripslashes($row_rsRFA['summary']);
