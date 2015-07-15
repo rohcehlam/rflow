@@ -162,16 +162,21 @@ header(sprintf("Location: %s", $insertGoTo));
 			$subject = "Status Reports (US): #" . $row_rsStatusReport['statusReportID'] . " " . $row_rsStatusReport['subject'] . " Case #" . $row_rsStatusReport['wrm'];
 		}
 
-		$email->Subject = $subject;
-		$email->Body = $body;
+		$email->set_subject($subject);
+		$email->set_body($body);
 
 		if (!$email->send()) {
-			echo "This Status Report could not be sent successfully. Please check the errors below .<br />";
-			echo "Mailer Error: " . $email->get_error();
+			?>
+			<div class='alert alert-danger' role='alert'>
+				<strong>Error!</strong> This Status Report could not be sent successfully. Please check the errors below or contact El Chapulin Colorado.<br />
+				<strong>Mailer Error:</strong> <?php echo $email->get_error(); ?>
+			</div>
+			<?php
 			exit;
 		}
-
-		echo "Status Report sent successfully! If you can see this message, please contact Adam.";
 		?>
+		<div class="alert alert-success" role="alert">
+			<strong>Success!</strong> Maintenance Notification sent successfully!
+		</div>
 	</body>
 </html>

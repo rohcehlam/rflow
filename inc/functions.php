@@ -54,6 +54,34 @@ function buildMenu() {
 	  echo "</div>\n"; */
 }
 
+function buildNewHeader($rootPage, $rootPageText, $pageText = '', $destiny = '', $addText = '') {
+	?>
+	<div class="page-header">
+		<div class='row'>
+			<div class='col-xs-10'>
+				<small>
+					<ul style='margin-top: 8px;' class='breadcrumb'>
+						<li><a href='../userPortals/myPortal.php'>Home</a></li>						
+						<?php if ($pageText != '') { ?>
+							<li><a href='<?php echo $rootPage; ?>'><?php echo $rootPageText; ?></a></li>
+							<li class='active'><?php echo $pageText; ?></li>
+						<?php } else { ?>
+							<li class='active'><?php echo $rootPageText; ?></li>
+						<?php } ?>
+					</ul>
+				</small>
+			</div>
+			<div class='col-xs-2'>
+				<?php if ($addText != '') { ?>
+					<a style='margin-top: 12px;' class='btn btn-primary' href='<?php echo $destiny; ?>?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;<?php echo $addText; ?></a>
+				<?php } ?>
+				&nbsp;</div>
+			<?php //buildHeader("statusReport", null, "statusReports", "Status Reports", "Add a Status Report"); ?>
+		</div>
+	</div>
+	<?php
+}
+
 function buildHeader($rootPage, $parentPageText, $page, $pageText, $addText) {
 	echo "<table align=\"left\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\"><tr><td class=\"jstime\"><script type=\"text/javascript\">document.write(TODAY);</script></td>\n";
 	echo "<td class=\"breadcrumbs\"><a title=\"My Portal\" href=\"../userPortals/myPortal.php\">My Portal</a> &raquo; ";

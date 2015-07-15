@@ -1,53 +1,80 @@
 <?php
-require_once('../Connections/connProdOps.php');
+require_once('../Connections/connection.php');
 require_once('../inc/functions.php');
-?><?php
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "maintenanceNotif1")) {
-	$insertSQL = sprintf("INSERT INTO maintenancenotifs (startDate, reason, customerImpact, nocImpact, prodChanges, employeeID, startTime, estimatedHours, estimatedMinutes) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", GetSQLValueString($_POST['startDate'], "date"), GetSQLValueString($_POST['reason'], "text"), GetSQLValueString($_POST['customerImpact'], "text"), GetSQLValueString($_POST['nocImpact'], "text"), GetSQLValueString($_POST['prodChanges'], "text"), GetSQLValueString($_POST['engineer'], "int"), GetSQLValueString($_POST['startHour'] . $_POST['startMinute'] . "00", "int"), GetSQLValueString($_POST['estHours'], "int"), GetSQLValueString($_POST['estMins'], "int"));
+require_once("../inc/class.email.php");
 
-	mysql_select_db($database_connProdOps, $connProdOps);
-	$Result1 = mysql_query($insertSQL, $connProdOps) or die(mysql_error());
+$args = array(
+	 'MM_insert' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'MM_update' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'startDate' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'reason' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'customerImpact' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'nocImpact' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'prodChanges' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'engineer' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'startHour' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'startMinute' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'estHours' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'estMins' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'project' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'status' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'maintenance' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'projectEvent' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'module' => FILTER_SANITIZE_SPECIAL_CHARS,
+);
+$my_post = filter_input_array(INPUT_GET, $args);
+$my_server = filter_input_array(INPUT_SERVER, array(
+	 'QUERY_STRING' => FILTER_SANITIZE_SPECIAL_CHARS,
+	 'HTTP_HOST' => FILTER_SANITIZE_SPECIAL_CHARS,
+		  ), true);
+
+if ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "maintenanceNotif1")) {
+	$insertSQL = "INSERT INTO maintenancenotifs (startDate, reason, customerImpact, nocImpact, prodChanges, employeeID, startTime, estimatedHours, estimatedMinutes) VALUES"
+			  . " ('{$my_post['startDate']}', '{$my_post['reason']}', '{$my_post['customerImpact']}', '{$my_post['nocImpact']}', '{$my_post['prodChanges']}', {$my_post['engineer']}"
+			  . ", {$my_post['startHour']}{$my_post['startMinute']}00, {$my_post['estHours']}, {$my_post['estMins']})";
+	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 
 	global $lastID;
-	$lastID = mysql_insert_id();
+	$lastID = $conn->insert_id;
 
 	$insertGoTo = "maintenance.php?sent=y&function=view&maintenance=" . $lastID;
-	if (isset($_SERVER['QUERY_STRING'])) {
+	if (isset($my_server['QUERY_STRING'])) {
 		$insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
-		$insertGoTo .= $_SERVER['QUERY_STRING'];
+		$insertGoTo .= $my_server['QUERY_STRING'];
 	}
-	header(sprintf("Location: %s", $insertGoTo));
+	header("Location: $insertGoTo");
 }
 
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "maintenanceUpdate")) {
-	$updateSQL = sprintf("UPDATE maintenancenotifs SET maintenancenotifs.status=%s WHERE maintenancenotifs.maintenanceNotifsID=%s", GetSQLValueString($_POST['status'], "text"), GetSQLValueString($_POST['maintenance'], "int"));
+if ((isset($my_post["MM_update"])) && ($my_post["MM_update"] == "maintenanceUpdate")) {
+	$updateSQL = "UPDATE maintenancenotifs SET maintenancenotifs.status='{$my_post['status']}' WHERE maintenancenotifs.maintenanceNotifsID={$my_post['maintenance']}";
+	$Result1 = $con->query($updateSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 
-	mysql_select_db($database_connProdOps, $connProdOps);
-	$Result1 = mysql_query($updateSQL, $connProdOps) or die(mysql_error());
-
-	$updateGoTo = "../statusReports/statusReport.php?function=add&maintenance=" . $_POST['maintenance'];
-	if (isset($_SERVER['QUERY_STRING'])) {
+	$updateGoTo = "../statusReports/statusReport.php?function=add&maintenance=" . $my_post['maintenance'];
+	if (isset($my_server['QUERY_STRING'])) {
 		$updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
-		$updateGoTo .= $_SERVER['QUERY_STRING'];
+		$updateGoTo .= $my_server['QUERY_STRING'];
 	}
-	header(sprintf("Location: %s", $updateGoTo));
+	header("Location: $updateGoTo");
 }
 
 //populate projects xreference table
-if (isset($_POST['project'])) {
-	$insertSQL = sprintf("INSERT INTO projecttasksxmodules (projectID, projectTaskID, `module`, moduleID) VALUES (%s, %s, %s, LAST_INSERT_ID())", GetSQLValueString($_POST['project'], "int"), GetSQLValueString($_POST['projectEvent'], "int"), GetSQLValueString($_POST['module'], "text"));
-
-	mysql_select_db($database_connProdOps, $connProdOps);
-	$Result1 = mysql_query($insertSQL, $connProdOps) or die(mysql_error());
+if (isset($my_post['project'])) {
+	$insertSQL = "INSERT INTO projecttasksxmodules (projectID, projectTaskID, `module`, moduleID) VALUES"
+			  . " ({$my_post['project']}, {$my_post['projectEvent']}, '{$my_post['module']}', LAST_INSERT_ID())";
+	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 }
 
 //maintenance notification
-mysql_select_db($database_connProdOps, $connProdOps);
-$query_rsMaintenanceNotif = sprintf("SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.customerImpact, maintenancenotifs.nocImpact, maintenancenotifs.prodChanges, TIME_FORMAT(startTime, '%%H:%%i') as startTime, maintenancenotifs.employeeID, maintenancenotifs.estimatedHours, maintenancenotifs.estimatedMinutes, DATE_FORMAT(startDate, '%%m/%%d/%%Y') as startDate, employees.displayName, maintenancenotifs.status FROM maintenancenotifs, employees WHERE maintenancenotifs.maintenanceNotifsID = %s AND maintenancenotifs.employeeID=employees.employeeID", $lastID);
-$rsMaintenanceNotif = mysql_query($query_rsMaintenanceNotif, $connProdOps) or die(mysql_error());
-$row_rsMaintenanceNotif = mysql_fetch_assoc($rsMaintenanceNotif);
-$totalRows_rsMaintenanceNotif = mysql_num_rows($rsMaintenanceNotif);
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+$query_rsMaintenanceNotif = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.customerImpact, maintenancenotifs.nocImpact"
+		  . ", maintenancenotifs.prodChanges, TIME_FORMAT(startTime, '%%H:%%i') as startTime, maintenancenotifs.employeeID, maintenancenotifs.estimatedHours"
+		  . ", maintenancenotifs.estimatedMinutes, DATE_FORMAT(startDate, '%%m/%%d/%%Y') as startDate, employees.displayName, maintenancenotifs.status"
+		  . " FROM maintenancenotifs, employees"
+		  . " WHERE maintenancenotifs.maintenanceNotifsID = $lastID AND maintenancenotifs.employeeID=employees.employeeID";
+$rsMaintenanceNotif = $conn->query($query_rsMaintenanceNotif) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
+$row_rsMaintenanceNotif = $rsMaintenanceNotif->fetch_assoc();
+$totalRows_rsMaintenanceNotif = $rsMaintenanceNotif->num_rows;
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Submitting Maintenance Notification..</title>
@@ -55,42 +82,25 @@ $totalRows_rsMaintenanceNotif = mysql_num_rows($rsMaintenanceNotif);
 	</head>
 	<body>
 		<?php
-		require_once("../inc/class.phpmailer.php");
-		require_once("../inc/class.smtp.php");
-		require_once("../inc/phpmailer.lang-en.php");
+		$email = new tEmail();
 
-		$mail = new PHPMailer();
+		if (($my_post['prodOps'] == 'y')) {
+			$email->AddAddress("rflow@markssystems.com", "masFlight Operations US");
+		}
+		if (($my_post['noc'] == 'y')) {
+			$email->AddAddress("rflow@markssystems.com", "NOC");
+		}
+		if (($my_post['neteng'] == 'y')) {
+			$email->AddAddress("rflow@markssystems.com", "NetEng");
+		}
+		if (($my_post['syseng'] == 'y')) {
+			$email->AddAddress("rflow@markssystems.com", "SysEng");
+		}
+		if ((isset($my_post['cc'])) && ($my_post['cc'] != null)) {
+			$email->AddAddress("" . $my_post['cc'] . "", "cc");
+		}
+		$email->AddReplyTo("MaintenanceNotifications@sap.com", "Maintenance Notifications");
 
-		$mail->IsSMTP();			// set mailer to use SMTP
-		$mail->SMTPSecure = 'ssl';
-		$mail->SMTPAuth = true;
-		$mail->Host = "smtp.gmail.com";
-		$mail->Port = "465";
-		$mail->Username = "mailer@markssystems.com";
-		$mail->Password = "M@ilerMF";
-		$mail->AddReplyTo("mailer²markssystems.com");
-		$mail->From = "mailer@markssystems.com";
-		$mail->FromName = "Maintenance Notification";
-
-		if (($_POST['prodOps'] == 'y')) {
-			$mail->AddAddress("rflow@markssystems.com", "masFlight Operations US");
-		}
-		if (($_POST['noc'] == 'y')) {
-			$mail->AddAddress("rflow@markssystems.com", "NOC");
-		}
-		if (($_POST['neteng'] == 'y')) {
-			$mail->AddAddress("rflow@markssystems.com", "NetEng");
-		}
-		if (($_POST['syseng'] == 'y')) {
-			$mail->AddAddress("rflow@markssystems.com", "SysEng");
-		}
-		if ((isset($_POST['cc'])) && ($_POST['cc'] != null)) {
-			$mail->AddAddress("" . $_POST['cc'] . "", "cc");
-		}
-		$mail->AddReplyTo("MaintenanceNotifications@sap.com", "Maintenance Notifications");
-
-		$mail->WordWrap = 75;			  // set word wrap to 50 characters
-		$mail->IsHTML(true);				// set email format to HTML
 		$body = "*********************<br />";
 		$body .= "<b>Start Date:</b> " . $row_rsMaintenanceNotif['startDate'] . "<br />";
 		$body .= "<b>Start Time:</b> " . $row_rsMaintenanceNotif['startTime'] . "&nbsp;EST<br />";
@@ -147,18 +157,22 @@ $totalRows_rsMaintenanceNotif = mysql_num_rows($rsMaintenanceNotif);
 
 		$subject = "Maintenance Notification (Internal): " . $row_rsMaintenanceNotif['reason'];
 
-		$mail->Subject = $subject;
-		$mail->Body = $body;
-		$mail->AltBody = $txtbody;
+		$email->set_subject($subject);
+		$email->set_body($body);
+		$email->set_alt_body($txtbody);
 
-		if (!$mail->Send()) {
-			echo "This Maintenance Notification could not be sent successfully. Please check the errors below or contact Adam.<br />";
-			echo "Mailer Error: " . $mail->ErrorInfo;
+		if (!$email->send()) {
+			?>
+			<div class='alert alert-danger' role='alert'>
+				<strong>Error!</strong> This Maintenance Notification could not be sent successfully. Please check the errors below or contact El Chapulin Colorado.<br />
+				<strong>Mailer Error:</strong> <?php echo $email->get_error(); ?>
+			</div>
+			<?php
 			exit;
 		}
-
-		echo "Maintenance Notification sent successfully!";
-		?></body>
+		?>
+		<div class="alert alert-success" role="alert">
+			<strong>Success!</strong> Maintenance Notification sent successfully!
+		</div>
+	</body>
 </html>
-<?php
-mysql_free_result($rsGetUserFriendlyValues);

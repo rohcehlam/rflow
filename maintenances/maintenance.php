@@ -71,7 +71,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar(3, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\">Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\">Logout</a></li>\n") ?>
+				<?php build_navbar(3, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a></li>\n") ?>
 			</header> 
 		</div>
 
@@ -79,12 +79,9 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 			<div class="container-fluid">
 
-				<div class="page-header">
-					<h3>Maintenance</h3>
-					<!--
-					<p class="lead">&nbsp;</p>
-					-->
-				</div>
+				<?php
+				buildNewHeader('maintenances.php', 'Maintenances', "{$my_get['function']} a Maintenance Notification");
+				?>
 
 				<div class='row'>
 					<div class='col-md-2'></div>
@@ -271,7 +268,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 							<div class="form-group">
 								<div class="col-xs-offset-2 col-xs-10">
-									<button type="submit" class="btn btn-primary">Send Maintenance Notification</button>
+									<button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Maintenance Notification</button>
 									<?php if ($my_get['function'] != 'add') { ?>
 										<a style="font-weight: bold;" href="../statusReports/statusReport.php?function=add&amp;maintenance=<?php
 										echo $row_rsMaintenanceNotif['maintenanceNotifsID'];
