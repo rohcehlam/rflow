@@ -75,12 +75,12 @@ if (filter_input(INPUT_GET, 'app', FILTER_SANITIZE_SPECIAL_CHARS)) {
 }
 
 $query_limit_rsChangeRequests = sprintf("%s LIMIT %d, %d", $query_rsChangeRequests, $startRow_rsChangeRequests, $maxRows_rsChangeRequests);
-$rsChangeRequests = $conn->query($query_limit_rsChangeRequests);
+$rsChangeRequests = $conn->query($query_limit_rsChangeRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsChangeRequests = $rsChangeRequests->fetch_assoc();
 
 $totalRows_rsChangeRequests = filter_input(INPUT_GET, 'totalRows_rsChangeRequests', FILTER_SANITIZE_SPECIAL_CHARS);
 if (!$totalRows_rsChangeRequests) {
-	$all_rsChangeRequests = $conn->query($query_rsChangeRequests);
+	$all_rsChangeRequests = $conn->query($query_rsChangeRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 	$totalRows_rsChangeRequests = $all_rsChangeRequests->num_rows;
 }
 $totalPages_rsChangeRequests = ceil($totalRows_rsChangeRequests / $maxRows_rsChangeRequests) - 1;
@@ -104,7 +104,7 @@ $queryString_rsChangeRequests = sprintf("&totalRows_rsChangeRequests=%d%s", $tot
 
 //select applications for application filter list
 $query_rsApps = "SELECT applicationID, application FROM applications ORDER BY application ASC";
-$rsApps = $conn->query($query_rsApps);
+$rsApps = $conn->query($query_rsApps) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsApps = $rsApps->fetch_assoc();
 $totalRows_rsApps = $rsApps->num_rows;
 
@@ -119,252 +119,66 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 	<head>
 		<title><?php buildTitle("Change Requests"); ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link href="../inc/global.css" rel="stylesheet" type="text/css" />
-		<link href="../inc/menu.css" rel="stylesheet" type="text/css" />
-		<link rel="shortcut icon" href="../images/logos/favicon.ico" type="image/x-icon" />
-		<script type="text/javascript" src="../inc/js/menu.js"></script>
-		<script type="text/javascript" src="../inc/js/js.js"></script>
-		<script type="text/javascript" src="../inc/js/calendarDateInput2.js"></script>
-		<script type="text/javascript">
-			var tabs = new Array();
-			tabs[0] = "none";
-			tabs[1] = "app";
-			tabs[2] = "engineer";
-			tabs[3] = "status";
-			tabs[4] = "summary";
-		</script>        
+		<?php build_header(); ?>
 	</head>
-	<body>
-		<?php buildMenu(); ?>
-		<script type="text/javascript">
-			dolphintabs.init("menunav", 1)
-		</script>
-		<div class="casing" align="left">
-			<?php buildHeader("rfa", null, "rfas", "RFCs", "Add an RFC"); ?>
-			<!-- TABS -->
-			<div id="tabs">
-				<span class="<?php
-				if ($varApp_rsMaintenanceNotifs || $varEmployee_rsMaintenanceNotifs || $varrequestOrigin_rsMaintenanceNotifs || $varStatus_rsMaintenanceNotifs || $varsubapp_rsMaintenanceNotifs || $varsummary_rsMaintenanceNotifs) {
-					echo "tabbak";
-				} else {
-					echo "tabfor";
-				}
-				?>" id="tab_none"><a href="rfas.php?filter=none">No Filter</a></span>
-						<?php
-						tab("app", "Application");
-						tab("engineer", "Engineer");
-						//tab("requestOrigin","Origin");
-						tab("status", "Status");
-						tab("summary", "Summary");
-						?>
-				<!-- TABS BODY -->
-				<div id="tabscontent">
-					<!-- DETAILS -->
-					<a name="tabnone" id="tabnone"></a>
-					<div id="tabscontent_none"<?php
-					if (!$varApp_rsMaintenanceNotifs || !$varEmployee_rsMaintenanceNotifs || !$varrequestOrigin_rsMaintenanceNotifs || !$varStatus_rsMaintenanceNotifs || !$varsummary_rsMaintenanceNotifs) {
-						echo " style=\"display: none;\"";
-					}
-					?>>Select a tab to filter the available RFCs</div>
-					<a name="tabapp" id="tabapp"></a>
+	<body class="skin-blue layout-top-nav">
 
-					<div id="tabscontent_app"<?php
-					if (!$varApp_rsMaintenanceNotifs) {
-						echo " style=\"display: none;\"";
-					}
-					?>>
-						<form action="rfas.php" method="get" name="filterApp" id="filterApp">
-							Display RFCs for
-							<select name="app" id="app">
-								<option value="">Select Application</option>
-								<?php do { ?>
-									<option value="<?php echo $row_rsApps['applicationID'] ?>"<?php
-									if ($varApp_rsMaintenanceNotifs && ($row_rsApps['applicationID'] == $varApp_rsMaintenanceNotifs)) {
-										echo " selected=\"selected\"";
-									}
-									?>><?php echo $row_rsApps['application'] ?></option>
-											  <?php
-										  } while ($row_rsApps = $rsApps->fetch_assoc());
-										  if ($rsApps->num_rows > 0) {
-											  $rsApps->data_seek(0);
-											  $row_rsApps = $rsApps->fetch_assoc();
-										  }
-										  ?>
-							</select>
-							<input type="submit" name="Submit" value="Submit" />
-						</form>
-					</div>
+		<div class="wrapper">
+			<header class="main-header">
+				<?php build_navbar(1, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a></li>\n") ?>
+			</header> 
+		</div>
 
-					<a name="taborigin" id="taborigin"></a>
-					<div id="tabscontent_origin"<?php
-					if ($varorigin_rsMaintenanceNotifs) {
-						echo " style=\"display: none;\"";
-					}
-					?>>
-						<form action="rfas.php" method="get" name="filterOrigin" id="filterOrigin">
-							Display RFCs for <select name="origin" id="origin">
-								<option value="">Select Origin</option>
-								<option value="Ticket"<?php
-								if (isset($varorigin_rsMaintenanceNotifs) && ($row_rsRFA['requestOrigin'] == $varEmployee_rsMaintenanceNotifs)) {
-									echo " selected=\"selected\"";
-								}
-								?>><?php echo $row_rsEngineers['displayName'] ?></option>
-							</select>&nbsp;#<input type="text" name="ticket" id="ticket"<?php
-							if ($varticket_rsMaintenanceNotifs) {
-								echo " value=\"$varticket_rsMaintenanceNotifs\"";
-							}
-							?> size="10" />
-							<input type="submit" name="Submit" value="Submit" />
-						</form>
-					</div>
+		<div class="content-wrapper">
 
-					<a name="tabengineer" id="tabengineer"></a>
-					<div id="tabscontent_engineer"<?php
-					if ($varEEmployee_rsMaintenanceNotifs) {
-						echo " style=\"display: none;\"";
-					}
-					?>>
-						<form action="rfas.php" method="get" name="filterEngineer" id="filterEngineer">
-							Display RFCs submitted by <select name="engineer" id="engineer">
-								<option value="">Select Engineer</option>
-								<?php do { ?>
-									<option value="<?php echo $row_rsEngineers['employeeID'] ?>"<?php
-									if (isset($varEmployee_rsMaintenanceNotifs) && ($row_rsEngineers['employeeID'] == $varEmployee_rsMaintenanceNotifs)) {
-										echo " selected=\"selected\"";
-									}
-									?>><?php echo $row_rsEngineers['displayName'] ?></option>
-											  <?php
-										  } while ($row_rsEngineers = $rsEngineers->fetch_assoc());
-										  if ($rsEngineers->num_rows > 0) {
-											  $rsEngineer->data_seek(0);
-											  $row_rsEngineers = $rsEngineers->fetch_assoc();
-										  }
-										  ?>
-							</select>
-							<input type="submit" name="Submit" value="Submit" />
-						</form>
-					</div>
+			<div class="container-fluid">
 
-					<a name="tabsummary" id="tabsummary"></a>
-					<div id="tabscontent_summary"<?php
-					if ($varsummary_rsMaintenanceNotifs) {
-						echo " style=\"display: none;\"";
-					}
-					?>>
-						<form action="rfas.php" method="get" name="filterSummary" id="filterSummary">
-							Display RFCs with the Summary containing <input type="text" name="summary" id="summary"<?php
-							if ($varsummary_rsMaintenanceNotifs) {
-								echo " value=\"$varsummary_rsMaintenanceNotifs\"";
-							}
-							?> size="20" />
-							<input type="submit" name="Submit" value="Submit" />
-						</form>
-					</div>    
-
-					<a name="tabstatus" id="tabstatus"></a>
-					<div id="tabscontent_status"<?php
-					if ($varStatus_rsMaintenanceNotifs) {
-						echo " style=\"display: none;\"";
-					}
-					?>>
-						<form action="rfas.php" method="get" name="filterStatus" id="filterStatus">
-							Display <select name="status" id="status">
-								<option value="">Select Status</option>
-								<?php
-								$select_selected = filter_input(INPUT_GET, 'status', FILTER_SANITIZE_SPECIAL_CHARS);
-								$helper_select = array(
-									 'All' => 'All',
-									 'Pending Approval' => 'Pending Approval',
-									 'Pre-approved' => 'Pre-approved',
-									 'Approved' => 'Approved',
-									 'Declined' => 'Declined',
-									 'Returned' => 'Returned',
-									 'Submitted for CAB Approval' => 'Submitted for CAB Approval',
-									 'Approved by CAB' => 'Approved by CAB',
-									 'Rejected by CAB' => 'Rejected by CAB',
-									 'Returned by CAB' => 'Returned by CAB',
-									 'Completed' => 'Completed',
-									 'Resolved' => 'Resolved',
-								);
-								foreach ($helper_select as $key => $value) {
-									echo "<option value='$key' " . (($select_selected == $key) ? "selected='selected'" : '') . ">$value</option>";
-								}
-								?>
-							</select>&nbsp;Maintenance Notifications
-							<input type="submit" name="Submit" value="Submit" />
-						</form>
-					</div>
-
-				</div>
-			</div>                    
-			<?php
-			if ($totalRows_rsChangeRequests > 0) {
-				echo "<h3><em>Pending</em> RFCs</h3>";
-			} else {
-				echo "<h3>There are no <em>pending</em> RFCs</h3>";
-			}
-
-//hide the data table if there are no records to show
-			if ($totalRows_rsChangeRequests > 0) {
+				<?php
+				buildNewHeader('rfas.php', 'RFCs', '', 'rfa.php', 'Add an RFC');
 				?>
-				<table class="data" align="center" cellpadding="2" cellspacing="0">
-					<thead>
-						<tr>
-							<th>Date<br />Submitted</th>
-							<th>Submitted By</th>
-							<th>Summary</th>
-							<th>App</th>
-							<th>Status</th>
-							<th>Window</th>
-							<?php sudoAuthData(null, null, "th", "edit", null); ?>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-						while ($row_rsChangeRequests = $rsChangeRequests->fetch_assoc()) {
-							?>
-							<tr>
-								<td><?php echo $row_rsChangeRequests['dateSubmitted']; ?></td>
-								<td><?php echo $row_rsChangeRequests['displayName']; ?></td>
-								<td><?php echo "<a href=\"rfa.php?function=view&amp;rfa=" . $row_rsChangeRequests['changeRequestID'] . "\">" . $row_rsChangeRequests['summary'] . "</a>"; ?></td>
-								<td><?php echo $row_rsChangeRequests['application']; ?></td>
-								<td><?php echo $row_rsChangeRequests['status']; ?></td>
-								<td><?php echo $row_rsChangeRequests['windowStartDate']; ?></td>
-								<?php sudoAuthData("rfa.php", "Update RFA", "td", "edit", "function=update&amp;rfa=" . $row_rsChangeRequests['changeRequestID']); ?>
-							</tr>
-						<?php } ?>
-					</tbody>
-				</table>
 
-				<div id="count">Viewing <?php echo ($startRow_rsChangeRequests + 1) ?> through <?php echo min($startRow_rsChangeRequests + $maxRows_rsChangeRequests, $totalRows_rsChangeRequests) ?> of <?php echo $totalRows_rsChangeRequests ?> Change Requests</div>
-				<?php if ($totalRows_rsChangeRequests > 25) { ?>
-					<table class="pagination" width="50%" align="center">
-						<tr>
-							<td width="23%" align="center"><?php if ($pageNum_rsChangeRequests > 0) { // Show if not first page           ?>
-									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, 0, $queryString_rsChangeRequests); ?>"><img src="../images/icons/first.jpg" alt="First" /></a>
-								<?php } // Show if not first page       ?>
-							</td>
-							<td width="31%" align="center"><?php if ($pageNum_rsChangeRequests > 0) { // Show if not first page           ?>
-									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, max(0, $pageNum_rsChangeRequests - 1), $queryString_rsChangeRequests); ?>"><img src="../images/icons/prev.jpg" alt="Previous" /></a>
-								<?php } // Show if not first page       ?>
-							</td>
-							<td width="23%" align="center"><?php if ($pageNum_rsChangeRequests < $totalPages_rsChangeRequests) { // Show if not last page           ?>
-									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, min($totalPages_rsChangeRequests, $pageNum_rsChangeRequests + 1), $queryString_rsChangeRequests); ?>"><img src="../images/icons/next.jpg" alt="Next" /></a>
-								<?php } // Show if not last page       ?>
-							</td>
-							<td width="23%" align="center"><?php if ($pageNum_rsChangeRequests < $totalPages_rsChangeRequests) { // Show if not last page           ?>
-									<a href="<?php printf("%s?pageNum_rsChangeRequests=%d%s", $currentPage, $totalPages_rsChangeRequests, $queryString_rsChangeRequests); ?>"><img src="../images/icons/final.jpg" alt="Final" /></a>
-								<?php } // Show if not last page       ?>
-							</td>
-						</tr>
+				<div class="row">
+					<table id='rfas_table' class="showMySettings table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Date<br />Submitted</th>
+								<th>Submitted By</th>
+								<th>Summary</th>
+								<th>App</th>
+								<th>Status</th>
+								<th>Window</th>
+								<?php sudoAuthData(null, null, "th", "edit", null); ?>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							while ($row_rsChangeRequests = $rsChangeRequests->fetch_assoc()) {
+								?>
+								<tr>
+									<td><?php echo $row_rsChangeRequests['dateSubmitted']; ?></td>
+									<td><?php echo $row_rsChangeRequests['displayName']; ?></td>
+									<td><?php echo "<a href=\"rfa.php?function=view&amp;rfa=" . $row_rsChangeRequests['changeRequestID'] . "\">" . $row_rsChangeRequests['summary'] . "</a>"; ?></td>
+									<td><?php echo $row_rsChangeRequests['application']; ?></td>
+									<td><?php echo $row_rsChangeRequests['status']; ?></td>
+									<td><?php echo $row_rsChangeRequests['windowStartDate']; ?></td>
+									<?php sudoAuthData("rfa.php", "Update RFA", "td", "edit", "function=update&amp;rfa=" . $row_rsChangeRequests['changeRequestID']); ?>
+								</tr>
+							<?php } ?>
+						</tbody>
 					</table>
-					<?php
-				}
-			}
-			?>
-			<?php buildFooter("0"); ?>
-		</div>
-		</div>
+
+					<script type="text/javascript">
+						$(document).ready(function () {
+							$('#rfas_table').dataTable();
+						});
+					</script>
+
+				</div> <!-- /row -->
+
+			</div> <!-- /container -->
+		</div> <!-- /content-wrapper -->
+
+		<?php build_footer(); ?>
 	</body>
 </html>
 

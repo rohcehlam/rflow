@@ -80,7 +80,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 			<div class="container-fluid">
 
 				<?php
-				buildNewHeader('maintenances.php', 'Maintenances', "{$my_get['function']} a Maintenance Notification");
+				buildNewHeader('maintenances.php', 'Maintenance Notifications', "{$my_get['function']} a Maintenance Notification");
 				?>
 
 				<div class='row'>
@@ -145,7 +145,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 									</div>
 									<?php
 								} else {
-									echo "<div class='col-xs-8'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startTime']}&nbsp;</p></div>\n";
+									echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startTime']}&nbsp;</p></div>\n";
 								}
 								?>
 								<label for='estHours' class="control-label col-xs-2">Estimated Duration:</label>
