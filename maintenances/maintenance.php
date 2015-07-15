@@ -60,7 +60,11 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 		<?php build_header(); ?>
 
+		<script src="../js/bootstrap-datepicker.js"></script>
+		<link rel="stylesheet" href="../css/datepicker.css"/>
+		<!--
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+		-->
 
 	</head>
 	<body class="skin-blue layout-top-nav">
@@ -94,12 +98,10 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 										echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startDate']}</p>\n";
 									} else {
 										?>
-										<script>
-											$(function () {
-												$("#startDate").datepicker();
-											});
-										</script>
-										<input type="text" id="startDate" class="form-control" placeholder="<?php echo date('m/d/Y') ?>"/>
+										<div class="input-group">
+											<span class="input-group-addon" onclick='opendatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
+											<input type="text" id="startDate" class="form-control" placeholder="<?php echo date('m/d/Y') ?>"/>
+										</div>
 										<?php
 									}
 									?>
@@ -131,57 +133,43 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 							<div class='form-group'>
 								<label for='' class="control-label col-xs-2">Start Time:</label>
-								<div class="col-xs-4">
-									<?php if ($my_get['function'] != "view") { ?>
-										<div class='col-xs-4'>
+								<?php if ($my_get['function'] != "view") { ?>
+									<div class='col-xs-2'>
+										<div class="input-group">
 											<input type="text" name="startHour" id="startHour" value="" maxlength="2" class='form-control' placeholder='<?php echo date('H'); ?>'/>
+											<span class="input-group-addon">&nbsp;<strong>:</strong>&nbsp;</span>
 										</div>
-										<div class='col-xs-4'>
+									</div>
+									<div class='col-xs-2'>
+										<div class="input-group">
 											<input type="text" name="startMinute" id="startMinute" value="" maxlength="2" class='form-control' placeholder='<?php echo date('i'); ?>'/>
+											<span class="input-group-addon">UTC</span>
 										</div>
-										<?php
-									} else {
-										echo "<div class='col-xs-8'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startTime']}&nbsp</p></div>\n";
-									}
-									?>
-									<div class='col-xs-4'><strong>UTC</strong></div>
-								</div>
+									</div>
+									<?php
+								} else {
+									echo "<div class='col-xs-8'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startTime']}&nbsp;</p></div>\n";
+								}
+								?>
 								<label for='estHours' class="control-label col-xs-2">Estimated Duration:</label>
-								<div class="col-xs-4">
-									<?php if ($my_get['function'] != "view") { ?>
-										<div class='col-xs-3'>
+								<?php if ($my_get['function'] != "view") { ?>
+									<div class='col-xs-2'>
+										<div class="input-group">
+											<span class="input-group-addon">Hour(s)</span>
 											<input type="text" name="estHours" id="estHours" maxlength="2"  class='form-control' placeholder='00'/>
 										</div>
-										<div class='col-xs-3'>
-											<label for="estHours">&nbsp;hour(s)</label>
-										</div>
-										<div class='col-xs-3'>
+									</div>
+									<div class='col-xs-2'>
+										<div class="input-group">
+											<span class="input-group-addon">Minute(s)</span>
 											<input type="text" name="estMins" id="estMins" maxlength="2" tabindex="2" class='form-control' placeholder='30'/>
 										</div>
-										<div class='col-xs-3'>
-											<label for="estMins">&nbsp;minute(s)</label>
-										</div>
-										<?php
-									} else {
-										if ($row_rsMaintenanceNotif['estimatedHours'] > "1") {
-											echo $row_rsMaintenanceNotif['estimatedHours'] . " hours";
-										} elseif ($row_rsMaintenanceNotif['estimatedHours'] == "1") {
-											echo $row_rsMaintenanceNotif['estimatedHours'] . " hour";
-										} else {
-											echo "";
-										}
-
-										//start estimated minutes
-										if ($row_rsMaintenanceNotif['estimatedMinutes'] > "1") {
-											echo " " . $row_rsMaintenanceNotif['estimatedMinutes'] . " minutes";
-										} elseif ($row_rsMaintenanceNotif['estimatedMinutes'] == "1") {
-											echo " " . $row_rsMaintenanceNotif['estimatedMinutes'] . " minute";
-										} else {
-											echo "";
-										}
-									}
-									?>
-								</div>
+									</div>
+									<?php
+								} else {
+									echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['estimatedHours']} Hours(s)&nbsp;{$row_rsMaintenanceNotif['estimatedMinutes']} Minute(s)</p></div>\n";
+								}
+								?>
 							</div>
 
 							<div class='form-group'>
@@ -295,6 +283,14 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 								</div>
 							</div>
 						</form>
+						<script>
+							$(function () {
+								$("#startDate").datepicker();
+							});
+							function opendatepicker() {
+								$("#startDate").datepicker("show");
+							}
+						</script>
 					</div>
 					<div class='col-md-2'></div>
 				</div>
