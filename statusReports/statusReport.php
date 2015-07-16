@@ -383,13 +383,11 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 						<script>
 							$(function () {
 								$("#startDate").datepicker();
+								$("#endDate").datepicker();
 							});
 							function openstartdatepicker() {
 								$("#startDate").datepicker("show");
 							}
-							$(function () {
-								$("#endDate").datepicker();
-							});
 							function openstartdatepicker() {
 								$("#endDate").datepicker("show");
 							}
