@@ -170,19 +170,17 @@ function sudoAuthDataOLD($linkedPage, $linkedText, $tdth, $icon, $param) {
 }
 
 function sudoAuthData($linkedPage, $linkedText, $tdth, $icon, $param) {
-	global $sudo;
-	$sudo = $_SESSION['MM_Username'];
-	if (isset($sudo)) {
+	if (isset($_SESSION['MM_Username'])) {
 		if ($tdth == "th") {
-			echo "<th";
-			if ($icon == "edit") {
-				echo " class=\"edit\"";
-			} elseif ($icon == "delete") {
-				echo " class=\"delete\"";
-			}
-			echo "></th>\n";
+			echo "<th></th>\n";
 		} elseif ($tdth == "td") {
-			echo "<td align=\"center\"><a title=\"" . $linkedText . "\" href=\"" . $linkedPage . "?" . $param . "\"><img src=\"../images/icons/" . $icon . ".gif\" alt=\"" . $icon . "\" /></a></td>\n";
+			?>
+			<td align="center">
+				<a title="<?php echo $linkedText; ?>" href="<?php echo "{$linkedPage}?{$param}"; ?>">
+					<span class="glyphicon <?php echo (($icon == 'edit') ? 'glyphicon-edit' : 'glyphicon-remove-sign'); ?>"></span>
+				</a>
+			</td>
+			<?php
 		}
 	}
 }
@@ -196,7 +194,8 @@ function buildFooter($colspan, $year = "2015", $version = "1.1") {
 }
 
 function sentSuccessful($message) {
-	if ((isset($_GET["sent"])) && ($_GET["sent"] == 'y')) {
+	$my_get = filter_input_array(INPUT_GET, array('sent' => FILTER_SANITIZE_SPECIAL_CHARS,));
+	if ((isset($my_get['sent'])) && ($my_get['sent'] == 'y')) {
 		echo "<div class=\"successful\">" . $message . "</div>\n";
 	}
 }
@@ -350,7 +349,7 @@ function build_header() {
 	<?php
 }
 
-function build_navbar($active = 0, $extra = '') {
+function build_navbar($conn, $active = 0) {
 	?>
 	<nav class="navbar navbar-fixed-top">
 		<div class="container-fluid">
@@ -371,7 +370,27 @@ function build_navbar($active = 0, $extra = '') {
 			<!-- Navbar Right Menu -->
 			<div class="navbar-custom-menu">
 				<ul class="nav navbar-nav">
-					<?php echo $extra ?>
+					<?php if (!isset($_SESSION['employee'])) { ?>
+						<li>
+							<a href="index.php"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>
+						</li>
+						<?php
+					} else {
+						$logoutAction = filter_input(INPUT_SERVER, 'PHP_SELF', FILTER_SANITIZE_SPECIAL_CHARS) . "?doLogout=true";
+						if (filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_SANITIZE_SPECIAL_CHARS)) {
+							$logoutAction .="&" . htmlentities(filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_SANITIZE_SPECIAL_CHARS));
+						}
+						$query_rsEmployeeInfo = "SELECT employeeID, firstName, displayName FROM employees WHERE employeeID = {$_SESSION['employee']}";
+						$rsEmployeeInfo = $conn->query($query_rsEmployeeInfo) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
+						$row_rsEmployeeInfo = $rsEmployeeInfo->fetch_assoc();
+						?>
+						<li>
+							<a href='#'>Welcome, <?php echo $row_rsEmployeeInfo['firstName']; ?>!</a>
+						</li>
+						<li>
+							<a href="<?php echo $logoutAction; ?>"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a>
+						</li>
+					<?php } ?>
 					<li>&nbsp;</li>
 				</ul>
 			</div>

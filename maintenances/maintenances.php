@@ -18,52 +18,51 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 $currentPage = $my_server["PHP_SELF"];
 
 $maxRows_rsMaintenanceNotifs = 25;
-$pageNum_rsMaintenanceNotifs = 0;
-if (isset($my_get['pageNum_rsMaintenanceNotifs'])) {
-	$pageNum_rsMaintenanceNotifs = $my_get['pageNum_rsMaintenanceNotifs'];
-}
+$pageNum_rsMaintenanceNotifs = (isset($my_get['pageNum_rsMaintenanceNotifs']) ? $my_get['pageNum_rsMaintenanceNotifs'] : 0);
 $startRow_rsMaintenanceNotifs = $pageNum_rsMaintenanceNotifs * $maxRows_rsMaintenanceNotifs;
 
-$varEmployee_rsMaintenanceNotifs = "1";
-if (isset($my_get['employee'])) {
-	$varEmployee_rsMaintenanceNotifs = addslashes($my_get['employee']);
-}
-$varStatus_rsMaintenanceNotifs = "1";
-if (isset($my_get['status'])) {
-	$varStatus_rsMaintenanceNotifs = addslashes($my_get['status']);
-}
+$varEmployee_rsMaintenanceNotifs = (isset($my_get['employee']) ? addslashes($my_get['employee']) : "1");
+$varStatus_rsMaintenanceNotifs = (isset($my_get['status']) ? addslashes($my_get['status']) : "1");
 
-if (isset($my_get['employee'])) {
-	$query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
-			  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
-			  . ", maintenancenotifs.status"
-			  . " FROM maintenancenotifs, employees"
-			  . " WHERE maintenancenotifs.employeeID=employees.employeeID AND maintenancenotifs.employeeID=$varEmployee_rsMaintenanceNotifs"
-			  . " ORDER BY startDateSort DESC, startTimeSort DESC";
-//display all maintenance notifications
-} elseif ((isset($my_get['status'])) && ($my_get['status'] == "All")) {
-	$query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
-			  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
-			  . ", maintenancenotifs.status"
-			  . " FROM maintenancenotifs, employees"
-			  . " WHERE maintenancenotifs.employeeID=employees.employeeID"
-			  . " ORDER BY startDateSort DESC, startTimeSort DESC";
-//display maintenance notifications for the status selected by the user
-} elseif ((isset($my_get['status'])) && ($my_get['status'] != "All")) {
-	$query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
-			  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
-			  . ", maintenancenotifs.status"
-			  . " FROM maintenancenotifs, employees"
-			  . " WHERE maintenancenotifs.status='$varStatus_rsMaintenanceNotifs' AND maintenancenotifs.employeeID=employees.employeeID"
-			  . " ORDER BY startDateSort DESC, startTimeSort DESC";
-} elseif (!isset($my_get['status'])) {
-	$query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
-			  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
-			  . ", maintenancenotifs.status"
-			  . " FROM maintenancenotifs, employees"
-			  . " WHERE maintenancenotifs.employeeID=employees.employeeID AND (maintenancenotifs.status='Open' OR maintenancenotifs.status='Extended')"
-			  . " ORDER BY startDateSort DESC, startTimeSort DESC";
-}
+/*
+  if (isset($my_get['employee'])) {
+  $query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
+  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
+  . ", maintenancenotifs.status"
+  . " FROM maintenancenotifs, employees"
+  . " WHERE maintenancenotifs.employeeID=employees.employeeID AND maintenancenotifs.employeeID=$varEmployee_rsMaintenanceNotifs"
+  . " ORDER BY startDateSort DESC, startTimeSort DESC";
+  //display all maintenance notifications
+  } elseif ((isset($my_get['status'])) && ($my_get['status'] == "All")) {
+  $query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
+  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
+  . ", maintenancenotifs.status"
+  . " FROM maintenancenotifs, employees"
+  . " WHERE maintenancenotifs.employeeID=employees.employeeID"
+  . " ORDER BY startDateSort DESC, startTimeSort DESC";
+  //display maintenance notifications for the status selected by the user
+  } elseif ((isset($my_get['status'])) && ($my_get['status'] != "All")) {
+  $query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
+  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
+  . ", maintenancenotifs.status"
+  . " FROM maintenancenotifs, employees"
+  . " WHERE maintenancenotifs.status='$varStatus_rsMaintenanceNotifs' AND maintenancenotifs.employeeID=employees.employeeID"
+  . " ORDER BY startDateSort DESC, startTimeSort DESC";
+  } elseif (!isset($my_get['status'])) {
+  $query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
+  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
+  . ", maintenancenotifs.status"
+  . " FROM maintenancenotifs, employees"
+  . " WHERE maintenancenotifs.employeeID=employees.employeeID AND (maintenancenotifs.status='Open' OR maintenancenotifs.status='Extended')"
+  . " ORDER BY startDateSort DESC, startTimeSort DESC";
+  }
+ */
+$query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
+		  . ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
+		  . ", maintenancenotifs.status"
+		  . " FROM maintenancenotifs, employees"
+		  . " WHERE maintenancenotifs.employeeID=employees.employeeID AND (maintenancenotifs.status='Open' OR maintenancenotifs.status='Extended')"
+		  . " ORDER BY startDateSort DESC, startTimeSort DESC";
 
 $query_limit_rsMaintenanceNotifs = sprintf("%s LIMIT %d, %d", $query_rsMaintenanceNotifs, $startRow_rsMaintenanceNotifs, $maxRows_rsMaintenanceNotifs);
 $rsMaintenanceNotifs = $conn->query($query_limit_rsMaintenanceNotifs) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
@@ -110,7 +109,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar(2, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a></li>\n") ?>
+				<?php build_navbar($conn, 2); ?>
 			</header> 
 		</div>
 

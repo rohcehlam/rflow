@@ -80,7 +80,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar(2, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a></li>\n") ?>
+				<?php build_navbar($conn, 2); ?>
 			</header> 
 		</div>
 

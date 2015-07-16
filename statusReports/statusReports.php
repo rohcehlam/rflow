@@ -30,29 +30,40 @@ if (isset($my_get['pageNum_rsStatusReports'])) {
 	$pageNum_rsStatusReports = $my_get['pageNum_rsStatusReports'];
 }
 $startRow_rsStatusReports = $pageNum_rsStatusReports * $maxRows_rsStatusReports;
+/*
+  //define various queries for each filter type
+  if (isset($my_get['app'])) {
+  if (!isset($my_get['sortBy'])) {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.applicationID=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varApp_rsStatusReports);
+  } else {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.applicationID=%s ORDER BY %ss.%s %s", $varApp_rsStatusReports, $varSortBy_rsStatusReports, $varSortBy_rsStatusReports, $varSortOrder_rsStatusReports);
+  }
+  } elseif (isset($my_get['customer'])) {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.customerID=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varCarrier_rsStatusReports);
+  } elseif (isset($my_get['employee'])) {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.employeeID=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varEmployee_rsStatusReports);
+  } elseif (isset($my_get['reporttype'])) {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.reportTypeID=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varReportType_rsStatusReports);
+  } elseif (isset($my_get['subject'])) {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.subject REGEXP '%s' ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varSubject_rsStatusReports);
+  } elseif (isset($my_get['ticket'])) {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.magicTicket=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varTicket_rsStatusReports);
+  } elseif (isset($my_get['wrm'])) {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.wrm=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varWRM_rsStatusReports);
+  } else {
+  $query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID ORDER BY statusreports.endDate DESC, statusreports.endTime DESC");
+  }
+ */
+$query_rsStatusReports = "SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application"
+		  . ", customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType"
+		  . ", DATE_FORMAT(endDate, '%m/%d/%Y') as endDate"
+		  . " FROM applications, customers, statusreports, employees, reporttypes"
+		  . " WHERE statusreports.applicationID=applications.applicationID"
+		  . "  AND statusreports.customerID=customers.customerID"
+		  . "  AND statusreports.reportTypeID=reporttypes.reportTypeID"
+		  . "  AND statusreports.employeeID=employees.employeeID"
+		  . " ORDER BY statusreports.endDate DESC, statusreports.endTime DESC";
 
-//define various queries for each filter type
-if (isset($my_get['app'])) {
-	if (!isset($my_get['sortBy'])) {
-		$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.applicationID=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varApp_rsStatusReports);
-	} else {
-		$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.applicationID=%s ORDER BY %ss.%s %s", $varApp_rsStatusReports, $varSortBy_rsStatusReports, $varSortBy_rsStatusReports, $varSortOrder_rsStatusReports);
-	}
-} elseif (isset($my_get['customer'])) {
-	$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.customerID=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varCarrier_rsStatusReports);
-} elseif (isset($my_get['employee'])) {
-	$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.employeeID=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varEmployee_rsStatusReports);
-} elseif (isset($my_get['reporttype'])) {
-	$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.reportTypeID=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varReportType_rsStatusReports);
-} elseif (isset($my_get['subject'])) {
-	$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.subject REGEXP '%s' ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varSubject_rsStatusReports);
-} elseif (isset($my_get['ticket'])) {
-	$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.magicTicket=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varTicket_rsStatusReports);
-} elseif (isset($my_get['wrm'])) {
-	$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID AND statusreports.wrm=%s ORDER BY statusreports.endDate DESC, statusreports.endTime DESC", $varWRM_rsStatusReports);
-} else {
-	$query_rsStatusReports = sprintf("SELECT statusreports.statusReportID, statusreports.applicationID, statusreports.customerID, statusreports.employeeID, applications.application, customers.customer, employees.displayName, statusreports.magicTicket, statusreports.subject, statusreports.wrm, statusreports.reportTypeID, reporttypes.reportType, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate FROM applications, customers, statusreports, employees, reporttypes WHERE statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.reportTypeID=reporttypes.reportTypeID AND statusreports.employeeID=employees.employeeID ORDER BY statusreports.endDate DESC, statusreports.endTime DESC");
-}
 $query_limit_rsStatusReports = sprintf("%s LIMIT %d, %d", $query_rsStatusReports, $startRow_rsStatusReports, $maxRows_rsStatusReports);
 $rsStatusReports = $conn->query($query_limit_rsStatusReports);
 $row_rsStatusReports = $rsStatusReports->fetch_assoc();
@@ -80,30 +91,31 @@ if (!empty($my_server['QUERY_STRING'])) {
 	}
 }
 $queryString_rsStatusReports = sprintf("&amp;totalRows_rsStatusReports=%d%s", $totalRows_rsStatusReports, $queryString_rsStatusReports);
+/*
+  //select applications for application filter list
+  $query_rsApps = "SELECT applicationID, application FROM applications ORDER BY application ASC";
+  $rsApps = $conn->query($query_rsApps);
+  $row_rsApps = $rsApps->fetch_assoc();
+  $totalRows_rsApps = $rsApps->num_rows;
 
-//select applications for application filter list
-$query_rsApps = "SELECT applicationID, application FROM applications ORDER BY application ASC";
-$rsApps = $conn->query($query_rsApps);
-$row_rsApps = $rsApps->fetch_assoc();
-$totalRows_rsApps = $rsApps->num_rows;
+  //select customers for customer filter list
+  $query_rsCarrier = "SELECT customerID, customer FROM customers ORDER BY customer ASC";
+  $rsCarrier = $conn->query($query_rsCarrier);
+  $row_rsCarrier = $rsCarrier->fetch_assoc();
+  $totalRows_rsCarrier = $rsCarrier->num_rows;
 
-//select customers for customer filter list
-$query_rsCarrier = "SELECT customerID, customer FROM customers ORDER BY customer ASC";
-$rsCarrier = $conn->query($query_rsCarrier);
-$row_rsCarrier = $rsCarrier->fetch_assoc();
-$totalRows_rsCarrier = $rsCarrier->num_rows;
+  //select employees for employee filter list
+  $query_rsEngineers = "SELECT employeeID, displayName FROM employees WHERE employees.engineer ='y' ORDER BY displayName ASC";
+  $rsEngineers = $conn->query($query_rsEngineers);
+  $row_rsEngineers = $rsEngineers->fetch_assoc();
+  $totalRows_rsEngineers = $rsEngineers->num_rows;
 
-//select employees for employee filter list
-$query_rsEngineers = "SELECT employeeID, displayName FROM employees WHERE employees.engineer ='y' ORDER BY displayName ASC";
-$rsEngineers = $conn->query($query_rsEngineers);
-$row_rsEngineers = $rsEngineers->fetch_assoc();
-$totalRows_rsEngineers = $rsEngineers->num_rows;
-
-//select report types for report type filter list
-$query_rsReportTypes = "SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC";
-$rsReportTypes = $conn->query($query_rsReportTypes);
-$row_rsReportTypes = $rsReportTypes->fetch_assoc();
-$totalRows_rsReportTypes = $rsReportTypes->num_rows;
+  //select report types for report type filter list
+  $query_rsReportTypes = "SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC";
+  $rsReportTypes = $conn->query($query_rsReportTypes);
+  $row_rsReportTypes = $rsReportTypes->fetch_assoc();
+  $totalRows_rsReportTypes = $rsReportTypes->num_rows;
+ */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -117,7 +129,7 @@ $totalRows_rsReportTypes = $rsReportTypes->num_rows;
 
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar(2, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a></li>\n") ?>
+				<?php build_navbar($conn, 2); ?>
 			</header> 
 		</div>
 
@@ -156,7 +168,7 @@ $totalRows_rsReportTypes = $rsReportTypes->num_rows;
 								if (!isset($my_get['wrm'])) {
 									echo "          <th>Case</th>\n";
 								}
-								//	sudoAuthData(null, null, "th", null, null); 
+								sudoAuthData(null, null, "th", null, null);
 								?>
 							</tr>
 						</thead>
@@ -214,7 +226,7 @@ $totalRows_rsReportTypes = $rsReportTypes->num_rows;
 											echo "</td>\n";
 										}
 
-										//	sudoAuthData("statusReportUpdate", "Update Status Report", "td", "edit", "statusReport=" . $row_rsStatusReports['statusReportID']); 
+										sudoAuthData("statusReportUpdate", "Update Status Report", "td", "edit", "statusReport=" . $row_rsStatusReports['statusReportID']);
 										?>
 								</tr>
 							<?php } ?>

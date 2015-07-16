@@ -71,7 +71,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar(3, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a></li>\n") ?>
+				<?php build_navbar($conn, 3); ?>
 			</header> 
 		</div>
 
@@ -217,52 +217,49 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 							<div class='form-group'>
 								<label for='cc' class='control-label col-xs-2'>Email Recipients</label>
-								<div class='col-xs-10'>
-									<div class="row">
-										<div class="col-xs-3">
-											<div class="input-group">
-												<span class="input-group-addon">
-													<input type="checkbox" name="prodOps" id="prodOps" value="y" checked="checked"/>
-												</span>
-												<input type="text" class="form-control" value="US ProdOps" disabled="disabled"/>
-											</div>
-										</div>
-										<div class="col-xs-3">
-											<div class="input-group">
-												<span class="input-group-addon">
-													<input type="checkbox" name="noc" id="noc" value="y" checked="checked"/>
-												</span>
-												<input type="text" class="form-control" value="&nbsp;NOC &amp; SUI" disabled="disabled"/>
-											</div>
-										</div>
-										<div class="col-xs-6">
-											<div class="input-group">
-												<span class="input-group-addon">CC:</span>
-												<input type="text" class="form-control" value="" name='cc' id='cc' placeholder="Carbon Copy"/>
-											</div>
-										</div>
+								<div class="col-xs-2">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" name="prodOps" id="prodOps" value="y" checked="checked"/>
+										</span>
+										<input type="text" class="form-control" value="US ProdOps" disabled="disabled"/>
 									</div>
-									<div class="row">
-										<div class="col-xs-3">
-											<div class="input-group">
-												<span class="input-group-addon">
-													<input type="checkbox" name="syseng" id="syseng" value="y"/>
-												</span>
-												<input type="text" class="form-control" value="&nbsp;SysEng" disabled="disabled"/>
-											</div>
-										</div>
-										<div class="col-xs-3">
-											<div class="input-group">
-												<span class="input-group-addon">
-													<input type="checkbox" name="neteng" id="neteng" value="y"/>
-												</span>
-												<input type="text" class="form-control" value="&nbsp;NetEng" disabled="disabled"/>
-											</div>
-										</div>
-										<div class="col-xs-6">
-											&nbsp;
-										</div>
+								</div>
+								<div class="col-xs-2">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" name="noc" id="noc" value="y" checked="checked"/>
+										</span>
+										<input type="text" class="form-control" value="&nbsp;NOC &amp; SUI" disabled="disabled"/>
 									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="input-group">
+										<span class="input-group-addon">CC:</span>
+										<input type="text" class="form-control" value="" name='cc' id='cc' placeholder="Carbon Copy"/>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-xs-2">&nbsp;</div>
+								<div class="col-xs-2">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" name="syseng" id="syseng" value="y"/>
+										</span>
+										<input type="text" class="form-control" value="&nbsp;SysEng" disabled="disabled"/>
+									</div>
+								</div>
+								<div class="col-xs-2">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" name="neteng" id="neteng" value="y"/>
+										</span>
+										<input type="text" class="form-control" value="&nbsp;NetEng" disabled="disabled"/>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									&nbsp;
 								</div>
 							</div>
 

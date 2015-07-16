@@ -65,58 +65,70 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
 	exit;
 }
 
+$varEmployee = (isset($_SESSION['employee']) ? addslashes($_SESSION['employee']) : "1");
+
 //my projects
-$varEmployee_rsMyProjects = "1";
-if (isset($_SESSION['employee'])) {
-	$varEmployee_rsMyProjects = (get_magic_quotes_gpc()) ? $_SESSION['employee'] : addslashes($_SESSION['employee']);
-}
-$query_rsMyProjects = sprintf("SELECT projectID, projectName, status, applications.application, customers.customer, organizingEngineerID, DATE_FORMAT(targetDate, '%%m/%%d/%%Y') as targetDate, wrm, ticket FROM projects LEFT JOIN applications ON projects.applicationID=applications.applicationID LEFT JOIN customers ON projects.primaryCustomerID=customers.customerID WHERE organizingEngineerID = %s AND status <> 'Completed' ORDER BY targetDate ASC", $varEmployee_rsMyProjects);
-$rsMyProjects = $conn->query($query_rsMyProjects);
+$query_rsMyProjects = "SELECT projectID, projectName, status, applications.application, customers.customer, organizingEngineerID"
+		  . ", DATE_FORMAT(targetDate, '%m/%d/%Y') as targetDate, wrm, ticket"
+		  . " FROM projects"
+		  . " LEFT JOIN applications ON projects.applicationID=applications.applicationID"
+		  . " LEFT JOIN customers ON projects.primaryCustomerID=customers.customerID"
+		  . " WHERE organizingEngineerID = $varEmployee AND status <> 'Completed'"
+		  . " ORDER BY targetDate ASC";
+$rsMyProjects = $conn->query($query_rsMyProjects) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsMyProjects = $rsMyProjects->fetch_assoc();
 $totalRows_rsMyProjects = $rsMyProjects->num_rows;
 
 //my support requests
-$varEmployee_rsSupportRequests = "1";
-if (isset($_SESSION['employee'])) {
-	$varEmployee_rsSupportRequests = (get_magic_quotes_gpc()) ? $_SESSION['employee'] : addslashes($_SESSION['employee']);
-}
-$query_rsSupportRequests = sprintf("SELECT escalationID, DATE_FORMAT(dateEscalated, '%%m/%%d/%%Y') as dateEscalated, applications.application, subject, assignedTo, status, ticket, customers.customer, DATE_FORMAT(targetDate, '%%m/%%d/%%Y') as targetDate FROM escalations LEFT JOIN applications ON escalations.applicationID=applications.applicationID LEFT JOIN customers ON escalations.customerID=customers.customerID WHERE assignedTo = %s AND status <> 'Closed' AND status <> 'Returned' ORDER BY targetDate ASC", $varEmployee_rsSupportRequests);
-$rsSupportRequests = $conn->query($query_rsSupportRequests);
+$query_rsSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscalated, '%m/%d/%Y') as dateEscalated, applications.application, subject, assignedTo, status, ticket"
+		  . ", customers.customer, DATE_FORMAT(targetDate, '%m/%d/%Y') as targetDate"
+		  . " FROM escalations"
+		  . " LEFT JOIN applications ON escalations.applicationID=applications.applicationID"
+		  . " LEFT JOIN customers ON escalations.customerID=customers.customerID"
+		  . " WHERE assignedTo = $varEmployee AND status <> 'Closed' AND status <> 'Returned'"
+		  . " ORDER BY targetDate ASC";
+$rsSupportRequests = $conn->query($query_rsSupportRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsSupportRequests = $rsSupportRequests->fetch_assoc();
 $totalRows_rsSupportRequests = $rsSupportRequests->num_rows;
 
 //pending maintenances
-$query_rsPendingMaintenances = "SELECT maintenanceNotifsID, reason, TIME_FORMAT(startTime,'%k:%i') AS startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate FROM maintenancenotifs WHERE status = 'Open' OR status='Extended' ORDER BY startDate DESC, startTime DESC";
-$rsPendingMaintenances = $conn->query($query_rsPendingMaintenances);
+$query_rsPendingMaintenances = "SELECT maintenanceNotifsID, reason, TIME_FORMAT(startTime,'%k:%i') AS startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate"
+		  . " FROM maintenancenotifs"
+		  . " WHERE status = 'Open' OR status='Extended'"
+		  . " ORDER BY startDate DESC, startTime DESC";
+$rsPendingMaintenances = $conn->query($query_rsPendingMaintenances) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsPendingMaintenances = $rsPendingMaintenances->fetch_assoc();
 $totalRows_rsPendingMaintenances = $rsPendingMaintenances->num_rows;
 
-$colname_rsEmployeeInfo = "1";
-if (isset($_SESSION['employee'])) {
-	$colname_rsEmployeeInfo = (get_magic_quotes_gpc()) ? $_SESSION['employee'] : addslashes($_SESSION['employee']);
-}
-$query_rsEmployeeInfo = sprintf("SELECT employeeID, firstName, displayName FROM employees WHERE employeeID = %s", $colname_rsEmployeeInfo);
-$rsEmployeeInfo = $conn->query($query_rsEmployeeInfo);
+$query_rsEmployeeInfo = "SELECT employeeID, firstName, displayName FROM employees WHERE employeeID = $varEmployee";
+$rsEmployeeInfo = $conn->query($query_rsEmployeeInfo) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsEmployeeInfo = $rsEmployeeInfo->fetch_assoc();
 $totalRows_rsEmployeeInfo = $rsEmployeeInfo->num_rows;
 
 //unassigned support requests
-$query_rsUnassignedSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscalated, '%m/%d/%Y') as dateEscalated, applications.application, subject, assignedTo, status, ticket, customers.customer, DATE_FORMAT(targetDate, '%m/%d/%Y') as targetDate FROM escalations LEFT JOIN applications ON escalations.applicationID=applications.applicationID LEFT JOIN customers ON escalations.customerID=customers.customerID WHERE assignedTo='48' AND status <> 'Closed' AND status <> 'Returned' ORDER BY targetDate ASC";
-$rsUnassignedSupportRequests = $conn->query($query_rsUnassignedSupportRequests);
+$query_rsUnassignedSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscalated, '%m/%d/%Y') as dateEscalated, applications.application, subject, assignedTo, status"
+		  . ", ticket, customers.customer, DATE_FORMAT(targetDate, '%m/%d/%Y') as targetDate"
+		  . " FROM escalations"
+		  . " LEFT JOIN applications ON escalations.applicationID=applications.applicationID"
+		  . " LEFT JOIN customers ON escalations.customerID=customers.customerID"
+		  . " WHERE assignedTo='48' AND status <> 'Closed' AND status <> 'Returned'"
+		  . " ORDER BY targetDate ASC";
+$rsUnassignedSupportRequests = $conn->query($query_rsUnassignedSupportRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsUnassignedSupportRequests = $rsUnassignedSupportRequests->fetch_assoc();
 $totalRows_rsUnassignedSupportRequests = $rsUnassignedSupportRequests->num_rows;
 
 //my project tasks
-$varEngineer_rsMyProjectTasks = "1";
-if (isset($_SESSION['employee'])) {
-	$varEngineer_rsMyProjectTasks = (get_magic_quotes_gpc()) ? $_SESSION['employee'] : addslashes($_SESSION['employee']);
-}
-$query_rsMyProjectTasks = sprintf("SELECT projectevents.projectEventID, projectevents.projectEvent, projectevents.projectID, projects.projectName, projectevents.order, projectevents.engineerID, employees.displayName, DATE_FORMAT(projectevents.targetDate, '%%m/%%d/%%Y') as targetDate, projectevents.status FROM projectevents LEFT JOIN projects ON projects.projectID=projectevents.projectID LEFT JOIN employees ON employees.employeeID=projectevents.engineerID WHERE projectevents.engineerID = '%s' AND projectevents.status <> 'Complete' ORDER BY projectevents.projectID ASC, projectevents.order", $varEngineer_rsMyProjectTasks);
-$rsMyProjectTasks = $conn->query($query_rsMyProjectTasks);
+$query_rsMyProjectTasks = "SELECT projectevents.projectEventID, projectevents.projectEvent, projectevents.projectID, projects.projectName, projectevents.order"
+		  . ", projectevents.engineerID, employees.displayName, DATE_FORMAT(projectevents.targetDate, '%m/%d/%Y') as targetDate, projectevents.status"
+		  . " FROM projectevents"
+		  . " LEFT JOIN projects ON projects.projectID=projectevents.projectID"
+		  . " LEFT JOIN employees ON employees.employeeID=projectevents.engineerID"
+		  . " WHERE projectevents.engineerID = '$varEmployee' AND projectevents.status <> 'Complete'"
+		  . " ORDER BY projectevents.projectID ASC, projectevents.order";
+$rsMyProjectTasks = $conn->query($query_rsMyProjectTasks) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsMyProjectTasks = $rsMyProjectTasks->fetch_assoc();
 $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -128,7 +140,7 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 	<body class="skin-blue layout-top-nav">
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar(0, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\">Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\">Logout</a></li>\n") ?>
+				<?php build_navbar($conn, 0) ?>
 			</header> 
 		</div>
 
@@ -137,8 +149,16 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 			<div class="container-fluid">
 
 				<div class="page-header">
-					<h1>My Portal</h1>
-					<p class="lead">Data flow masflight</p>
+					<div class='row'>
+						<div class='col-xs-10'>
+							<small>
+								<ul style='margin-top: 8px;' class='breadcrumb'>
+									<li class="active">Home</li>
+								</ul>
+							</small>
+						</div>
+						<div class='col-xs-2'>&nbsp;</div>
+					</div>
 				</div>
 
 				<div class="row">
@@ -160,8 +180,8 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 										<table class="showMySettings table table-bordered table-striped">
 											<thead>
 												<tr>
-													<th>Date<br />Requested</th>
-													<th>Target<br />Date</th>
+													<th>Date Requested</th>
+													<th>Target Date</th>
 													<th>Subject</th>
 													<th>Customer</th>
 													<th>App</th>
