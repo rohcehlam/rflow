@@ -359,7 +359,7 @@ function build_navbar($conn, $active = 0) {
 					<a href="index.php" class="navbar-brand"><img width="100" src="../images/masflight-logo.png"/></a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li<?php echo ($active == 0) ? ' class="active"' : ''; ?>><a href="../userPortals/MyPortal.php">My Portal</a></li>
+					<li<?php echo ($active == 0) ? ' class="active"' : ''; ?>><a href="../userPortals/myPortal.php">My Portal</a></li>
 					<li<?php echo ($active == 1) ? ' class="active"' : ''; ?>><a href="../rfas/rfas.php">RFCs</a></li>
 					<li<?php echo ($active == 2) ? ' class="active"' : ''; ?>><a href="../statusReports/statusReports.php">Status Reports</a></li>
 					<li<?php echo ($active == 3) ? ' class="active"' : ''; ?>><a href="../maintenances/maintenances.php">Maintenance Notifications</a></li>

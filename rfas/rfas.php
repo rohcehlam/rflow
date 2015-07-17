@@ -10,69 +10,14 @@ $pageNum_rsChangeRequests = filter_input(INPUT_GET, 'pageNum_rsChangeRequests', 
 
 $startRow_rsChangeRequests = $pageNum_rsChangeRequests * $maxRows_rsChangeRequests;
 
-$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') as dateSubmitted, changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') as windowStartDate FROM changerequests LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID LEFT JOIN applications ON changerequests.applicationID=applications.applicationID WHERE changerequests.status='Pending Approval' or changerequests.status='Submitted for CAB Approval' or changerequests.status='Returned' ORDER BY windowStartDate DESC, windowStartTime DESC";
-
-$varEmployee_rsMaintenanceNotifs = filter_input(INPUT_GET, 'engineer', FILTER_SANITIZE_SPECIAL_CHARS);
-$varStatus_rsMaintenanceNotifs = filter_input(INPUT_GET, 'status', FILTER_SANITIZE_SPECIAL_CHARS);
-$varApp_rsMaintenanceNotifs = filter_input(INPUT_GET, 'app', FILTER_SANITIZE_SPECIAL_CHARS);
-$varsummary_rsMaintenanceNotifs = filter_input(INPUT_GET, 'summary', FILTER_SANITIZE_SPECIAL_CHARS);
-$varrequestOrigin_rsMaintenanceNotifs = filter_input(INPUT_GET, 'requestOrigin', FILTER_SANITIZE_SPECIAL_CHARS);
-$varsubapp_rsMaintenanceNotifs = filter_input(INPUT_GET, 'subapp', FILTER_SANITIZE_SPECIAL_CHARS);
-$varorigin_rsMaintenanceNotifs = filter_input(INPUT_GET, 'origin', FILTER_SANITIZE_SPECIAL_CHARS);
-$varticket_rsMaintenanceNotifs = filter_input(INPUT_GET, 'ticket', FILTER_SANITIZE_SPECIAL_CHARS);
-$varEEmployee_rsMaintenanceNotifs = filter_input(INPUT_GET, 'employee', FILTER_SANITIZE_SPECIAL_CHARS);
-
-$args = array(
-	 'engineer' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'status' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'app' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'summary' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'requestOrigin' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'subapp' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'origin' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'tricket' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'employee' => FILTER_SANITIZE_SPECIAL_CHARS,
-);
-
-$my_get = filter_input_array(INPUT_GET, $args);
-//var_dump($my_get);
-
-if (filter_input(INPUT_GET, 'app', FILTER_SANITIZE_SPECIAL_CHARS)) {
-	$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') AS dateSubmitted, changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') AS windowStartDate 
-    FROM changerequests 
-    LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID 
-    LEFT JOIN applications ON changerequests.applicationID=applications.applicationID 
-    WHERE changerequests.applicationID='$varApp_rsMaintenanceNotifs' 
-    ORDER BY windowStartDate DESC, windowStartTime DESC
-    ";
-} elseif (filter_input(INPUT_GET, 'summary', FILTER_SANITIZE_SPECIAL_CHARS)) {
-	$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') AS dateSubmitted, changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') AS windowStartDate 
-    FROM changerequests 
-    LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID 
-    LEFT JOIN applications ON changerequests.applicationID=applications.applicationID 
-    WHERE summary LIKE '%$varsummary_rsMaintenanceNotifs%'
-    ORDER BY windowStartDate DESC, windowStartTime DESC ";
-} elseif (filter_input(INPUT_GET, 'engineer', FILTER_SANITIZE_SPECIAL_CHARS)) {
-	$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') AS dateSubmitted, changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') AS windowStartDate 
-    FROM changerequests 
-    LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID 
-    LEFT JOIN applications ON changerequests.applicationID=applications.applicationID 
-    WHERE 
-    employeeID=employees.employeeID
-    AND changerequests.submittedBy='$varEmployee_rsMaintenanceNotifs' 
-    ORDER BY windowStartDate DESC, windowStartTime DESC ";
-} elseif (filter_input(INPUT_GET, 'status', FILTER_SANITIZE_SPECIAL_CHARS) == "All") {
-	$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') as dateSubmitted, changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') as windowStartDate FROM changerequests LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID LEFT JOIN applications ON changerequests.applicationID=applications.applicationID ORDER BY windowStartDate DESC, windowStartTime DESC";
-} elseif (filter_input(INPUT_GET, 'status', FILTER_SANITIZE_SPECIAL_CHARS) != "All") {
-	$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') as dateSubmitted, changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') as windowStartDate 
-        FROM changerequests 
-        LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID 
-        LEFT JOIN applications ON changerequests.applicationID=applications.applicationID 
-        WHERE changerequests.status='$varStatus_rsMaintenanceNotifs'  or changerequests.status='Returned' 
-        ORDER BY windowStartDate DESC, windowStartTime DESC";
-} elseif (filter_input(INPUT_GET, 'status', FILTER_SANITIZE_SPECIAL_CHARS)) {
-	$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') as dateSubmitted, changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') as windowStartDate FROM changerequests LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID LEFT JOIN applications ON changerequests.applicationID=applications.applicationID WHERE changerequests.status='Pending Approval' or changerequests.status='Returned' ORDER BY windowStartDate DESC, windowStartTime DESC";
-}
+$query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') as dateSubmitted"
+		  .", changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID"
+		  .", changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') as windowStartDate"
+		  ." FROM changerequests"
+		  ." LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID"
+		  ." LEFT JOIN applications ON changerequests.applicationID=applications.applicationID"
+		  ." WHERE changerequests.status='Pending Approval' OR changerequests.status='Submitted for CAB Approval' OR changerequests.status='Returned'"
+		  ." ORDER BY windowStartDate DESC, windowStartTime DESC";
 
 $query_limit_rsChangeRequests = sprintf("%s LIMIT %d, %d", $query_rsChangeRequests, $startRow_rsChangeRequests, $maxRows_rsChangeRequests);
 $rsChangeRequests = $conn->query($query_limit_rsChangeRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
@@ -125,7 +70,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar(1, !isset($_SESSION['employee']) ? "<li>\n<a href=\"index.php\"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>\n</li>\n" : "<li><a href='#'>Welcome, {$row_rsEmployeeInfo['firstName']}!</a></li>\n<li><a href=\"$logoutAction\"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a></li>\n") ?>
+				<?php build_navbar($conn, 1) ?>
 			</header> 
 		</div>
 
@@ -141,7 +86,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 					<table id='rfas_table' class="showMySettings table table-bordered table-striped">
 						<thead>
 							<tr>
-								<th>Date<br />Submitted</th>
+								<th>Date Submitted</th>
 								<th>Submitted By</th>
 								<th>Summary</th>
 								<th>App</th>
