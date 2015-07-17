@@ -17,10 +17,10 @@ $args = array(
 	 'totalRows_rsStatusReports' => FILTER_SANITIZE_SPECIAL_CHARS,
 );
 $my_get = filter_input_array(INPUT_GET, $args);
-$my_server = filter_input_array(INPUT_SERVER, [
-	 'PHP_SELF' => FILTER_SANITIZE_SPECIAL_CHARS,
-	 'QUERY_STRING' => FILTER_SANITIZE_SPECIAL_CHARS,
-		  ]);
+$my_server = filter_input_array(INPUT_SERVER, array(
+	 'PHP_SELF' => FILTER_SANITIZE_SPECIAL_CHARS, 
+	 'QUERY_STRING' => FILTER_SANITIZE_SPECIAL_CHARS
+	 ));
 
 $currentPage = $my_server["PHP_SELF"];
 
