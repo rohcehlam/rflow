@@ -66,7 +66,7 @@ $query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, main
 
 $query_limit_rsMaintenanceNotifs = sprintf("%s LIMIT %d, %d", $query_rsMaintenanceNotifs, $startRow_rsMaintenanceNotifs, $maxRows_rsMaintenanceNotifs);
 $rsMaintenanceNotifs = $conn->query($query_limit_rsMaintenanceNotifs) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsMaintenanceNotifs = $rsMaintenanceNotifs->fetch_assoc();
+//$row_rsMaintenanceNotifs = $rsMaintenanceNotifs->fetch_assoc();
 
 if (isset($my_get['totalRows_rsMaintenanceNotifs'])) {
 	$totalRows_rsMaintenanceNotifs = $my_get['totalRows_rsMaintenanceNotifs'];
@@ -109,7 +109,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar($conn, 2); ?>
+				<?php build_navbar($conn, 3); ?>
 			</header> 
 		</div>
 
@@ -122,7 +122,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 				?>
 
 				<div class="row">
-					<table id='maintenances_table' class="showMySettings table table-bordered table-striped">
+					<table class="showMySettings table table-bordered table-striped">
 						<thead>
 							<tr>
 								<th width="6%">Date</th>
@@ -141,7 +141,6 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 						</thead>
 						<tbody>
 							<?php
-							$num = 0;
 							while ($row_rsMaintenanceNotifs = $rsMaintenanceNotifs->fetch_assoc()) {
 								?>
 								<tr>
@@ -161,11 +160,6 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 							<?php } ?>
 						</tbody>
 					</table>
-					<script type="text/javascript">
-						$(document).ready(function () {
-							$('#maintenances_table').dataTable();
-						});
-					</script>
 
 				</div> <!-- /row -->
 

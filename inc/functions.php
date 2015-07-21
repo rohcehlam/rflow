@@ -57,27 +57,27 @@ function buildMenu() {
 function buildNewHeader($rootPage, $rootPageText, $pageText = '', $destiny = '', $addText = '') {
 	?>
 	<div class="page-header">
-		<div class='row'>
-			<div class='col-xs-10'>
-				<small>
-					<ul style='margin-top: 8px;' class='breadcrumb'>
-						<li><a href='../userPortals/myPortal.php'>Home</a></li>						
-						<?php if ($pageText != '') { ?>
-							<li><a href='<?php echo $rootPage; ?>'><?php echo $rootPageText; ?></a></li>
-							<li class='active'><?php echo $pageText; ?></li>
-						<?php } else { ?>
-							<li class='active'><?php echo $rootPageText; ?></li>
-						<?php } ?>
-					</ul>
-				</small>
-			</div>
-			<div class='col-xs-2'>
-				<?php if ($addText != '') { ?>
-					<a style='margin-top: 12px;' class='btn btn-primary' href='<?php echo $destiny; ?>?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;<?php echo $addText; ?></a>
-				<?php } ?>
-				&nbsp;</div>
-			<?php //buildHeader("statusReport", null, "statusReports", "Status Reports", "Add a Status Report"); ?>
-		</div>
+		 <div class='row'>
+			  <div class='col-xs-10'>
+					<small>
+						 <ul style='margin-top: 8px;' class='breadcrumb'>
+							  <li><a href='../userPortals/myPortal.php'>Home</a></li>						
+							  <?php if ($pageText != '') { ?>
+								  <li><a href='<?php echo $rootPage; ?>'><?php echo $rootPageText; ?></a></li>
+								  <li class='active'><?php echo $pageText; ?></li>
+							  <?php } else { ?>
+								  <li class='active'><?php echo $rootPageText; ?></li>
+							  <?php } ?>
+						 </ul>
+					</small>
+			  </div>
+			  <div class='col-xs-2'>
+					<?php if ($addText != '') { ?>
+						<a style='margin-top: 12px;' class='btn btn-primary' href='<?php echo $destiny; ?>?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;<?php echo $addText; ?></a>
+					<?php } ?>
+					&nbsp;</div>
+			  <?php //buildHeader("statusReport", null, "statusReports", "Status Reports", "Add a Status Report"); ?>
+		 </div>
 	</div>
 	<?php
 }
@@ -176,9 +176,9 @@ function sudoAuthData($linkedPage, $linkedText, $tdth, $icon, $param) {
 		} elseif ($tdth == "td") {
 			?>
 			<td align="center">
-				<a title="<?php echo $linkedText; ?>" href="<?php echo "{$linkedPage}?{$param}"; ?>">
-					<span class="glyphicon <?php echo (($icon == 'edit') ? 'glyphicon-edit' : 'glyphicon-remove-sign'); ?>"></span>
-				</a>
+				 <a title="<?php echo $linkedText; ?>" href="<?php echo "{$linkedPage}?{$param}"; ?>">
+					  <span class="glyphicon <?php echo (($icon == 'edit') ? 'glyphicon-edit' : 'glyphicon-remove-sign'); ?>"></span>
+				 </a>
 			</td>
 			<?php
 		}
@@ -351,50 +351,46 @@ function build_header() {
 
 function build_navbar($conn, $active = 0) {
 	?>
-	<nav class="navbar navbar-fixed-top">
-		<div class="container-fluid">
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-				<div class="navbar-header">
-					<a href="index.php" class="navbar-brand"><img width="100" src="../images/masflight-logo.png"/></a>
-				</div>
-				<ul class="nav navbar-nav">
-					<li<?php echo ($active == 0) ? ' class="active"' : ''; ?>><a href="../userPortals/myPortal.php">My Portal</a></li>
-					<li<?php echo ($active == 1) ? ' class="active"' : ''; ?>><a href="../rfas/rfas.php">RFCs</a></li>
-					<li<?php echo ($active == 2) ? ' class="active"' : ''; ?>><a href="../statusReports/statusReports.php">Status Reports</a></li>
-					<li<?php echo ($active == 3) ? ' class="active"' : ''; ?>><a href="../maintenances/maintenances.php">Maintenance Notifications</a></li>
-					<li<?php echo ($active == 4) ? ' class="active"' : ''; ?>><a href="../supportRequests/supportRequests.php">Support Requests</a></li>
-					<li<?php echo ($active == 5) ? ' class="active"' : ''; ?>><a href="http://54.144.64.79/masflight_projects/index.php">Projects</a></li>                                
-				</ul>                      
-			</div><!-- /.navbar-collapse -->
-			<!-- Navbar Right Menu -->
-			<div class="navbar-custom-menu">
-				<ul class="nav navbar-nav">
-					<?php if (!isset($_SESSION['employee'])) { ?>
-						<li>
-							<a href="index.php"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>
-						</li>
-						<?php
-					} else {
-						$logoutAction = filter_input(INPUT_SERVER, 'PHP_SELF', FILTER_SANITIZE_SPECIAL_CHARS) . "?doLogout=true";
-						if (filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_SANITIZE_SPECIAL_CHARS)) {
-							$logoutAction .="&" . htmlentities(filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_SANITIZE_SPECIAL_CHARS));
-						}
-						$query_rsEmployeeInfo = "SELECT employeeID, firstName, displayName FROM employees WHERE employeeID = {$_SESSION['employee']}";
-						$rsEmployeeInfo = $conn->query($query_rsEmployeeInfo) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-						$row_rsEmployeeInfo = $rsEmployeeInfo->fetch_assoc();
-						?>
-						<li>
-							<a href='#'>Welcome, <?php echo $row_rsEmployeeInfo['firstName']; ?>!</a>
-						</li>
-						<li>
-							<a href="<?php echo $logoutAction; ?>"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a>
-						</li>
-					<?php } ?>
-					<li>&nbsp;</li>
-				</ul>
-			</div>
-		</div><!-- /.container-fluid -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		 <div class="container-fluid">
+			  <!-- Collect the nav links, forms, and other content for toggling -->
+			  <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+					<div class="navbar-header">
+						 <a href="../userPortals/myPortal.php" class="navbar-brand"><img width="100" src="../images/masflight-logo.png"/></a>
+					</div>
+					<ul class="nav navbar-nav">
+						 <li<?php echo ($active == 0) ? ' class="active"' : ''; ?>><a href="../userPortals/myPortal.php">Dashboard</a></li>
+						 <li<?php echo ($active == 1) ? ' class="active"' : ''; ?>><a href="../rfas/rfas.php">RFCs</a></li>
+						 <li<?php echo ($active == 2) ? ' class="active"' : ''; ?>><a href="../statusReports/statusReports.php">Status Reports</a></li>
+						 <li<?php echo ($active == 3) ? ' class="active"' : ''; ?>><a href="../maintenances/maintenances.php">Maintenance Notifications</a></li>
+						 <li<?php echo ($active == 4) ? ' class="active"' : ''; ?>><a href="../supportRequests/supportRequests.php">Support Requests</a></li>
+						 <li<?php echo ($active == 5) ? ' class="active"' : ''; ?>><a href="http://54.144.64.79/masflight_projects/index.php">Projects</a></li>                                
+					</ul>                      
+			  </div><!-- /.navbar-collapse -->
+			  <!-- Navbar Right Menu -->
+			  <div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						 <?php if (!isset($_SESSION['employee'])) { ?>
+							 <li>
+								  <a href="index.php"><span class='glyphicon glyphicon-log-in'></span>&nbsp;Login</a>
+							 </li>
+							 <?php
+						 } else {
+							 $query_rsEmployeeInfo = "SELECT employeeID, firstName, displayName FROM employees WHERE employeeID = {$_SESSION['employee']}";
+							 $rsEmployeeInfo = $conn->query($query_rsEmployeeInfo) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
+							 $row_rsEmployeeInfo = $rsEmployeeInfo->fetch_assoc();
+							 ?>
+							 <li>
+								  <a href='#'>Welcome, <?php echo $row_rsEmployeeInfo['firstName']; ?>!</a>
+							 </li>
+							 <li>
+								  <a href="../userPortals/myPortal.php?doLogout=true"><span class='glyphicon glyphicon-log-out'></span>&nbsp;Logout</a>
+							 </li>
+						 <?php } ?>
+						 <li>&nbsp;</li>
+					</ul>
+			  </div>
+		 </div><!-- /.container-fluid -->
 	</nav>
 	<?php
 }
@@ -402,9 +398,10 @@ function build_navbar($conn, $active = 0) {
 function build_footer() {
 	?>
 	<footer class="footer">
-		<div class="container">
-			<p class="text-muted" style="text-align: center;">&copy; 2015 Marks Systems Inc, - masFlight<br/>Technical Support. Version 2.0</p>
-		</div>
+		 <div class="container">
+			  <p class="text-muted" style="text-align: center;">&copy; 2015 Marks Systems Inc, - masFlight<br/>Technical Support. Version 2.0</p>
+		 </div>
 	</footer>
 	<?php
 }
+

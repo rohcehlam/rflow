@@ -104,8 +104,9 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 										if (isset($my_get['maintenance'])) {
 											?>
 											<div class="input-group">
-												<span class="input-group-addon" onclick='openstartdatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
+												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 												<input name="userStartDate" type="text" id="userstartDate" value="<?php echo $row_rsMaint['startDate']; ?>" class="form-control" readonly="<?php echo $row_rsMaint['startDate']; ?>"/>
+												<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 												<input type="hidden" name="startDate" id="startDate" value="<?php echo $row_rsMaint['startDateRaw']; ?>" />
 											</div>											
 										<?php } else { ?>
@@ -211,7 +212,6 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 								<?php if ($my_get['function'] != "view") { ?>
 									<div class='col-xs-4'>
 										<select name="customers" id="customers" class="form-control" required>
-											<option value="">Select Customer</option>
 											<?php
 											while ($row_rsCustomers = $rsCustomers->fetch_assoc()) {
 												echo "<option value='{$row_rsCustomers['customerID']}'>{$row_rsCustomers['customer']}</option>\n";
@@ -228,7 +228,6 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 								<?php if ($my_get['function'] != "view") { ?>
 									<div class='col-xs-4'>
 										<select name="reportType" id="reportType" class="form-control" required>
-											<option value="">Select Report Type</option>
 											<?php
 											while ($row_rsReportTypes = $rsReportTypes->fetch_assoc()) {
 												echo "<option value='{$row_rsReportTypes['reportTypeID']}'" . ((isset($my_get['supportRequest']) && !(strcmp($row_rsReportTypes['reportTypeID'], $row_rsSupportRequest['categoryID']))) ? ' selected="selected"' : '' ) . ">{$row_rsReportTypes['reportType']}</option>\n";
@@ -249,7 +248,6 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 								<?php if ($my_get['function'] != "view") { ?>
 									<div class='col-xs-4'>
 										<select name="app" id="app" class="form-control">
-											<option value="">Select Application</option>
 											<?php
 											while ($row_rsApplications = $rsApplications->fetch_assoc()) {
 												echo "<option value='{$row_rsApplications['applicationID']}'" . ((isset($my_get['supportRequest'])) && (!(strcmp($row_rsApplications['applicationID'], $row_rsSupportRequest['applicationID']))) ? ' selected="selected"' : '') . ">{$row_rsApplications['application']}</option>\n";
@@ -267,7 +265,6 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 								<?php if ($my_get['function'] != "view") { ?>
 									<div class='col-xs-4'>
 										<select name="engineer" id="engineer" class="form-control" required>
-											<option value="">Select Engineer</option>
 											<?php
 											while ($row_rsEmployees = $rsEmployees->fetch_assoc()) {
 												echo "<option value='{$row_rsEmployees['employeeID']}'>{$row_rsEmployees['displayName']}</option>\n";
@@ -307,53 +304,27 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 
 							<div class='form-group'>
 								<label for='cc' class='control-label col-xs-2'>Email Recipients</label>
-								<div class="row">
-									<div class="col-xs-2">
-										<div class="input-group">
-											<span class="input-group-addon">
-												<input type="checkbox" name="prodOps" id="prodOps" value="y" checked="checked"/>
-											</span>
-											<input type="text" class="form-control" value="US ProdOps" disabled="disabled"/>
-										</div>
-									</div>
-									<div class="col-xs-2">
-										<div class="input-group">
-											<span class="input-group-addon">
-												<input type="checkbox" name="noc" id="noc" value="y"/>
-											</span>
-											<input type="text" class="form-control" value="&nbsp;NOC &amp; SUI" disabled="disabled"/>
-										</div>
-									</div>
-									<div class="col-xs-6">
-										<div class="input-group">
-											<span class="input-group-addon">CC:</span>
-											<input type="text" class="form-control" value="" name='cc' id='cc' placeholder="Carbon Copy"/>
-										</div>
+								<div class="col-xs-5">
+									<div class="btn-group btn-group-justified" data-toggle="buttons">
+										<label class="btn btn-default active">
+											<input type="checkbox" name="prodOps" id="prodOps"/>Tech Support
+										</label>
+										<label class="btn btn-default">
+											<input type="checkbox" name="noc" id="noc"/>Product Dev
+										</label>
+										<label class="btn btn-default">
+											<input type="checkbox" name="syseng" id="syseng"/>Sales
+										</label>
+										<label class="btn btn-default">
+											<input type="checkbox" name="neteng" id="neteng"/>Projects
+										</label>
 									</div>
 								</div>
-							</div>
-							<div class='form-group'>
-								<div class="col-xs-2">
-									&nbsp;
-								</div>
-								<div class="col-xs-2">
+								<div class="col-xs-5">
 									<div class="input-group">
-										<span class="input-group-addon">
-											<input type="checkbox" name="syseng" id="syseng" value="y"/>
-										</span>
-										<input type="text" class="form-control" value="&nbsp;SysEng" disabled="disabled"/>
+										<span class="input-group-addon">CC:</span>
+										<input type="text" class="form-control" value="" name='cc' id='cc' placeholder="Carbon Copy"/>
 									</div>
-								</div>
-								<div class="col-xs-2">
-									<div class="input-group">
-										<span class="input-group-addon">
-											<input type="checkbox" name="neteng" id="neteng" value="y"/>
-										</span>
-										<input type="text" class="form-control" value="&nbsp;NetEng" disabled="disabled"/>
-									</div>
-								</div>
-								<div class="col-xs-6">
-									&nbsp;
 								</div>
 							</div>
 
@@ -388,7 +359,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 							function openstartdatepicker() {
 								$("#startDate").datepicker("show");
 							}
-							function openstartdatepicker() {
+							function openenddatepicker() {
 								$("#endDate").datepicker("show");
 							}
 						</script>

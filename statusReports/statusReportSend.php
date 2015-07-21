@@ -96,28 +96,16 @@ header(sprintf("Location: %s", $insertGoTo));
 		$email = new tEmail();
 
 		if (($my_post['prodOps'] == 'y')) {
-			$email->AddAddress("rflow@markssystems.com", "ProdOps US");
+			$email->AddAddress("techsupport@markssystems.com", "Tech Support");
 		}
 		if (($my_post['noc'] == 'y')) {
-			$email->AddAddress("rflow@markssystems.com", "Sybase365 NOC");
+			$email->AddAddress("product@markssystems.com", "Product Dev");
 		}
 		if (($my_post['neteng'] == 'y')) {
-			$email->AddAddress("rflow@markssystems.com", "NetEng");
+			$email->AddAddress("sales@markssystems.com", "Sales");
 		}
 		if (($my_post['syseng'] == 'y')) {
-			$email->AddAddress("rflow@markssystems.com", "SysEng");
-		}
-		if (($my_post['projMan'] == 'y')) {
-			$email->AddAddress("rflow@markssystems.com", "Project Management");
-		}
-		if (($my_post['dev'] == 'y')) {
-			$email->AddAddress("rflow@markssystems.com", "US Software Development");
-		}
-		if (($my_post['newLaunch'] == 'y')) {
-			$email->AddAddress("rflow@markssystems.com", "Carrier Launch");
-		}
-		if (($my_post['sui'] == 'y')) {
-			$email->AddAddress("rflow@markssystems.com", "SUI");
+			$email->AddAddress("projects@markssystems.com", "Projects");
 		}
 		if ((isset($my_post['cc'])) && ($my_post['cc'] != null)) {
 			$email->AddAddress("" . $my_post['cc'] . "", "cc");
