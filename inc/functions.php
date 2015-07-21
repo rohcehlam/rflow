@@ -196,7 +196,7 @@ function buildFooter($colspan, $year = "2015", $version = "1.1") {
 function sentSuccessful($message) {
 	$my_get = filter_input_array(INPUT_GET, array('sent' => FILTER_SANITIZE_SPECIAL_CHARS,));
 	if ((isset($my_get['sent'])) && ($my_get['sent'] == 'y')) {
-		echo "<div class=\"successful\">" . $message . "</div>\n";
+		echo "<span class=\"label label-success\">&nbsp;::&nbsp;" . $message . "&nbsp;::&nbsp;</span>\n";
 	}
 }
 

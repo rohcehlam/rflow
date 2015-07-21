@@ -97,7 +97,13 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 										  <div class="col-xs-4">
 												<?php
 												if ($my_get['function'] == 'view') {
-													echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startDate']}</p>\n";
+													?>
+													<div class="input-group">
+														 <input type="text" name='startDate' class="form-control" value="<?php echo $row_rsMaintenanceNotif['startDate']; ?>" readonly />
+														 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+													</div>
+													<?php
+													//echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startDate']}</p>\n";
 												} else {
 													?>
 													<div class="input-group">
@@ -150,7 +156,15 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 											  </div>
 											  <?php
 										  } else {
-											  echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startTime']}&nbsp;</p></div>\n";
+											  ?>
+											  <div class='col-xs-4'>
+													<div class="input-group">
+														 <input type="text" name='startTime' class="form-control" value="<?php echo $row_rsMaintenanceNotif['startTime']; ?>" readonly />
+														 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+													</div>
+											  </div>
+											  <?php
+											  //echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startTime']}&nbsp;</p></div>\n";
 										  }
 										  ?>
 										  <label for='estHours' class="control-label col-xs-2">Estimated Duration:</label>
@@ -169,7 +183,15 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 											  </div>
 											  <?php
 										  } else {
-											  echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['estimatedHours']} Hours(s)&nbsp;{$row_rsMaintenanceNotif['estimatedMinutes']} Minute(s)</p></div>\n";
+											  ?>
+											  <div class='col-xs-4'>
+													<div class="input-group">
+														 <input type="text" name='estimated' class="form-control" value="<?php echo "{$row_rsMaintenanceNotif['estimatedHours']} Hours(s)&nbsp;{$row_rsMaintenanceNotif['estimatedMinutes']} Minute(s)"; ?>" readonly />
+														 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+													</div>
+											  </div>
+											  <?php
+											  //echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['estimatedHours']} Hours(s)&nbsp;{$row_rsMaintenanceNotif['estimatedMinutes']} Minute(s)</p></div>\n";
 										  }
 										  ?>
 									 </div>
@@ -206,7 +228,13 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 													</select><?php
 													sudoAuth("../common/employee.php?function=add", "Add an Engineer", "add");
 												} else {
-													echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['displayName']}</p>\n";
+													?>
+													<div class="input-group">
+														 <input type="text" name='engineer' class="form-control" value="<?php echo $row_rsMaintenanceNotif['displayName']; ?>" readonly />
+														 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+													</div>
+													<?php
+													//echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['displayName']}</p>\n";
 												}
 												?>
 										  </div>

@@ -92,7 +92,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 
 		<div class="wrapper">
 			<header class="main-header">
-				<?php build_navbar($conn, 2); ?>
+				<?php build_navbar($conn, 4); ?>
 			</header> 
 		</div>
 

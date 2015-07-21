@@ -21,7 +21,7 @@ $query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests
 
 $query_limit_rsChangeRequests = sprintf("%s LIMIT %d, %d", $query_rsChangeRequests, $startRow_rsChangeRequests, $maxRows_rsChangeRequests);
 $rsChangeRequests = $conn->query($query_limit_rsChangeRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsChangeRequests = $rsChangeRequests->fetch_assoc();
+//$row_rsChangeRequests = $rsChangeRequests->fetch_assoc();
 
 $totalRows_rsChangeRequests = filter_input(INPUT_GET, 'totalRows_rsChangeRequests', FILTER_SANITIZE_SPECIAL_CHARS);
 if (!$totalRows_rsChangeRequests) {
@@ -111,12 +111,6 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 							<?php } ?>
 						</tbody>
 					</table>
-
-					<script type="text/javascript">
-						$(document).ready(function () {
-							$('#rfas_table').dataTable();
-						});
-					</script>
 
 				</div> <!-- /row -->
 
