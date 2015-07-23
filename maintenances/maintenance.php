@@ -91,234 +91,242 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 					 <div class='row'>
 						  <div class='col-md-2'></div>
 						  <div class='col-md-8'>
-								<form class="form-horizontal" action="maintenanceSend.php" method="post" enctype="multipart/form-data" name="maintenanceUpdate" data-toggle="validator">
-									 <div class="form-group">
-										  <label for='startdate' class="control-label col-xs-2">Start Date:</label>
-										  <div class="col-xs-4">
-												<?php
-												if ($my_get['function'] == 'view') {
-													?>
-													<div class="input-group">
-														 <input type="text" name='startDate' class="form-control" value="<?php echo $row_rsMaintenanceNotif['startDate']; ?>" readonly />
-														 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-													</div>
-													<?php
-													//echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startDate']}</p>\n";
-												} else {
-													?>
-													<div class="input-group">
-														 <span class="input-group-addon" onclick='opendatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
-														 <input type="text" id="startDate" name='startDate' class="form-control" placeholder="<?php echo date('Y-m-d') ?>"/>
-													</div>
-													<?php
-												}
-												?>
-										  </div>
-										  <label for='status' class="control-label col-xs-2">Status:</label>
-										  <div class="col-xs-4">
-												<select<?php echo (($row_rsMaintenanceNotif['status'] == "Closed") || ($row_rsMaintenanceNotif['status'] == "Canceled")) ? " name=\"userStatus\" id=\"userStatus\" disabled=\"disabled\"" : " name=\"status\" id=\"status\""; ?> class='form-control'>
+
+								<div class='box box-primary'>
+									 <div class='box-header with-border'>
+										  <h4><?php echo $my_get['function']; ?> a Maintenance Notification</h4>
+									 </div>
+									 <div class='box-body'>
+
+										  <form class="form-horizontal" action="maintenanceSend.php" method="post" enctype="multipart/form-data" name="maintenanceUpdate" data-toggle="validator">
+												<div class="form-group">
+													 <label for='startdate' class="control-label col-xs-2">Start Date:</label>
+													 <div class="col-xs-4">
+														  <?php
+														  if ($my_get['function'] == 'view') {
+															  ?>
+															  <div class="input-group">
+																	<input type="text" name='startDate' class="form-control" value="<?php echo $row_rsMaintenanceNotif['startDate']; ?>" readonly />
+																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+															  </div>
+															  <?php
+															  //echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startDate']}</p>\n";
+														  } else {
+															  ?>
+															  <div class="input-group">
+																	<span class="input-group-addon" onclick='opendatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
+																	<input type="text" id="startDate" name='startDate' class="form-control" placeholder="<?php echo date('Y-m-d') ?>"/>
+															  </div>
+															  <?php
+														  }
+														  ?>
+													 </div>
+													 <label for='status' class="control-label col-xs-2">Status:</label>
+													 <div class="col-xs-4">
+														  <select<?php echo (($row_rsMaintenanceNotif['status'] == "Closed") || ($row_rsMaintenanceNotif['status'] == "Canceled")) ? " name=\"userStatus\" id=\"userStatus\" disabled=\"disabled\"" : " name=\"status\" id=\"status\""; ?> class='form-control'>
+																<?php
+																$options = array(
+																	'Open' => 'Open',
+																	'Closed' => 'Closed',
+																	'Canceled' => 'Canceled',
+																	'Extended' => 'Extended',
+																);
+																foreach ($options as $key => $data) {
+																	echo "<option value='$key'" . ($key === $row_rsMaintenanceNotif['status'] ? " selected='selected'" : '') . ">$data</option>\n";
+																}
+																?>
+														  </select>
+													 </div>
 													 <?php
-													 $options = array(
-														 'Open' => 'Open',
-														 'Closed' => 'Closed',
-														 'Canceled' => 'Canceled',
-														 'Extended' => 'Extended',
-													 );
-													 foreach ($options as $key => $data) {
-														 echo "<option value='$key'" . ($key === $row_rsMaintenanceNotif['status'] ? " selected='selected'" : '') . ">$data</option>\n";
+													 if ($my_get['function'] != "add") {
+														 if (($row_rsMaintenanceNotif['status'] == "Closed") || ($row_rsMaintenanceNotif['status'] == "Canceled")) {
+															 echo "<input type=\"hidden\" value=\"" . $row_rsMaintenanceNotif['status'] . "\" name=\"status\" id=\"status\" />";
+														 }
 													 }
 													 ?>
-												</select>
-										  </div>
-										  <?php
-										  if ($my_get['function'] != "add") {
-											  if (($row_rsMaintenanceNotif['status'] == "Closed") || ($row_rsMaintenanceNotif['status'] == "Canceled")) {
-												  echo "<input type=\"hidden\" value=\"" . $row_rsMaintenanceNotif['status'] . "\" name=\"status\" id=\"status\" />";
-											  }
-										  }
-										  ?>
-									 </div>
+												</div>
 
-									 <div class='form-group'>
-										  <label for='' class="control-label col-xs-2">Start Time:</label>
-										  <?php if ($my_get['function'] != "view") { ?>
-											  <div class='col-xs-2'>
-													<div class="input-group">
-														 <input type="text" name="startHour" id="startHour" value="" maxlength="2" class='form-control' placeholder='<?php echo date('H'); ?>'/>
-														 <span class="input-group-addon">&nbsp;<strong>:</strong>&nbsp;</span>
-													</div>
-											  </div>
-											  <div class='col-xs-2'>
-													<div class="input-group">
-														 <input type="text" name="startMinute" id="startMinute" value="" maxlength="2" class='form-control' placeholder='<?php echo date('i'); ?>'/>
-														 <span class="input-group-addon">UTC</span>
-													</div>
-											  </div>
-											  <?php
-										  } else {
-											  ?>
-											  <div class='col-xs-4'>
-													<div class="input-group">
-														 <input type="text" name='startTime' class="form-control" value="<?php echo $row_rsMaintenanceNotif['startTime']; ?>" readonly />
-														 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-													</div>
-											  </div>
-											  <?php
-											  //echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startTime']}&nbsp;</p></div>\n";
-										  }
-										  ?>
-										  <label for='estHours' class="control-label col-xs-2">Estimated Duration:</label>
-										  <?php if ($my_get['function'] != "view") { ?>
-											  <div class='col-xs-2'>
-													<div class="input-group">
-														 <span class="input-group-addon">Hour(s)</span>
-														 <input type="text" name="estHours" id="estHours" maxlength="2"  class='form-control' placeholder='00'/>
-													</div>
-											  </div>
-											  <div class='col-xs-2'>
-													<div class="input-group">
-														 <span class="input-group-addon">Minute(s)</span>
-														 <input type="text" name="estMins" id="estMins" maxlength="2" tabindex="2" class='form-control' placeholder='30'/>
-													</div>
-											  </div>
-											  <?php
-										  } else {
-											  ?>
-											  <div class='col-xs-4'>
-													<div class="input-group">
-														 <input type="text" name='estimated' class="form-control" value="<?php echo "{$row_rsMaintenanceNotif['estimatedHours']} Hours(s)&nbsp;{$row_rsMaintenanceNotif['estimatedMinutes']} Minute(s)"; ?>" readonly />
-														 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-													</div>
-											  </div>
-											  <?php
-											  //echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['estimatedHours']} Hours(s)&nbsp;{$row_rsMaintenanceNotif['estimatedMinutes']} Minute(s)</p></div>\n";
-										  }
-										  ?>
-									 </div>
-
-									 <div class='form-group'>
-										  <label for='reason' class="control-label col-xs-2">Reason:</label>
-										  <div class="col-xs-10">
-												<input id='reason' name='reason' value='<?php echo $row_rsMaintenanceNotif['reason']; ?>' class='form-control' placeholder='Reason'/>
-										  </div>
-									 </div>
-									 <div class='form-group'>
-										  <label for='customerImpact' class="control-label col-xs-2">Customer Impact:</label>
-										  <div class="col-xs-10">
-												<input id='customerImpact' name='customerImpact' value='<?php echo $row_rsMaintenanceNotif['customerImpact']; ?>' class='form-control' placeholder='Customer Impact'/>
-										  </div>
-									 </div>
-									 <div class='form-group'>
-										  <label for='nocImpact' class="control-label col-xs-2">NOC Impact:</label>
-										  <div class="col-xs-10">
-												<input id='nocImpact' name='nocImpact' value='<?php echo $row_rsMaintenanceNotif['nocImpact']; ?>' class='form-control' placeholder='NOC Impact'/>
-										  </div>
-									 </div>
-
-									 <div class='form-group'>
-										  <label for='engineer' class='control-label col-xs-2'>Engineer</label>
-										  <div class="col-xs-4">
-												<?php if ($my_get['function'] != "view") { ?>
-													<select name="engineer" id="engineer" class='form-control'>
+												<div class='form-group'>
+													 <label for='' class="control-label col-xs-2">Start Time:</label>
+													 <?php if ($my_get['function'] != "view") { ?>
+														 <div class='col-xs-2'>
+															  <div class="input-group">
+																	<input type="text" name="startHour" id="startHour" value="" maxlength="2" class='form-control' placeholder='<?php echo date('H'); ?>'/>
+																	<span class="input-group-addon">&nbsp;<strong>:</strong>&nbsp;</span>
+															  </div>
+														 </div>
+														 <div class='col-xs-2'>
+															  <div class="input-group">
+																	<input type="text" name="startMinute" id="startMinute" value="" maxlength="2" class='form-control' placeholder='<?php echo date('i'); ?>'/>
+																	<span class="input-group-addon">UTC</span>
+															  </div>
+														 </div>
 														 <?php
-														 while ($row_rsEngineers = $rsEngineers->fetch_assoc()) {
-															 echo "<option value='{$row_rsEngineers['employeeID']}'" . (($row_rsEngineers['employeeID'] == $_SESSION['employee']) ? "selected ='selected'" : '') . ">{$row_rsEngineers['displayName']}</option>\n";
-														 }
+													 } else {
 														 ?>
-													</select><?php
-													sudoAuth("../common/employee.php?function=add", "Add an Engineer", "add");
-												} else {
-													?>
-													<div class="input-group">
-														 <input type="text" name='engineer' class="form-control" value="<?php echo $row_rsMaintenanceNotif['displayName']; ?>" readonly />
-														 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-													</div>
+														 <div class='col-xs-4'>
+															  <div class="input-group">
+																	<input type="text" name='startTime' class="form-control" value="<?php echo $row_rsMaintenanceNotif['startTime']; ?>" readonly />
+																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+															  </div>
+														 </div>
+														 <?php
+														 //echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['startTime']}&nbsp;</p></div>\n";
+													 }
+													 ?>
+													 <label for='estHours' class="control-label col-xs-2">Estimated Duration:</label>
+													 <?php if ($my_get['function'] != "view") { ?>
+														 <div class='col-xs-2'>
+															  <div class="input-group">
+																	<span class="input-group-addon">Hour(s)</span>
+																	<input type="text" name="estHours" id="estHours" maxlength="2"  class='form-control' placeholder='00'/>
+															  </div>
+														 </div>
+														 <div class='col-xs-2'>
+															  <div class="input-group">
+																	<span class="input-group-addon">Minute(s)</span>
+																	<input type="text" name="estMins" id="estMins" maxlength="2" tabindex="2" class='form-control' placeholder='30'/>
+															  </div>
+														 </div>
+														 <?php
+													 } else {
+														 ?>
+														 <div class='col-xs-4'>
+															  <div class="input-group">
+																	<input type="text" name='estimated' class="form-control" value="<?php echo "{$row_rsMaintenanceNotif['estimatedHours']} Hours(s)&nbsp;{$row_rsMaintenanceNotif['estimatedMinutes']} Minute(s)"; ?>" readonly />
+																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+															  </div>
+														 </div>
+														 <?php
+														 //echo "<div class='col-xs-4'>\n<p class=\"form-control-static\">{$row_rsMaintenanceNotif['estimatedHours']} Hours(s)&nbsp;{$row_rsMaintenanceNotif['estimatedMinutes']} Minute(s)</p></div>\n";
+													 }
+													 ?>
+												</div>
+
+												<div class='form-group'>
+													 <label for='reason' class="control-label col-xs-2">Reason:</label>
+													 <div class="col-xs-10">
+														  <input id='reason' name='reason' value='<?php echo $row_rsMaintenanceNotif['reason']; ?>' class='form-control' placeholder='Reason'/>
+													 </div>
+												</div>
+												<div class='form-group'>
+													 <label for='customerImpact' class="control-label col-xs-2">Customer Impact:</label>
+													 <div class="col-xs-10">
+														  <input id='customerImpact' name='customerImpact' value='<?php echo $row_rsMaintenanceNotif['customerImpact']; ?>' class='form-control' placeholder='Customer Impact'/>
+													 </div>
+												</div>
+												<div class='form-group'>
+													 <label for='nocImpact' class="control-label col-xs-2">NOC Impact:</label>
+													 <div class="col-xs-10">
+														  <input id='nocImpact' name='nocImpact' value='<?php echo $row_rsMaintenanceNotif['nocImpact']; ?>' class='form-control' placeholder='NOC Impact'/>
+													 </div>
+												</div>
+
+												<div class='form-group'>
+													 <label for='engineer' class='control-label col-xs-2'>Engineer</label>
+													 <div class="col-xs-4">
+														  <?php if ($my_get['function'] != "view") { ?>
+															  <div class="input-group">
+																	<select name="engineer" id="engineer" class='form-control'>
+																		 <?php
+																		 while ($row_rsEngineers = $rsEngineers->fetch_assoc()) {
+																			 echo "<option value='{$row_rsEngineers['employeeID']}'" . (($row_rsEngineers['employeeID'] == $_SESSION['employee']) ? "selected ='selected'" : '') . ">{$row_rsEngineers['displayName']}</option>\n";
+																		 }
+																		 ?>
+																	</select>
+																	<?php sudoAuth("../common/employee.php?function=add", "Add an Engineer", "add"); ?>
+															  </div>
+														  <?php } else { ?>
+															  <div class="input-group">
+																	<input type="text" name='engineer' class="form-control" value="<?php echo $row_rsMaintenanceNotif['displayName']; ?>" readonly />
+																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+															  </div>
+														  <!-- echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['displayName']}</p>\n"; -->
+														  <?php } ?>
+													 </div>
+												</div>
+
+												<div class='form-group'>
+													 <label for='prodChange' class="control-label col-xs-2">Production Changes:</label>
+													 <div class="col-xs-10">
+														  <textarea name='prodChange' id='prodChange' class='form-control' rows="5" ><?php echo $row_rsMaintenanceNotif['prodChanges']; ?></textarea>
+													 </div>
+												</div>
+
+												<div class='form-group'>
+													 <label for='cc' class='control-label col-xs-2'>Email Recipients</label>
+													 <div class="col-xs-5">
+														  <div class="btn-group btn-group-justified" data-toggle="buttons">
+																<label class="btn btn-default active">
+																	 <input type="checkbox" name="prodOps" id="prodOps"/>Tech Support
+																</label>
+																<label class="btn btn-default">
+																	 <input type="checkbox" name="noc" id="noc"/>Product Dev
+																</label>
+																<label class="btn btn-default">
+																	 <input type="checkbox" name="syseng" id="syseng"/>Sales
+																</label>
+																<label class="btn btn-default">
+																	 <input type="checkbox" name="neteng" id="neteng"/>Projects
+																</label>
+														  </div>
+													 </div>
+													 <div class="col-xs-5">
+														  <div class="input-group">
+																<span class="input-group-addon">CC:</span>
+																<input type="text" class="form-control" value="" name='cc' id='cc' placeholder="Carbon Copy"/>
+														  </div>
+													 </div>
+												</div>
+
+
+												<div class="form-group">
+													 <div class="col-xs-offset-2 col-xs-10">
+														  <button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Maintenance Notification</button>
+														  <?php if ($my_get['function'] != 'add') { ?>
+															  <a class="btn btn-default" href="../statusReports/statusReport.php?function=add&amp;maintenance=<?php
+															  echo $row_rsMaintenanceNotif['maintenanceNotifsID'];
+															  if ($row_rsAnyPEforMN > 0) {
+																  echo "&amp;project=" . $row_rsAnyPEforMN['projectID'] . "&amp;module=statusReport&amp;projectEvent=" . $row_rsAnyPEforMN['projectTaskID'] . "&amp;function=add";
+															  }
+															  ?>"><span class="glyphicon glyphicon-new-window"></span>&nbsp;Generate Status Report</a>
+															  <?php } ?>
+													 </div>
+												</div>
+
+												<?php if ($my_get['function'] != "add") { ?>
+													<input type="hidden" name="maintenance" id="maintenance" value="<?php echo $my_get['maintenance']; ?>" />
+													<input type="hidden" name="MM_update" id="MM_update" value="maintenanceUpdate" />
+												<?php } else { ?>
+													<input type="hidden" name="MM_insert" value="maintenanceNotif1" />
+													<input type="hidden" name="status" value="Open" />
 													<?php
-													//echo "<p class=\"form-control-static\">{$row_rsMaintenanceNotif['displayName']}</p>\n";
+													if (isset($my_get['module'])) {
+														echo "<input type=\"hidden\" name=\"module\" value=\"" . $my_get['module'] . "\" />";
+														if (isset($my_get['project'])) {
+															echo "<input type=\"hidden\" name=\"project\" value=\"" . $my_get['project'] . "\" />";
+														}
+														if (isset($my_get['projectEvent'])) {
+															echo "<input type=\"hidden\" name=\"projectEvent\" value=\"" . $my_get['projectEvent'] . "\" />";
+														}
+														if (isset($my_get['rfa'])) {
+															echo "<input type=\"hidden\" name=\"rfa\" value=\"" . $my_get['rfa'] . "\" />";
+														}
+													}
 												}
 												?>
-										  </div>
-									 </div>
 
-									 <div class='form-group'>
-										  <label for='prodChange' class="control-label col-xs-2">Production Changes:</label>
-										  <div class="col-xs-10">
-												<textarea name='prodChange' id='prodChange' class='form-control' rows="5" ><?php echo $row_rsMaintenanceNotif['prodChanges']; ?></textarea>
-										  </div>
-									 </div>
-
-									 <div class='form-group'>
-										  <label for='cc' class='control-label col-xs-2'>Email Recipients</label>
-										  <div class="col-xs-5">
-												<div class="btn-group btn-group-justified" data-toggle="buttons">
-													 <label class="btn btn-default active">
-														  <input type="checkbox" name="prodOps" id="prodOps"/>Tech Support
-													 </label>
-													 <label class="btn btn-default">
-														  <input type="checkbox" name="noc" id="noc"/>Product Dev
-													 </label>
-													 <label class="btn btn-default">
-														  <input type="checkbox" name="syseng" id="syseng"/>Sales
-													 </label>
-													 <label class="btn btn-default">
-														  <input type="checkbox" name="neteng" id="neteng"/>Projects
-													 </label>
-												</div>
-										  </div>
-										  <div class="col-xs-5">
-												<div class="input-group">
-													 <span class="input-group-addon">CC:</span>
-													 <input type="text" class="form-control" value="" name='cc' id='cc' placeholder="Carbon Copy"/>
-												</div>
-										  </div>
-									 </div>
-
-
-									 <div class="form-group">
-										  <div class="col-xs-offset-2 col-xs-10">
-												<button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Maintenance Notification</button>
-												<?php if ($my_get['function'] != 'add') { ?>
-													<a class="btn btn-default" href="../statusReports/statusReport.php?function=add&amp;maintenance=<?php
-													echo $row_rsMaintenanceNotif['maintenanceNotifsID'];
-													if ($row_rsAnyPEforMN > 0) {
-														echo "&amp;project=" . $row_rsAnyPEforMN['projectID'] . "&amp;module=statusReport&amp;projectEvent=" . $row_rsAnyPEforMN['projectTaskID'] . "&amp;function=add";
-													}
-													?>"><span class="glyphicon glyphicon-new-window"></span>&nbsp;Generate Status Report</a>
-													<?php } ?>
-										  </div>
-									 </div>
-
-									 <?php if ($my_get['function'] != "add") { ?>
-										 <input type="hidden" name="maintenance" id="maintenance" value="<?php echo $my_get['maintenance']; ?>" />
-										 <input type="hidden" name="MM_update" id="MM_update" value="maintenanceUpdate" />
-									 <?php } else { ?>
-										 <input type="hidden" name="MM_insert" value="maintenanceNotif1" />
-										 <input type="hidden" name="status" value="Open" />
-										 <?php
-										 if (isset($my_get['module'])) {
-											 echo "<input type=\"hidden\" name=\"module\" value=\"" . $my_get['module'] . "\" />";
-											 if (isset($my_get['project'])) {
-												 echo "<input type=\"hidden\" name=\"project\" value=\"" . $my_get['project'] . "\" />";
-											 }
-											 if (isset($my_get['projectEvent'])) {
-												 echo "<input type=\"hidden\" name=\"projectEvent\" value=\"" . $my_get['projectEvent'] . "\" />";
-											 }
-											 if (isset($my_get['rfa'])) {
-												 echo "<input type=\"hidden\" name=\"rfa\" value=\"" . $my_get['rfa'] . "\" />";
-											 }
-										 }
-									 }
-									 ?>
-
-								</form>
-								<script>
-                           $(function () {
-                               $("#startDate").datepicker();
-                           });
-                           function opendatepicker() {
-                               $("#startDate").datepicker("show");
-                           }
-								</script>
+										  </form>
+										  <script>
+                                   $(function () {
+                                       $("#startDate").datepicker();
+                                   });
+                                   function opendatepicker() {
+                                       $("#startDate").datepicker("show");
+                                   }
+										  </script>
+									 </div> <!-- /.box-body -->
+								</div><!-- /.box -->
 						  </div>
 						  <div class='col-md-2'></div>
 					 </div>

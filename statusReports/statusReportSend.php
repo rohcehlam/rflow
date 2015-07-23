@@ -27,7 +27,7 @@ $args = array(
 	 'module' => FILTER_SANITIZE_SPECIAL_CHARS,
 	 'statusReport' => FILTER_SANITIZE_SPECIAL_CHARS,
 );
-$my_post = filter_input_array(INPUT_GET, $args);
+$my_post = filter_input_array(INPUT_POST, $args);
 $my_server = filter_input_array(INPUT_SERVER, [
 	 'PHP_SELF' => FILTER_SANITIZE_SPECIAL_CHARS,
 	 'QUERY_STRING' => FILTER_SANITIZE_SPECIAL_CHARS,
@@ -39,33 +39,40 @@ if ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd
 			  . ", startTime, endTime, maintenanceNotifID) VALUES ({$my_post['engineer']}, {$my_post['customers']}, '{$my_post['subject']}', {$my_post['app']}"
 			  . ", {$my_post['magic']}, {$my_post['wrm']}, '{$my_post['notes']}', '{$my_post['actions']}', {$my_post['reportType']}, '{$my_post['startDate']}'"
 			  . ", '{$my_post['endDate']}', '{$my_post['startTime']}', '{$my_post['endHour']}{$my_post['endMinute']}', {$my_post['maintenance']})";
-	$Result1 = $conn->query($insertSQL) or die($conn->error);
+	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 //insert for when the user doesn't want to link this Status Report to a Maintenance Notification (we still force them to use the startDate from the Maintenance Notification)
 } elseif ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd") && (isset($my_post['maintenance'])) && ($my_post['link'] != "y")) {
 	$insertSQL = "INSERT INTO statusreports (employeeID, customerID, subject, applicationID, magicTicket, wrm, notes, actionItems, reportTypeID, startDate, endDate"
 			  . ", startTime, endTime) VALUES ({$my_post['engineer']}, {$my_post['customers']}, '{$my_post['subject']}', {$my_post['app']}"
 			  . ", {$my_post['magic']}, {$my_post['wrm']}, '{$my_post['notes']}', '{$my_post['actions']}', {$my_post['reportType']}, '{$my_post['startDate']}'"
 			  . ", '{$my_post['endDate']}', '{$my_post['startTime']}', '{$my_post['endHour']}{$my_post['endMinute']}')";
-	$Result1 = $conn->query($insertSQL) or die($conn->error);
+	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 //insert for when the user is writing a Status Report without originating from a Maintenance Notification
 } elseif ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd") && (!isset($my_post['maintenance']))) {
 	$insertSQL = "INSERT INTO statusreports (employeeID, customerID, subject, applicationID, startDate, startTime, endDate, endTime, magicTicket, wrm, notes"
 			  . ", actionItems, reportTypeID) VALUES ({$my_post['engineer']}, {$my_post['customers']}, '{$my_post['subject']}', {$my_post['app']}"
 			  . ", '{$my_post['startDate']}', '{$my_post['startHour']}{$my_post['startMinute']}00', '{$my_post['endDate']}', '{$my_post['endHour']}{$my_post['endMinute']}00'"
 			  . ", {$my_post['magic']}, {$my_post['wrm']}, '{$my_post['notes']}', '{$my_post['actions']}', {$my_post['reportType']})";
-	$Result1 = $conn->query($insertSQL) or die($conn->error);
+	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 }
-
+/*
+echo "<pre>";
+print_r($_REQUEST);
+print_r($my_post);
+echo "</pre>";
+echo $Result1;
+exit;
+ */
 //when we're linking this Status Report to a Project Task, populate projects xreference table
 if (isset($my_post["project"])) {
 	$insertSQL = "INSERT INTO projecttasksxmodules (projectID, projectTaskID, `module`, moduleID) VALUES ({$my_post['project']}, {$my_post['projectEvent']}"
 			  . ", '{$my_post['module']}', LAST_INSERT_ID())";
-	$Result1 = $conn->query($insertSQL) or die($conn->error);
+	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 }
 
 global $lastID;
 if (!isset($my_post['statusReport'])) {
-	$lastID = $conn->insert_id();
+	$lastID = $conn->insert_id;
 } else {
 	$lastID = $my_post['statusReport'];
 }
@@ -82,6 +89,7 @@ header(sprintf("Location: %s", $insertGoTo));
 	<head>
 		<title>Submitting Status Report..</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<?php build_header(); ?>
 	</head>
 	<body><?php
 		$varStatusReport_rsStatusReport = "97";

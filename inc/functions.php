@@ -124,13 +124,15 @@ function buildHeaderNEW($rootPage, $parentPageText, $page, $pageText, $addText) 
 }
 
 function sudoAuth($linkedPage, $linkText, $icon) {
-	if (!isset($_GET['sudo_auth'])) {
-		$_GET['sudo_auth'] = null;
-	}
 	global $sudo;
-	$sudo = $_GET['sudo_auth'];
+	$sudo = filter_input(INPUT_GET, 'sudo_auth');
 	if (isset($sudo) && ($sudo == "admin")) {
-		echo "&nbsp;<img src=\"../images/icons/" . $icon . ".gif\" alt=\"" . $icon . "\" /><a title=\"" . $linkText . "\" href=\"" . $linkedPage . ".php?sudo_auth=admin\">" . $linkText . "</a>";
+		echo "<span class=\"input-group-btn\">\n";
+		echo "<a class=\"btn btn-default\" href=\"{$linkedPage}.php?sudo=admin\"><span class=\"glyphicon {$icon}\"></span>&nbsp;{$linkText}</a>\n";
+		echo "</span>\n";
+		//echo "&nbsp;<img src=\"../images/icons/" . $icon . ".gif\" alt=\"" . $icon . "\" /><a title=\"" . $linkText . "\" href=\"" . $linkedPage . ".php?sudo_auth=admin\">" . $linkText . "</a>";
+	} else {
+		echo "<span class=\"input-group-btn\"><a class=\"btn btn-default\" href=\"#\" title=\"You're not authorized to use this option\"><span class=\"glyphicon glyphicon-tags\"></span>&nbsp;</a></span>\n";
 	}
 }
 
@@ -404,4 +406,3 @@ function build_footer() {
 	</footer>
 	<?php
 }
-

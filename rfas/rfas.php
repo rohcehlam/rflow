@@ -11,13 +11,13 @@ $pageNum_rsChangeRequests = filter_input(INPUT_GET, 'pageNum_rsChangeRequests', 
 $startRow_rsChangeRequests = $pageNum_rsChangeRequests * $maxRows_rsChangeRequests;
 
 $query_rsChangeRequests = "SELECT changerequests.changeRequestID, changerequests.submittedBy, employees.displayName, DATE_FORMAT(dateSubmitted, '%m/%d/%Y') as dateSubmitted"
-		  .", changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID"
-		  .", changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') as windowStartDate"
-		  ." FROM changerequests"
-		  ." LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID"
-		  ." LEFT JOIN applications ON changerequests.applicationID=applications.applicationID"
-		  ." WHERE changerequests.status='Pending Approval' OR changerequests.status='Submitted for CAB Approval' OR changerequests.status='Returned'"
-		  ." ORDER BY windowStartDate DESC, windowStartTime DESC";
+	. ", changerequests.summary, changerequests.applicationID, applications.application, changerequests.status, changerequests.requestOrigin, changerequests.requestOriginID"
+	. ", changerequests.flagged, DATE_FORMAT(windowStartDate, '%m/%d/%Y') as windowStartDate"
+	. " FROM changerequests"
+	. " LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID"
+	. " LEFT JOIN applications ON changerequests.applicationID=applications.applicationID"
+	. " WHERE changerequests.status='Pending Approval' OR changerequests.status='Submitted for CAB Approval' OR changerequests.status='Returned'"
+	. " ORDER BY windowStartDate DESC, windowStartTime DESC";
 
 $query_limit_rsChangeRequests = sprintf("%s LIMIT %d, %d", $query_rsChangeRequests, $startRow_rsChangeRequests, $maxRows_rsChangeRequests);
 $rsChangeRequests = $conn->query($query_limit_rsChangeRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
@@ -37,7 +37,7 @@ if (!empty($temp)) {
 	$newParams = array();
 	foreach ($params as $param) {
 		if (stristr($param, "pageNum_rsChangeRequests") == false &&
-				  stristr($param, "totalRows_rsChangeRequests") == false) {
+			stristr($param, "totalRows_rsChangeRequests") == false) {
 			array_push($newParams, $param);
 		}
 	}
@@ -61,63 +61,75 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<title><?php buildTitle("Change Requests"); ?></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<?php build_header(); ?>
-	</head>
-	<body class="skin-blue layout-top-nav">
+	 <head>
+		  <title><?php buildTitle("Change Requests"); ?></title>
+		  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		  <?php build_header(); ?>
+	 </head>
+	 <body class="skin-blue layout-top-nav">
 
-		<div class="wrapper">
-			<header class="main-header">
-				<?php build_navbar($conn, 1) ?>
-			</header> 
-		</div>
+		  <div class="wrapper">
+				<header class="main-header">
+					 <?php build_navbar($conn, 1) ?>
+				</header> 
+		  </div>
 
-		<div class="content-wrapper">
+		  <div class="content-wrapper">
 
-			<div class="container-fluid">
+				<div class="container-fluid">
 
-				<?php
-				buildNewHeader('rfas.php', 'RFCs', '', 'rfa.php', 'Add an RFC');
-				?>
+					 <?php
+					 buildNewHeader('rfas.php', 'RFCs', '', 'rfa.php', 'Add an RFC');
+					 ?>
 
-				<div class="row">
-					<table id='rfas_table' class="showMySettings table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th>Date Submitted</th>
-								<th>Submitted By</th>
-								<th>Summary</th>
-								<th>App</th>
-								<th>Status</th>
-								<th>Window</th>
-								<?php sudoAuthData(null, null, "th", "edit", null); ?>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							while ($row_rsChangeRequests = $rsChangeRequests->fetch_assoc()) {
-								?>
-								<tr>
-									<td><?php echo $row_rsChangeRequests['dateSubmitted']; ?></td>
-									<td><?php echo $row_rsChangeRequests['displayName']; ?></td>
-									<td><?php echo "<a href=\"rfa.php?function=view&amp;rfa=" . $row_rsChangeRequests['changeRequestID'] . "\">" . $row_rsChangeRequests['summary'] . "</a>"; ?></td>
-									<td><?php echo $row_rsChangeRequests['application']; ?></td>
-									<td><?php echo $row_rsChangeRequests['status']; ?></td>
-									<td><?php echo $row_rsChangeRequests['windowStartDate']; ?></td>
-									<?php sudoAuthData("rfa.php", "Update RFA", "td", "edit", "function=update&amp;rfa=" . $row_rsChangeRequests['changeRequestID']); ?>
-								</tr>
-							<?php } ?>
-						</tbody>
-					</table>
+					 <div class="row">
+						  <div class="box box-primary">
+								<div class="box-header with-border">
+									 <h3>RFCs</h3>
+								</div>
+								<div class="box-body">
+									 <table id='rfas_table' class="table table-bordered table-striped">
+										  <thead>
+												<tr>
+													 <th>Date Submitted</th>
+													 <th>Submitted By</th>
+													 <th>Summary</th>
+													 <th>App</th>
+													 <th>Status</th>
+													 <th>Window</th>
+													 <?php sudoAuthData(null, null, "th", "edit", null); ?>
+												</tr>
+										  </thead>
+										  <tbody>
+												<?php
+												while ($row_rsChangeRequests = $rsChangeRequests->fetch_assoc()) {
+													?>
+													<tr>
+														 <td><?php echo $row_rsChangeRequests['dateSubmitted']; ?></td>
+														 <td><?php echo $row_rsChangeRequests['displayName']; ?></td>
+														 <td><?php echo "<a href=\"rfa.php?function=view&amp;rfa=" . $row_rsChangeRequests['changeRequestID'] . "\">" . $row_rsChangeRequests['summary'] . "</a>"; ?></td>
+														 <td><?php echo $row_rsChangeRequests['application']; ?></td>
+														 <td><?php echo $row_rsChangeRequests['status']; ?></td>
+														 <td><?php echo $row_rsChangeRequests['windowStartDate']; ?></td>
+														 <?php sudoAuthData("rfa.php", "Update RFA", "td", "edit", "function=update&amp;rfa=" . $row_rsChangeRequests['changeRequestID']); ?>
+													</tr>
+												<?php } ?>
+										  </tbody>
+									 </table>
+									 <script type="text/javascript">
+                               $(document).ready(function () {
+                                   $('#rfas_table').dataTable({"order": [[0, 'desc']], "pageLength": 25});
+                               });
+									 </script>
+								</div><!-- /.box-body -->
+						  </div><!-- /.box -->
 
-				</div> <!-- /row -->
+					 </div> <!-- /row -->
 
-			</div> <!-- /container -->
-		</div> <!-- /content-wrapper -->
+				</div> <!-- /container -->
+		  </div> <!-- /content-wrapper -->
 
-		<?php build_footer(); ?>
-	</body>
+		  <?php build_footer(); ?>
+	 </body>
 </html>
 
