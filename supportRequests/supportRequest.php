@@ -152,7 +152,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																		<input type="text" class="form-control" value="<?php echo $row_rsEscalations['dateClosed']; ?>" readonly />
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																	  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['dateClosed'];                                      ?></p> -->
+																	  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['dateClosed'];                                       ?></p> -->
 															 </div>
 															 <div class="col-xs-3">
 																  <div class="input-group">
@@ -161,7 +161,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																		<span class="input-group-addon"><span>UTC</span></span>
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																  <!-- <p class="form-control-static">at&nbsp;<?php //echo $row_rsEscalations['timeClosed'];                                     ?>&nbsp;UTC</p> -->
+																  <!-- <p class="form-control-static">at&nbsp;<?php //echo $row_rsEscalations['timeClosed'];                                      ?>&nbsp;UTC</p> -->
 															 </div>
 															 <div class="col-xs-3">
 																  <div class="input-group">
@@ -191,20 +191,10 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																		<input type="text" class="form-control" value="<?php echo $row_rsEscalations['receiver']; ?>" readonly />
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['receiver'];                                   ?></p> -->
+																  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['receiver'];                                    ?></p> -->
 															  <?php } ?>
 														 </div>
-														 <div class="col-xs-4 col-xs-offset-2">
-															  <?php
-															  if ($my_get['function'] != 'update') {
-																  if (isset($_SESSION['MM_Username'])) {
-																	  ?>
-																	  <a class="btn btn-primary" href="supportRequest.php?supportRequest=<?php echo $my_get['supportRequest']; ?>&function=update"><span class="glyphicon glyphicon-comment"></span>&nbsp;Add Comment</a>
-																	  <?php
-																  }
-															  }
-															  ?>
-														 </div>
+														 <div class="col-xs-6">&nbsp;</div>
 													</div>
 													<div class='form-group'>
 														 <label for='comments' class="control-label col-xs-2">Comments:</label>
@@ -222,19 +212,26 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 													<div class='form-group'>
 														 <div class="col-xs-10 col-xs-offset-2">
 															  <?php if ($my_get['function'] == "update") { ?>
-																  <button type="submit" name="update" id="update" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Update Support Request" </button>
+																  <button type="submit" name="update" id="update" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Update Support Request</button>
 																  <span class="btn btn-default" id='insert_comment'><span class="glyphicon glyphicon-comment"></span>&nbsp;Insert Comment</span>
 																  <script type="text/javascript">
 		                                               $('#insert_comment').click(function () {
 		                                                   var fecha = new Date();
 		                                                   fecha_txt = fecha.getUTCFullYear() + '-' + (fecha.getUTCMonth() + 1) + '-' + fecha.getUTCDay() + ' ' + fecha.getUTCHours() + ':' + fecha.getUTCMinutes();
 		                                                   var comment = $('#comments').val();
-		                                                   $('#comments').val('--------------------------------------------------\n' + fecha_txt + '\n<?php echo $commenter_name; ?>\n' + comment);
+		                                                   $('#comments').val('--------------------------------------------------\n' + fecha_txt + '\n<?php echo $commenter_name; ?>\n<Insert Text Here>\n' + comment);
 		                                               });
 																  </script>
 																  <?php
 															  } elseif (isset($my_get['sent'])) {
 																  sentSuccessful("Support Request updated successfully!");
+															  }
+															  if ($my_get['function'] != 'update') {
+																  if (isset($_SESSION['MM_Username'])) {
+																	  ?>
+																	  <a class="btn btn-primary" href="supportRequest.php?supportRequest=<?php echo $my_get['supportRequest']; ?>&function=update"><span class="glyphicon glyphicon-comment"></span>&nbsp;Add Comment / Change Status</a>
+																	  <?php
+																  }
 															  }
 															  ?>
 														 </div>
@@ -244,8 +241,8 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 										 </div><!-- /box -->
 
 										 <div class='box box-default'>
-											  <div class='box-header with-border'>
-													<h3 class="box-title">Support Request #<?php echo $row_rsEscalations['escalationID'] . "  :  " . $row_rsEscalations['subject']; ?></h3>
+											  <div class='box-header with-border text-center'>
+													<h3 class="box-title"><strong>Support Request #<?php echo $row_rsEscalations['escalationID'] . "  :  " . $row_rsEscalations['subject']; ?></strong></h3>
 											  </div>
 											  <div class='box-body'>
 
@@ -276,7 +273,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['escalator']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['escalator'];                            ?></p> -->
+																		 <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['escalator'];                             ?></p> -->
 																	 <?php } ?>
 																</div>
 																<?php if (($my_get['function'] == "add") || ($my_get['function'] == "update")) { ?>
@@ -301,7 +298,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['dateEscalated']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">on:&nbsp;<?php //echo $row_rsEscalations['dateEscalated'];                            ?></p> -->
+																		 <!-- <p class="form-control-static">on:&nbsp;<?php //echo $row_rsEscalations['dateEscalated'];                             ?></p> -->
 																	</div>
 																	<div class="col-xs-3">
 																		 <div class="input-group">
@@ -310,7 +307,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <span class="input-group-addon">UTC</span>
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['timeEscalated'];                            ?>&nbsp;UTC</p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['timeEscalated'];                             ?>&nbsp;UTC</p> -->
 																	</div>
 																<?php } ?>
 														  </div>
@@ -330,7 +327,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['department']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['department'];                            ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['department'];                             ?></p> -->
 																	 <?php } ?>
 																</div>
 																<label for='ticket' class="control-label col-xs-2">Ticket:</label>
@@ -429,7 +426,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['customer']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['customer'];            ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['customer'];             ?></p> -->
 																	 <?php } ?>
 																</div>
 														  </div>
@@ -449,7 +446,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['application']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['application'];          ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['application'];           ?></p> -->
 																	 <?php } ?>
 																</div>
 																<label for='category' class="control-label col-xs-2">Category:</label>
@@ -467,7 +464,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['category']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['category'];          ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['category'];           ?></p> -->
 																	 <?php } ?>
 																</div>
 														  </div>
