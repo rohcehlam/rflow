@@ -111,7 +111,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 						  <div class='col-md-8'>
 								<div class='box box-primary'>
 									 <div class='box-header with-border'>
-										  <h4><?php echo $my_get['function']; ?> a Status Report</h4>
+										  <h3 class="box-title"><?php echo $my_get['function']; ?> a Status Report</h3>
 									 </div>
 									 <div class='box-body'>
 										  <form class="form-horizontal" action="statusReportSend.php" method="post" name="statusReportForm" id="statusReportForm">
@@ -396,6 +396,9 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 													 </div>
 												</div>
 
+									 </div>
+									 <div class="box-footer">
+												
 												<div class="form-group">
 													 <div class="col-xs-offset-2 col-xs-10">
 														  <button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Status Report</button>

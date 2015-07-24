@@ -111,7 +111,7 @@ function colorCode($colorme) {
 					 <div class="row">
 						  <div class='box box-primary'>
 								<div class='box-header with-border'>
-									 <h3>Support Requests</h3>
+									 <h3 class="box-title">Support Requests</h3>
 								</div>
 								<div class='box-body'>
 

@@ -94,7 +94,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 								<div class='box box-primary'>
 									 <div class='box-header with-border'>
-										  <h4><?php echo $my_get['function']; ?> a Maintenance Notification</h4>
+										  <h3 class="box-title"><?php echo $my_get['function']; ?> a Maintenance Notification</h3>
 									 </div>
 									 <div class='box-body'>
 
@@ -279,7 +279,8 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 													 </div>
 												</div>
 
-
+									 </div>
+									 <div class="box-footer">
 												<div class="form-group">
 													 <div class="col-xs-offset-2 col-xs-10">
 														  <button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Maintenance Notification</button>

@@ -92,7 +92,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 					 <div class="row">
 						  <div class='box box-primary'>
 								<div class='box-header with-border'>
-									 <h3>Maintenance Notifications</h3>
+									 <h3 class="box-title">Maintenance Notifications</h3>
 								</div>
 								<div class='box-body'>
 									 <table id="table_maintenance_notificacions" class="table table-bordered table-striped">

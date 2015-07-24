@@ -85,7 +85,7 @@ if ($my_get['function'] != "add") {
 						  <div class='col-md-8'>
 								<div class="box box-primary">
 									 <div class="box-header with-border">
-										  <h4><?php echo $my_get['function']; ?> a RFC</h4>
+										  <h3 class="box-title"><?php echo $my_get['function']; ?> a RFC</h3>
 									 </div>
 									 <div class="box-body">
 
@@ -358,7 +358,8 @@ if ($my_get['function'] != "add") {
 														  <textarea name='comments' id='comments' class='form-control' rows="5" placeholder='Include Requester'><?php echo $row_rsRFA['comments']; ?></textarea>
 													 </div>
 												</div>
-
+									 </div>
+									 <div class="box-footer">
 												<div class="form-group">
 													 <div class="col-xs-offset-2 col-xs-10">
 														  <button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send RFC</button>

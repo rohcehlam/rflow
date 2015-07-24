@@ -85,7 +85,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 					 <div class="row">
 						  <div class="box box-primary">
 								<div class="box-header with-border">
-									 <h3>RFCs</h3>
+									 <h3 class="box-title">RFCs</h3>
 								</div>
 								<div class="box-body">
 									 <table id='rfas_table' class="table table-bordered table-striped">
