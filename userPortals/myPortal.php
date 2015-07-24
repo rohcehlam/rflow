@@ -165,10 +165,10 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 
 								<div class="panel panel-success">
 									 <div class="panel-heading">
-										  <h4 class="panel-title"><strong>Requests for my support: </strong></h4>
+										  <h3 class="panel-title"><strong>Requests for my support: </strong></h3>
 									 </div>
 									 <div class="panel-body">
-										  <table class="showMySettings table table-bordered table-striped">
+										  <table class="showMySettings table table-striped table-bordered table-condensed">
 												<thead>
 													 <tr>
 														  <th>Date Requested</th>
@@ -190,14 +190,13 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 															  <td><a href="../supportRequests/supportRequest.php?supportRequest=<?php echo $row_rsSupportRequests['escalationID']; ?>&amp;function=view"><?php echo stripslashes($row_rsSupportRequests['subject']); ?></a></td>
 															  <td><?php echo $row_rsSupportRequests['customer']; ?></td>
 															  <td><?php echo $row_rsSupportRequests['application']; ?></td>
-															  <td><?php echo $row_rsSupportRequests['application']; ?></td>
 															  <td><?php echo ($row_rsSupportRequests['ticket'] == "0") ? '-' : $row_rsSupportRequests['ticket']; ?></td>
 															  <td><?php echo $row_rsSupportRequests['status']; ?></td>
 														 </tr>
 													 <?php } ?>
 												</tbody>
 										  </table>
-									 </div>
+									 </div> <!-- /.box-body -->
 								</div>
 
 								<div class="panel panel-info">
@@ -205,7 +204,7 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 										  <h4 class="panel-title"><strong>Unassigned support requests: </strong></h4>
 									 </div>
 									 <div class="panel-body">
-										  <table class="showMySettings table table-bordered table-striped">
+										  <table class="showMySettings table table-bordered table-striped table-condensed">
 												<thead>
 													 <tr>
 														  <th>Date Requested</th>
@@ -245,7 +244,7 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 									 </div>
 									 <div class="panel-body">
 
-										  <table class="showMySettings table table-bordered table-striped">
+										  <table class="showMySettings table table-bordered table-striped table-condensed">
 												<thead>
 													 <tr>
 														  <th>Start Date</th>

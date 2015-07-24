@@ -3,6 +3,15 @@ require_once('../Connections/connection.php');
 require_once('../inc/functions.php');
 session_start();
 
+$label_colors = array(
+	"Open" => 'primary',
+	"Analysis" => 'info',
+	"Closed" => 'success',
+	"In Progress" => 'default',
+	"On Hold" => 'warning',
+	"Returned" => 'danger'
+);
+
 $args = array(
 	'pageNum_rsEscalations' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'employee' => FILTER_SANITIZE_SPECIAL_CHARS,
@@ -84,6 +93,22 @@ function colorCode($colorme) {
 		}
 	}
 }
+
+function escalation_level($colorme){
+	if ($colorme == "Closed") {
+		return "<span class=\"label label-success pull-right\">Closed</span>";
+	} else {
+		if (($colorme >= "20")) {
+			return "<span class=\"label label-danger pull-right\">Level Four</span>";
+		} elseif (($colorme >= 12) && ($colorme < 20)) {
+			return "<span class=\"label label-warning pull-right\">Level Three</span>";
+		} elseif (($colorme >= 2) && ($colorme < 12)) {
+			return "<span class=\"label label-info pull-right\">Level Two</span>";
+		} elseif (($colorme >= 0) && ($colorme < 2)) {
+			return "<span class=\"label label-default pull-right\">Level One</span>";
+		}
+	}
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -118,24 +143,14 @@ function colorCode($colorme) {
 									 <table id='supportRequests_table' class="table table-bordered table-striped">
 										  <thead>
 												<tr>
-													 <th width="7%">Date<br />Requested</th>
-													 <th width="7%">Last<br />Updated</th>
+													 <th>Date Requested</th>
+													 <th>Last Updated</th>
 													 <th>ID</th>
 													 <th>Subject</th>
-													 <?php
-													 if (!isset($my_get['app'])) {
-														 echo "		<th>App</th>\n";
-													 }
-													 if (!isset($my_get['ticket'])) {
-														 echo "		<th>Ticket</th>\n";
-													 }
-													 if (!isset($my_get['employee'])) {
-														 echo "		<th>Engineer</th>\n";
-													 }
-													 if (!isset($my_get['status']) || ($my_get['status'] == "none") || ($my_get['status'] == "Any")) {
-														 echo "		<th>Status</th>\n";
-													 }
-													 ?>
+													 <th>App</th>
+													 <th>Ticket</th>
+													 <th>Engineer</th>
+													 <th>Status</th>
 													 <?php sudoAuthData(null, null, "th", "edit", null); ?>
 												</tr>
 										  </thead>
@@ -160,7 +175,7 @@ function colorCode($colorme) {
 															  if (isset($row_rsEscalations['categoryID']) == "15") {
 																  echo "&amp;category=internal";
 															  }
-															  echo "\">" . stripslashes($row_rsEscalations['subject']) . "</a></td>\n";
+															  echo "\">" . stripslashes($row_rsEscalations['subject']) . "</a>".  escalation_level($row_rsEscalations['rowcolor'])."</td>\n";
 															  if (!isset($my_get['app'])) {
 																  echo "		<td>" . $row_rsEscalations['application'] . "</td>\n";
 															  }
@@ -176,11 +191,9 @@ function colorCode($colorme) {
 															  if (!isset($my_get['employee'])) {
 																  echo "		<td nowrap=\"nowrap\">" . $row_rsEscalations['receiver'] . "</td>\n";
 															  }
-															  if (!isset($my_get['status']) || ($my_get['status'] == "none") || ($my_get['status'] == "Any")) {
-																  echo "		<td nowrap=\"nowrap\">" . $row_rsEscalations['status'] . "</td>\n";
-															  }
 															  ?>
-															  <?php sudoAuthData("supportRequest.php", "Update Support Request", "td", "edit", "function=update&amp;supportRequest=" . $row_rsEscalations['escalationID']); ?>
+														 <td><?php echo "<span class=\"label label-{$label_colors[$row_rsEscalations['status']]}\">{$row_rsEscalations['status']}</span>"; ?></td>
+														 <?php sudoAuthData("supportRequest.php", "Update Support Request", "td", "edit", "function=update&amp;supportRequest=" . $row_rsEscalations['escalationID']); ?>
 													</tr>
 												<?php } ?>
 										  </tbody>

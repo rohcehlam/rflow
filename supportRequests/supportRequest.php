@@ -17,11 +17,11 @@ if ($my_get['function'] != "add") {
 	if (isset($my_get['supportRequest'])) {
 		$varEscalation_rsEscalations = addslashes($my_get['supportRequest']);
 	}
-	$query_rsEscalations = "SELECT escalations.escalationID, DATE_FORMAT(dateEscalated, '%m/%d/%Y') AS dateEscalated, DATE_FORMAT(targetDate, '%m/%d/%Y') AS targetDate"
+	$query_rsEscalations = "SELECT escalations.escalationID, DATE_FORMAT(dateEscalated, '%Y-%m-%d') AS dateEscalated, DATE_FORMAT(targetDate, '%Y-%m-%d') AS targetDate"
 		. ", TIME_FORMAT(timeEscalated,'%k:%i') AS timeEscalated, escalations.submittedBy, employees1.displayName AS escalator, escalations.applicationID"
 		. ", applications.application, escalations.categoryID, reporttypes.reportType AS category, escalations.subject, escalations.assignedTo, employees2.displayName AS receiver"
 		. ", escalations.status, escalations.ticket, escalations.priority, escalations.description, escalations.recreateSteps, escalations.whatWasTested"
-		. ", escalations.customerImpact, escalations.logs, DATE_FORMAT(dateClosed, '%m/%d/%Y') AS dateClosed, TIME_FORMAT(timeClosed,'%k:%i') AS timeClosed"
+		. ", escalations.customerImpact, escalations.logs, DATE_FORMAT(dateClosed, '%Y-%m-%d') AS dateClosed, TIME_FORMAT(timeClosed,'%k:%i') AS timeClosed"
 		. ", escalations.addInfo, escalations.outcome, escalations.deptID, departments.department, escalations.customerID, customers.customer"
 		. " FROM escalations"
 		. " LEFT JOIN applications ON escalations.applicationID=applications.applicationID"
@@ -123,14 +123,14 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 															 <div class="col-xs-4">
 																  <div class="input-group">
 																		<span class="input-group-addon">Updated on:</span>
-																		<input type="text" id="dateUpdated" name='dateUpdated' class="form-control" placeholder="<?php echo date('Y-m-d') ?>"/>
+																		<input type="text" id="dateUpdated" name='dateUpdated' class="form-control" value="<?php echo date('Y-m-d') ?>"/>
 																		<span class="input-group-addon" onclick='opendsdatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
 																  </div>
 															 </div>
 															 <div class="col-xs-3">
 																  <div class="input-group">
 																		<span class="input-group-addon">at:</span>
-																		<input type="text" id="timeUpdated" name='timeUpdated' class="form-control" placeholder="<?php echo date('H:i') ?>"/>
+																		<input type="text" id="timeUpdated" name='timeUpdated' class="form-control" value="<?php echo date('H:i') ?>"/>
 																		<span class="input-group-addon">UTC</span>
 																  </div>
 															 </div>
@@ -152,7 +152,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																		<input type="text" class="form-control" value="<?php echo $row_rsEscalations['dateClosed']; ?>" readonly />
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																	  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['dateClosed'];                                        ?></p> -->
+																	  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['dateClosed'];                                         ?></p> -->
 															 </div>
 															 <div class="col-xs-3">
 																  <div class="input-group">
@@ -161,7 +161,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																		<span class="input-group-addon"><span>UTC</span></span>
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																  <!-- <p class="form-control-static">at&nbsp;<?php //echo $row_rsEscalations['timeClosed'];                                       ?>&nbsp;UTC</p> -->
+																  <!-- <p class="form-control-static">at&nbsp;<?php //echo $row_rsEscalations['timeClosed'];                                        ?>&nbsp;UTC</p> -->
 															 </div>
 															 <div class="col-xs-3">
 																  <div class="input-group">
@@ -191,7 +191,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																		<input type="text" class="form-control" value="<?php echo $row_rsEscalations['receiver']; ?>" readonly />
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['receiver'];                                     ?></p> -->
+																  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['receiver'];                                      ?></p> -->
 															  <?php } ?>
 														 </div>
 														 <div class="col-xs-6">&nbsp;</div>
@@ -275,21 +275,21 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['escalator']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['escalator'];                              ?></p> -->
+																		 <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['escalator'];                               ?></p> -->
 																	 <?php } ?>
 																</div>
-																<?php if (($my_get['function'] == "add") || ($my_get['function'] == "update")) { ?>
+																<?php if ($my_get['function'] == "add") { ?>
 																	<label for='dateEscalated' class="control-label col-xs-1">On:</label>
 																	<div class="col-xs-2">
 																		 <div class="input-group">
 																			  <span class="input-group-addon" onclick='openEddatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
-																			  <input type="text" id="dateEscalated" name='dateEscalated' class="form-control" placeholder="<?php echo date('m/d/Y') ?>"/>
+																			  <input type="text" id="dateEscalated" name='dateEscalated' class="form-control" placeholder="<?php echo date('Y-m-d') ?>" value="<?php echo $row_rsEscalations['dateEscalated']; ?>"/>
 																		 </div>
 																	</div>
 																	<div class="col-xs-3">
 																		 <div class="input-group">
 																			  <span class="input-group-addon">&nbsp;<strong>at: </strong>&nbsp;</span>
-																			  <input type="text" name="timeEscalated" id="timeEscalated" value="" class='form-control' placeholder='<?php echo date('H:i'); ?>' maxlength="5"/>
+																			  <input type="text" name="timeEscalated" id="timeEscalated" class='form-control' placeholder='<?php echo date('H:i'); ?>' value="<?php echo $row_rsEscalations['timeEscalated']; ?>" maxlength="5"/>
 																			  <span class="input-group-addon">&nbsp;<strong>UTC</strong>&nbsp;</span>
 																		 </div>
 																	</div>
@@ -300,7 +300,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['dateEscalated']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">on:&nbsp;<?php //echo $row_rsEscalations['dateEscalated'];                              ?></p> -->
+																		 <!-- <p class="form-control-static">on:&nbsp;<?php //echo $row_rsEscalations['dateEscalated'];                               ?></p> -->
 																	</div>
 																	<div class="col-xs-3">
 																		 <div class="input-group">
@@ -309,7 +309,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <span class="input-group-addon">UTC</span>
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['timeEscalated'];                              ?>&nbsp;UTC</p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['timeEscalated'];                               ?>&nbsp;UTC</p> -->
 																	</div>
 																<?php } ?>
 														  </div>
@@ -329,7 +329,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['department']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['department'];                              ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['department'];                               ?></p> -->
 																	 <?php } ?>
 																</div>
 																<label for='ticket' class="control-label col-xs-2">Ticket:</label>
@@ -428,7 +428,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['customer']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['customer'];              ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['customer'];               ?></p> -->
 																	 <?php } ?>
 																</div>
 														  </div>
@@ -448,7 +448,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['application']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['application'];            ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['application'];             ?></p> -->
 																	 <?php } ?>
 																</div>
 																<label for='category' class="control-label col-xs-2">Category:</label>
@@ -466,7 +466,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['category']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['category'];            ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['category'];             ?></p> -->
 																	 <?php } ?>
 																</div>
 														  </div>
@@ -539,15 +539,14 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 														  </div>
 
 														  <?php if ($my_get['function'] == "add") { ?>
+														 </div>
+														 <div class="box-footer">
 															  <div class="form-group">
 																	<div class="col-xs-offset-2 col-xs-10">
 																		 <button class="btn btn-primary" type="submit" name="add" id="add"><span class='glyphicon glyphicon-save'></span>&nbsp;Submit Support Request</button>
 																		 <?php sentSuccessful("Support Request submitted successfully!"); ?>
 																	</div>
 															  </div>
-														  <?php } ?>
-
-														  <?php if ($my_get['function'] == "add") { ?>
 															  <input type="hidden" name="MM_insert" value="supportRequestAdd" />
 															  <input type="hidden" name="status" id="status" value="Open" />
 														  <?php } elseif ($my_get['function'] == "update") { ?>
