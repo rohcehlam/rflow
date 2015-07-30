@@ -28,10 +28,10 @@ $args = array(
 );
 $my_post = filter_input_array(INPUT_POST, $args);
 /*
-echo "<pre>\n";
-print_r($_REQUEST);
-print_r($my_post);
-echo "</pre>\n";
+  echo "<pre>\n";
+  print_r($_REQUEST);
+  print_r($my_post);
+  echo "</pre>\n";
  */
 $my_server = filter_input_array(INPUT_SERVER, array(
 	'QUERY_STRING' => FILTER_SANITIZE_SPECIAL_CHARS,
@@ -44,9 +44,8 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 	 <head>
 		  <title>Submitting Support Request..</title>
 		  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		  <?php build_header(); ?>
 	 </head>
-	 <body>		
+	 <body>
 		  <?php
 		  if ($my_post["MM_insert"] == "rfaAdd") {
 			  $temp = array();
@@ -71,9 +70,10 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 			  $temp = array();
 			  $helper_update = array('summary', 'description', 'applicationID', 'subapplicationID', 'layerID', 'status', 'comments', 'requestOrigin', 'requestOriginID', 'flagged', 'risk', 'reviewedBy');
 			  foreach ($helper_update as $data) {
-				  $temp[$data] = (isset($my_post[$data]) && $my_post[$data] != '' && $my_post[$data]) ? "$data='{$my_post[$data]}'" : 'NULL';
+				  $temp[$data] = (isset($my_post[$data]) && $my_post[$data] != '' && $my_post[$data]) ? "$data='{$my_post[$data]}'" : "$data=NULL";
 			  }
 			  $updateSQL = "UPDATE changerequests SET " . implode(', ', $temp) . " WHERE changeRequestID='{$my_post['changeRequestID']}'";
+			  echo $updateSQL;
 			  $Result1 = $conn->query($updateSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 		  } elseif ((isset($my_post["MM_update"])) && ($my_post["MM_update"] == "rfaUpdate") && (isset($my_post['windowStartDate']))) {
 			  $temp = array();

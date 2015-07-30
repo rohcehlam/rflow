@@ -24,6 +24,15 @@ if ((filter_input(INPUT_GET, 'doLogout', FILTER_SANITIZE_SPECIAL_CHARS) == "true
 $MM_authorizedUsers = "";
 $MM_donotCheckaccess = "true";
 
+$label_colors = array(
+	"Open" => 'primary',
+	"Analysis" => 'info',
+	"Closed" => 'success',
+	"In Progress" => 'default',
+	"On Hold" => 'warning',
+	"Returned" => 'danger'
+);
+
 // *** Restrict Access To Page: Grant or deny access to this page
 function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) {
 // For security, start by assuming the visitor is NOT authorized.
@@ -126,6 +135,40 @@ $query_rsMyProjectTasks = "SELECT projectevents.projectEventID, projectevents.pr
 $rsMyProjectTasks = $conn->query($query_rsMyProjectTasks) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsMyProjectTasks = $rsMyProjectTasks->fetch_assoc();
 $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
+$labels = array();
+$data0 = array();
+$data1 = array();
+$conn0 = new mysqli("23.23.213.234", "mfroot", "Mfroo7", "masflightdb");
+$result = $conn0->query("SELECT PROCESS, LEFT(datetime_event, 15) AS hora, AVG(processed_rec) as records"
+	. " FROM logmas_201507"
+	. " WHERE (PROCESS='oag_global' OR PROCESS='pinkfroot_demo')"
+	. "  AND type_proc='ES'"
+	. "  AND (datetime_event BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW())"
+	. " GROUP BY PROCESS, hora"
+	. " ORDER BY hora ASC;");
+$max_oag = 0;
+$max_pf = 0;
+while ($row = $result->fetch_assoc()) {
+	//if (!array_search($row['hora'], $labels)) {
+	if (!isset($labels[$row['hora']])) {
+		$labels[$row['hora']] = "'" . substr($row['hora'], 8, 7) . "0'";
+		$data0[$row['hora']] = 0;
+		$data1[$row['hora']] = 0;
+	}
+	if ($row['PROCESS'] == 'oag_global') {
+		$data0[$row['hora']] = $row['records'];
+		if ($row['records'] > $max_oag) {
+			$max_oag = $row['records'];
+		}
+	} else {
+		$data1[$row['hora']] = $row['records'];
+		if ($row['records'] > $max_pf) {
+			$max_pf = $row['records'];
+		}
+	}
+}
+$avg_oag = $max_oag != 0 ? floor(end($data0) / $max_oag * 100) : 0;
+$avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -163,12 +206,134 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 					 <div class="row">
 						  <div class="col-md-8">
 
-								<div class="panel panel-success">
-									 <div class="panel-heading">
-										  <h3 class="panel-title"><strong>Requests for my support: </strong></h3>
+								<div class="box box-primary">
+									 <div class="box-header with-border">
+										  <h3 class="box-title">Graph Area</h3>
+										  <div class="pull-right box-tools">
+												<button class="btn btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+										  </div>
 									 </div>
-									 <div class="panel-body">
-										  <table class="showMySettings table table-striped table-bordered table-condensed">
+									 <div class="box-body">
+										  <div class="chart">
+												<canvas id="areaChart" style="height:120px"></canvas>
+										  </div>
+										  <div class="row row-border">
+												<div class="col-md-2">
+													 <div class="description-block">
+														  <input type="text" class="knob" value="<?php echo $avg_oag; ?>" data-width="90" data-height="90" data-fgColor="rgba(210, 214, 222, 1)" readonly/>
+													 </div><!-- /.description-block -->
+												</div>
+												<div class="col-md-2 border-right">
+													 <div class="description-block">
+														  <span class="description-header">OAG global</span><br/>
+														  <span class="description-text">Max: <?php echo number_format($max_oag, 2); ?></span><br/>
+														  <span class="description-text">Current: <?php echo number_format(end($data0), 2); ?></span>
+														  <span class="description-text">Percent: <?php echo $avg_oag; ?>%</span>
+													 </div>
+												</div>
+												<div class="col-md-2">
+													 <div class="description-block">
+														  <input type="text" class="knob" value="<?php echo $avg_pf; ?>" data-width="90" data-height="90" data-fgColor="rgba(60,141,188,0.9)" readonly/>
+													 </div><!-- /.description-block -->
+												</div>
+												<div class="col-md-2 border-right">
+													 <div class="description-block">
+														  <span class="description-header">Pinkfroot Demo</span><br/>
+														  <span class="description-text">Max: <?php echo number_format($max_pf, 2); ?></span><br/>
+														  <span class="description-text">Current: <?php echo number_format(end($data1), 2); ?></span>
+														  <span class="description-text">Percent: <?php echo $avg_pf; ?>%</span>
+													 </div>
+												</div>
+										  </div>
+									 </div>
+								</div>
+								<script src="../js/Chart.min.js" type="text/javascript"></script>
+								<script src="../js/jquery.knob.js" type="text/javascript"></script>
+								<script>
+                           $(function () {
+                               var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
+                               // This will get the first returned node in the jQuery collection.
+                               var areaChart = new Chart(areaChartCanvas);
+
+                               var areaChartData = {
+                                   labels: [<?php echo implode(', ', $labels); ?>],
+                                   datasets: [
+                                       {
+                                           label: "OAG Global",
+                                           fillColor: "rgba(210, 214, 222, 1)",
+                                           strokeColor: "rgba(210, 214, 222, 1)",
+                                           pointColor: "rgba(210, 214, 222, 1)",
+                                           pointStrokeColor: "#c1c7d1",
+                                           pointHighlightFill: "#fff",
+                                           pointHighlightStroke: "rgba(220,220,220,1)",
+                                           data: [<?php echo implode(', ', $data0); ?>]
+                                       },
+                                       {
+                                           label: "Pinkfroot Demo",
+                                           fillColor: "rgba(60,141,188,0.9)",
+                                           strokeColor: "rgba(60,141,188,0.8)",
+                                           pointColor: "#3b8bba",
+                                           pointStrokeColor: "rgba(60,141,188,1)",
+                                           pointHighlightFill: "#fff",
+                                           pointHighlightStroke: "rgba(60,141,188,1)",
+                                           data: [<?php echo implode(', ', $data1); ?>]
+                                       }
+                                   ]
+                               };
+
+                               var areaChartOptions = {
+                                   //Boolean - If we should show the scale at all
+                                   showScale: true,
+                                   //Boolean - Whether grid lines are shown across the chart
+                                   scaleShowGridLines: false,
+                                   //String - Colour of the grid lines
+                                   scaleGridLineColor: "rgba(0,0,0,.05)",
+                                   //Number - Width of the grid lines
+                                   scaleGridLineWidth: 1,
+                                   //Boolean - Whether to show horizontal lines (except X axis)
+                                   scaleShowHorizontalLines: true,
+                                   //Boolean - Whether to show vertical lines (except Y axis)
+                                   scaleShowVerticalLines: true,
+                                   //Boolean - Whether the line is curved between points
+                                   bezierCurve: true,
+                                   //Number - Tension of the bezier curve between points
+                                   bezierCurveTension: 0.3,
+                                   //Boolean - Whether to show a dot for each point
+                                   pointDot: false,
+                                   //Number - Radius of each point dot in pixels
+                                   pointDotRadius: 4,
+                                   //Number - Pixel width of point dot stroke
+                                   pointDotStrokeWidth: 1,
+                                   //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+                                   pointHitDetectionRadius: 20,
+                                   //Boolean - Whether to show a stroke for datasets
+                                   datasetStroke: true,
+                                   //Number - Pixel width of dataset stroke
+                                   datasetStrokeWidth: 2,
+                                   //Boolean - Whether to fill the dataset with a color
+                                   datasetFill: false,
+                                   //String - A legend template
+                                   legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+                                   //Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                                   maintainAspectRatio: true,
+                                   //Boolean - whether to make the chart responsive to window resizing
+                                   responsive: true
+                               };
+                               areaChart.Line(areaChartData, areaChartOptions);
+
+                               $(".knob").knob();
+                           });
+								</script>
+
+								<div class="box box-success">
+									 <div class="box-header with-border">
+										  <h3 class="box-title"><span class="badge"><?php echo $rsSupportRequests->num_rows; ?></span>&nbsp;<strong>Requests for my support</strong></h3>
+										  <div class="pull-right box-tools">
+												<button class="btn btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+										  </div>
+									 </div>
+									 <div class="box-body">
+										  <table class="table table-striped table-condensed">
 												<thead>
 													 <tr>
 														  <th>Date Requested</th>
@@ -191,7 +356,7 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 															  <td><?php echo $row_rsSupportRequests['customer']; ?></td>
 															  <td><?php echo $row_rsSupportRequests['application']; ?></td>
 															  <td><?php echo ($row_rsSupportRequests['ticket'] == "0") ? '-' : $row_rsSupportRequests['ticket']; ?></td>
-															  <td><?php echo $row_rsSupportRequests['status']; ?></td>
+															  <td><span class="label label-<?php echo $label_colors[$row_rsSupportRequests['status']]; ?>"><?php echo $row_rsSupportRequests['status']; ?></span></td>
 														 </tr>
 													 <?php } ?>
 												</tbody>
@@ -199,12 +364,15 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 									 </div> <!-- /.box-body -->
 								</div>
 
-								<div class="panel panel-info">
-									 <div class="panel-heading">
-										  <h4 class="panel-title"><strong>Unassigned support requests: </strong></h4>
+								<div class="box box-info">
+									 <div class="box-header with-border">
+										  <h4 class="box-title"><span class="badge"><?php echo $rsUnassignedSupportRequests->num_rows; ?></span>&nbsp;<strong>Unassigned support requests</strong></h4>
+										  <div class="pull-right box-tools">
+												<button class="btn btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+										  </div>
 									 </div>
-									 <div class="panel-body">
-										  <table class="showMySettings table table-bordered table-striped table-condensed">
+									 <div class="box-body">
+										  <table class="table table-striped table-condensed">
 												<thead>
 													 <tr>
 														  <th>Date Requested</th>
@@ -227,7 +395,7 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 															  <td><?php echo $row_rsUnassignedSupportRequests['customer']; ?></td>
 															  <td><?php echo $row_rsUnassignedSupportRequests['application']; ?></td>
 															  <td><?php echo ($row_rsUnassignedSupportRequests['ticket'] == "0") ? '-' : $row_rsUnassignedSupportRequests['ticket']; ?></td>
-															  <td><?php echo $row_rsUnassignedSupportRequests['status']; ?></td>
+															  <td><span class="label label-<?php echo $label_colors[$row_rsUnassignedSupportRequests['status']]; ?>"><?php echo $row_rsUnassignedSupportRequests['status']; ?></span></td>
 														 </tr>
 													 <?php } ?>
 												</tbody>
@@ -238,13 +406,16 @@ $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
 						  </div>
 						  <div class="col-md-4">
 
-								<div class="panel panel-danger">
-									 <div class="panel-heading">
-										  <h4 class="panel-title"><strong>Open Maintenances: </strong></h4>
+								<div class="box box-danger">
+									 <div class="box-header with-border">
+										  <h4 class="panel-title"><span class="badge"><?php echo $rsPendingMaintenances->num_rows; ?></span>&nbsp;<strong>Open Maintenances</strong></h4>
+										  <div class="pull-right box-tools">
+												<button class="btn btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+										  </div>
 									 </div>
-									 <div class="panel-body">
+									 <div class="box-body">
 
-										  <table class="showMySettings table table-bordered table-striped table-condensed">
+										  <table class="table table-striped table-condensed">
 												<thead>
 													 <tr>
 														  <th>Start Date</th>

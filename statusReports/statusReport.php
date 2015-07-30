@@ -131,7 +131,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 															  <?php } else { ?>
 																  <div class="input-group">
 																		<span class="input-group-addon" onclick='openstartdatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
-																		<input type="text" name="startDate" id="startDate" class="form-control" placeholder="<?php echo date('m/d/Y'); ?>"/>
+																		<input type="text" name="startDate" id="startDate" class="form-control" value="<?php echo date('Y-m-d'); ?>" required/>
 																  </div>
 															  <?php } ?>
 														  <?php } else { ?>
@@ -139,7 +139,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 																	<input type="text" class="form-control" value="<?php echo $row_rsStatusReport['startDate']; ?>" readonly />
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['startDate'];                        ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['startDate'];                         ?></p> -->
 														  <?php } ?>
 													 </div>
 													 <label for='enddate' class="control-label col-xs-2">End Date:</label>
@@ -147,14 +147,14 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 														  <?php if ($my_get['function'] != "view") { ?>
 															  <div class="input-group">
 																	<span class="input-group-addon" onclick='openenddatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
-																	<input type="text" name='endDate' id="endDate" class="form-control" placeholder="<?php echo date('m/d/Y'); ?>"/>
+																	<input type="text" name='endDate' id="endDate" class="form-control" value="<?php echo date('Y-m-d'); ?>" required/>
 															  </div>
 														  <?php } else { ?>
 															  <div class="input-group">
 																	<input type="text" class="form-control" value="<?php echo $row_rsStatusReport['endDate']; ?>" readonly />
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['endDate'];                       ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['endDate'];                        ?></p> -->
 														  <?php } ?>
 													 </div>
 												</div>
@@ -163,13 +163,13 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 													 <label for='subject' class="control-label col-xs-2">Subject:</label>
 													 <div class="col-xs-10">
 														  <?php if ($my_get['function'] != "view") { ?>
-															  <input type="text" name="subject" id="subject" maxlength="255" placeholder="Subject" class="form-control"/>
+															  <input type="text" name="subject" id="subject" maxlength="255" placeholder="Subject" class="form-control" required/>
 														  <?php } else { ?>
 															  <div class="input-group">
 																	<input type="text" class="form-control" value="<?php echo $row_rsStatusReport['subject']; ?>" readonly />
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['subject'];                       ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['subject'];                        ?></p> -->
 														  <?php } ?>
 													 </div>
 												</div>
@@ -229,7 +229,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 													 <label for='magic' class="control-label col-xs-2">Ticket #:</label>
 													 <div class='col-xs-4'>
 														  <?php if ($my_get['function'] != "view") { ?>
-															  <input type="text" name="magic" id="magic" value="" maxlength="20" class='form-control' placeholder='Ticket #'/>
+															  <input type="text" name="magic" id="magic" value="" maxlength="20" class='form-control' placeholder='Ticket #' required/>
 														  <?php } else { ?>
 															  <div class="input-group">
 																	<input type="text" class="form-control" value="<?php echo $row_rsStatusReport['magicTicket'] == "0" ? '-' : $row_rsStatusReport['magicTicket']; ?>" readonly />
@@ -241,7 +241,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 													 <label for='wrm' class="control-label col-xs-2">Case #:</label>
 													 <div class='col-xs-4'>
 														  <?php if ($my_get['function'] != "view") { ?>
-															  <input type="text" name="wrm" id="wrm" value="" class='form-control' placeholder='Case #'/>
+															  <input type="text" name="wrm" id="wrm" value="" class='form-control' placeholder='Case #' required/>
 														  <?php } else { ?>
 															  <div class="input-group">
 																	<input type="text" class="form-control" value="<?php echo $row_rsStatusReport['wrm'] == "0" ? '-' : $row_rsStatusReport['wrm']; ?>" readonly />
@@ -344,13 +344,13 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 													 <label for='notes' class="control-label col-xs-2">Notes:</label>
 													 <div class="col-xs-10">
 														  <?php if ($my_get['function'] != "view") { ?>
-															  <textarea name='notes' id='notes' class='form-control' rows="5" ><?php echo (isset($my_get['maintenance']) ? $row_rsMaint['prodChanges'] : ''); ?></textarea>
+															  <textarea name='notes' id='notes' class='form-control' rows="5" required><?php echo (isset($my_get['maintenance']) ? $row_rsMaint['prodChanges'] : ''); ?></textarea>
 														  <?php } else { ?>
 															  <div class="input-group">
 																	<textarea rows="5" class="form-control" readonly><?php echo nl2br($row_rsStatusReport['notes']); ?></textarea>
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo nl2br($row_rsStatusReport['notes']);   ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo nl2br($row_rsStatusReport['notes']);    ?></p> -->
 														  <?php } ?>
 													 </div>
 												</div>
@@ -365,7 +365,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 																	<textarea rows="5" class="form-control" readonly><?php echo nl2br($row_rsStatusReport['actionItems']); ?></textarea>
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo nl2br($row_rsStatusReport['actionItems']);  ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo nl2br($row_rsStatusReport['actionItems']);   ?></p> -->
 														  <?php } ?>
 													 </div>
 												</div>
@@ -375,16 +375,16 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 													 <div class="col-xs-5">
 														  <div class="btn-group btn-group-justified" data-toggle="buttons">
 																<label class="btn btn-default active">
-																	 <input type="checkbox" name="prodOps" id="prodOps"/>Tech Support
+																	 <input type="checkbox" value='y' name="prodOps" id="prodOps" checked='checked' />Tech Support
 																</label>
 																<label class="btn btn-default">
-																	 <input type="checkbox" name="noc" id="noc"/>Product Dev
+																	 <input type="checkbox" value='y' name="noc" id="noc"/>Product Dev
 																</label>
 																<label class="btn btn-default">
-																	 <input type="checkbox" name="syseng" id="syseng"/>Sales
+																	 <input type="checkbox" value='y' name="syseng" id="syseng"/>Sales
 																</label>
 																<label class="btn btn-default">
-																	 <input type="checkbox" name="neteng" id="neteng"/>Projects
+																	 <input type="checkbox" value='y' name="neteng" id="neteng"/>Projects
 																</label>
 														  </div>
 													 </div>
@@ -398,26 +398,28 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 
 									 </div>
 									 <div class="box-footer">
-												
-												<div class="form-group">
-													 <div class="col-xs-offset-2 col-xs-10">
-														  <button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Status Report</button>
-														  <?php if ($my_get['function'] != "add") { ?>
-															  <input type="hidden" name="statusReport" id="statusReport" value="<?php echo $my_get['statusReport'] ?>" /><?php
-														  } else {
-															  echo "<input type=\"hidden\" name=\"MM_insert\" value=\"statusReportAdd\" />";
-															  if (isset($my_get['project'])) {
-																  ?>
-																  <input type="hidden" name="module" value="<?php echo $my_get['module']; ?>" />
-																  <input type="hidden" name="project" value="<?php echo $my_get['project']; ?>" />
-																  <input type="hidden" name="projectEvent" value="<?php echo $my_get['projectEvent']; ?>" />
-																  <?php
-															  }
-														  }
-														  sentSuccessful("Status Report sent successfully!");
-														  ?>
-													 </div>
+
+										  <div class="form-group">
+												<div class="col-xs-offset-2 col-xs-10">
+													 <?php if ($my_get['function'] != "view") { ?>
+														 <button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Status Report</button>
+													 <?php } ?>
+													 <?php if ($my_get['function'] != "add") { ?>
+														 <input type="hidden" name="statusReport" id="statusReport" value="<?php echo $my_get['statusReport'] ?>" /><?php
+													 } else {
+														 echo "<input type=\"hidden\" name=\"MM_insert\" value=\"statusReportAdd\" />";
+														 if (isset($my_get['project'])) {
+															 ?>
+															 <input type="hidden" name="module" value="<?php echo $my_get['module']; ?>" />
+															 <input type="hidden" name="project" value="<?php echo $my_get['project']; ?>" />
+															 <input type="hidden" name="projectEvent" value="<?php echo $my_get['projectEvent']; ?>" />
+															 <?php
+														 }
+													 }
+													 sentSuccessful("Status Report sent successfully!");
+													 ?>
 												</div>
+										  </div>
 
 										  </form>
 										  <script>

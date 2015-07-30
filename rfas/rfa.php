@@ -38,10 +38,10 @@ if ($my_get['function'] != "add") {
 		$varRFA_rsRFA = addslashes($my_get['rfa']);
 	}
 	$query_rsRFA = "SELECT changerequests.changeRequestID, employees1.displayName as submittedBy, employees2.displayName as reviewer, changerequests.reviewedBy"
-		. ", DATE_FORMAT(dateSubmitted, '%m/%d/%Y') AS dateSubmitted, TIME_FORMAT(timeSubmitted,'%k:%i') AS timeSubmitted, changerequests.summary, changerequests.description"
+		. ", DATE_FORMAT(dateSubmitted, '%Y-%m-%d') AS dateSubmitted, TIME_FORMAT(timeSubmitted,'%k:%i') AS timeSubmitted, changerequests.summary, changerequests.description"
 		. ", changerequests.status, changerequests.comments, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged"
-		. ", DATE_FORMAT(windowStartDate, '%m/%d/%Y') AS windowStartDate, TIME_FORMAT(windowStartTime,'%k:%i') AS windowStartTime"
-		. ", DATE_FORMAT(windowEndDate, '%m/%d/%Y') AS windowEndDate, TIME_FORMAT(windowEndTime,'%k:%i') AS windowEndTime, changerequests.applicationID, applications.application"
+		. ", DATE_FORMAT(windowStartDate, '%Y-%m-%d') AS windowStartDate, TIME_FORMAT(windowStartTime,'%k:%i') AS windowStartTime"
+		. ", DATE_FORMAT(windowEndDate, '%Y-%m-%d') AS windowEndDate, TIME_FORMAT(windowEndTime,'%k:%i') AS windowEndTime, changerequests.applicationID, applications.application"
 		. ", changerequests.subapplicationID, subapplications.subapplication, changerequests.layerID, layers.layer, changerequests.risk"
 		. " FROM changerequests"
 		. " LEFT JOIN employees as employees1 ON changerequests.submittedBy=employees1.employeeID"
@@ -94,7 +94,7 @@ if ($my_get['function'] != "add") {
 												<div class="form-group">
 													 <?php if ($my_get['function'] == "add") { ?>
 														 <label for='submittedBy' class="control-label col-xs-2">Submitted by:</label>
-														 <div class="col-xs-4">
+														 <div class="col-xs-3">
 															  <select name="submittedBy" id="submittedBy" class="form-control">
 																	<?php
 																	while ($row = $rsEmployees->fetch_assoc()) {
@@ -104,16 +104,16 @@ if ($my_get['function'] != "add") {
 															  </select>
 														 </div>
 														 <label for='dateSubmitted' class="control-label col-xs-1">On:</label>
-														 <div class="col-xs-2">
+														 <div class="col-xs-3">
 															  <div class="input-group">
 																	<span class="input-group-addon" onclick='opendsdatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
-																	<input type="text" id="dateSubmitted" name='dateSubmitted' class="form-control" placeholder="<?php echo date('Y-m-d') ?>"/>
+																	<input type="date" id="dateSubmitted" name='dateSubmitted' class="form-control" value="<?php echo date('Y-m-d') ?>" required/>
 															  </div>
 														 </div>
 														 <div class="col-xs-3">
 															  <div class="input-group">
 																	<span class="input-group-addon">&nbsp;<strong>at: </strong>&nbsp;</span>
-																	<input type="text" name="timeSubmitted" id="timeSubmitted" value="" class='form-control' placeholder='<?php echo date('H:i'); ?>' maxlength="5"/>
+																	<input type="text" name="timeSubmitted" id="timeSubmitted" class='form-control' value='<?php echo date('H:i'); ?>' maxlength="5" required/>
 																	<span class="input-group-addon">&nbsp;<strong>UTC</strong>&nbsp;</span>
 															  </div>
 														 </div>
@@ -148,13 +148,13 @@ if ($my_get['function'] != "add") {
 												<div class='form-group'>
 													 <label for='summary' class="control-label col-xs-2">Summary:</label>
 													 <div class="col-xs-10">
-														  <input id='summary' name='summary' value='<?php echo $row_rsRFA['summary']; ?>' class='form-control' placeholder='Summary'/>
+														  <input id='summary' name='summary' value='<?php echo $row_rsRFA['summary']; ?>' class='form-control' placeholder='Summary' required/>
 													 </div>
 												</div>
 												<div class='form-group'>
 													 <label for='description' class="control-label col-xs-2">Description:</label>
 													 <div class="col-xs-10">
-														  <textarea name='description' id='description' class='form-control' rows="5" placeholder='Description of the change that will be made'><?php echo $row_rsRFA['description']; ?></textarea>
+														  <textarea name='description' id='description' class='form-control' rows="5" placeholder='Description of the change that will be made' required><?php echo $row_rsRFA['description']; ?></textarea>
 													 </div>
 												</div>
 												<div class='form-group'>
@@ -258,7 +258,7 @@ if ($my_get['function'] != "add") {
 														  <?php if (($my_get['function'] == "add") || (($my_get['function'] == "update") && ($my_get['modWindow'] == "y") )) { ?>
 															  <div class="input-group">
 																	<span class="input-group-addon">Starting</span>
-																	<input type="text" id="windowStartDate" name='windowStartDate' class="form-control" placeholder="<?php echo date('Y-m-d') ?>"/>
+																	<input type="text" id="windowStartDate" name='windowStartDate' class="form-control" value="<?php echo date('Y-m-d') ?>"/>
 																	<span class="input-group-addon" onclick='openwsdatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
 															  </div>
 														  <?php } else { ?>
@@ -274,7 +274,7 @@ if ($my_get['function'] != "add") {
 													 <div class="col-xs-4">
 														  <div class="input-group">
 																<span class="input-group-addon">&nbsp;<strong>at: </strong>&nbsp;</span>
-																<input type="text" name="windowStartTime" id="windowStartTime" value="" class='form-control' placeholder='<?php echo date('H:i'); ?>' maxlength="5"/>
+																<input type="text" name="windowStartTime" id="windowStartTime" class='form-control' value='<?php echo date('H:i'); ?>' maxlength="5"/>
 																<span class="input-group-addon">&nbsp;<strong>UTC</strong>&nbsp;</span>
 														  </div>
 													 </div>
@@ -285,7 +285,7 @@ if ($my_get['function'] != "add") {
 														  <?php if (($my_get['function'] == "add") || (($my_get['function'] == "update") && ($my_get['modWindow'] == "y") )) { ?>
 															  <div class="input-group">
 																	<span class="input-group-addon">Ending</span>
-																	<input type="text" id="windowEndDate" name='windowEndDate' class="form-control" placeholder="<?php echo date('Y-m-d') ?>"/>
+																	<input type="text" id="windowEndDate" name='windowEndDate' class="form-control" value="<?php echo date('Y-m-d') ?>"/>
 																	<span class="input-group-addon" onclick='openwedatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
 															  </div>
 														  <?php } else { ?>
@@ -301,7 +301,7 @@ if ($my_get['function'] != "add") {
 													 <div class="col-xs-4">
 														  <div class="input-group">
 																<span class="input-group-addon">&nbsp;<strong>at: </strong>&nbsp;</span>
-																<input type="text" name="windowStartTime" id="windowStartTime" value="" class='form-control' placeholder='<?php echo date('H:i'); ?>' maxlength="5"/>
+																<input type="text" name="windowStartTime" id="windowStartTime" class='form-control' value='<?php echo date('H:i'); ?>' maxlength="5"/>
 																<span class="input-group-addon">&nbsp;<strong>UTC</strong>&nbsp;</span>
 														  </div>
 													 </div>
