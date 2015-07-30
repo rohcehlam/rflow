@@ -29,7 +29,7 @@ if (isset($my_get['engineer'])) {
 }
 if (isset($my_get['status'])) {
 	$where = " WHERE changerequests.status='{$my_get['status']}'";
-	$filter_text = "&nbsp;<span class='glyphicon glyphicon-filter'></span>&nbsp;Filter: <em>Engineer: </em>{$my_get['status']}\n";
+	$filter_text = "&nbsp;<span class='glyphicon glyphicon-filter'></span>&nbsp;Filter: <em>Status: </em>{$my_get['status']}\n";
 }
 if (isset($my_get['summary'])) {
 	$where = " WHERE changerequests.summary like('%{$my_get['summary']}%')";

@@ -69,7 +69,6 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 		  <!--
 		  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
 		  -->
-		  <script src="../js/validator.js"></script>
 
 	 </head>
 	 <body class="skin-blue layout-top-nav">
@@ -115,7 +114,7 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 															  ?>
 															  <div class="input-group">
 																	<span class="input-group-addon" onclick='opendatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
-																	<input type="text" id="startDate" name='startDate' class="form-control" placeholder="<?php echo date('Y-m-d') ?>"/>
+																	<input type="text" id="startDate" name='startDate' class="form-control" value="<?php echo date('Y-m-d') ?>" required/>
 															  </div>
 															  <?php
 														  }
@@ -125,14 +124,8 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 													 <div class="col-xs-4">
 														  <select<?php echo (($row_rsMaintenanceNotif['status'] == "Closed") || ($row_rsMaintenanceNotif['status'] == "Canceled")) ? " name=\"userStatus\" id=\"userStatus\" disabled=\"disabled\"" : " name=\"status\" id=\"status\""; ?> class='form-control'>
 																<?php
-																$options = array(
-																	'Open' => 'Open',
-																	'Closed' => 'Closed',
-																	'Canceled' => 'Canceled',
-																	'Extended' => 'Extended',
-																);
-																foreach ($options as $key => $data) {
-																	echo "<option value='$key'" . ($key === $row_rsMaintenanceNotif['status'] ? " selected='selected'" : '') . ">$data</option>\n";
+																foreach (['Open', 'Closed', 'Canceled', 'Extended'] as $data) {
+																	echo "<option value='$data'" . ($data === $row_rsMaintenanceNotif['status'] ? " selected='selected'" : '') . ">$data</option>\n";
 																}
 																?>
 														  </select>
@@ -151,13 +144,13 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 													 <?php if ($my_get['function'] != "view") { ?>
 														 <div class='col-xs-2'>
 															  <div class="input-group">
-																	<input type="text" name="startHour" id="startHour" value="" maxlength="2" class='form-control' placeholder='<?php echo date('H'); ?>'/>
+																	<input type="text" name="startHour" id="startHour" maxlength="2" class='form-control' value='<?php echo date('H'); ?>' required/>
 																	<span class="input-group-addon">&nbsp;<strong>:</strong>&nbsp;</span>
 															  </div>
 														 </div>
 														 <div class='col-xs-2'>
 															  <div class="input-group">
-																	<input type="text" name="startMinute" id="startMinute" value="" maxlength="2" class='form-control' placeholder='<?php echo date('i'); ?>'/>
+																	<input type="text" name="startMinute" id="startMinute" maxlength="2" class='form-control' value='<?php echo date('i'); ?>' required/>
 																	<span class="input-group-addon">UTC</span>
 															  </div>
 														 </div>
@@ -179,13 +172,13 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 														 <div class='col-xs-2'>
 															  <div class="input-group">
 																	<span class="input-group-addon">Hour(s)</span>
-																	<input type="text" name="estHours" id="estHours" maxlength="2"  class='form-control' placeholder='00'/>
+																	<input type="text" name="estHours" id="estHours" maxlength="2"  class='form-control' value='00' required/>
 															  </div>
 														 </div>
 														 <div class='col-xs-2'>
 															  <div class="input-group">
 																	<span class="input-group-addon">Minute(s)</span>
-																	<input type="text" name="estMins" id="estMins" maxlength="2" tabindex="2" class='form-control' placeholder='30'/>
+																	<input type="text" name="estMins" id="estMins" maxlength="2" tabindex="2" class='form-control' value='30' required/>
 															  </div>
 														 </div>
 														 <?php
@@ -206,19 +199,40 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 												<div class='form-group'>
 													 <label for='reason' class="control-label col-xs-2">Reason:</label>
 													 <div class="col-xs-10">
-														  <input id='reason' name='reason' value='<?php echo $row_rsMaintenanceNotif['reason']; ?>' class='form-control' placeholder='Reason'/>
+														  <?php if ($my_get['function'] != "view") { ?>
+															  <input id='reason' name='reason' value='<?php echo $row_rsMaintenanceNotif['reason']; ?>' class='form-control' placeholder='Reason' required/>
+														  <?php } else { ?>
+															  <div class='input-group'>
+																	<input id='reason' name='reason' value='<?php echo $row_rsMaintenanceNotif['reason']; ?>' class='form-control' readonly/>
+																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+															  </div>
+														  <?php } ?>
 													 </div>
 												</div>
 												<div class='form-group'>
 													 <label for='customerImpact' class="control-label col-xs-2">Customer Impact:</label>
 													 <div class="col-xs-10">
-														  <input id='customerImpact' name='customerImpact' value='<?php echo $row_rsMaintenanceNotif['customerImpact']; ?>' class='form-control' placeholder='Customer Impact'/>
+														  <?php if ($my_get['function'] != "view") { ?>
+															  <input id='customerImpact' name='customerImpact' value='<?php echo $row_rsMaintenanceNotif['customerImpact']; ?>' class='form-control' placeholder='Customer Impact' required/>
+														  <?php } else { ?>
+															  <div class='input-group'>
+																	<input id='customerImpact' name='customerImpact' value='<?php echo $row_rsMaintenanceNotif['customerImpact']; ?>' class='form-control' readonly/>
+																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+															  </div>
+														  <?php } ?>
 													 </div>
 												</div>
 												<div class='form-group'>
 													 <label for='nocImpact' class="control-label col-xs-2">NOC Impact:</label>
 													 <div class="col-xs-10">
-														  <input id='nocImpact' name='nocImpact' value='<?php echo $row_rsMaintenanceNotif['nocImpact']; ?>' class='form-control' placeholder='NOC Impact'/>
+														  <?php if ($my_get['function'] != "view") { ?>
+															  <input id='nocImpact' name='nocImpact' value='<?php echo $row_rsMaintenanceNotif['nocImpact']; ?>' class='form-control' placeholder='NOC Impact' required/>
+														  <?php } else { ?>
+															  <div class='input-group'>
+																	<input id='nocImpact' name='nocImpact' value='<?php echo $row_rsMaintenanceNotif['nocImpact']; ?>' class='form-control' readonly/>
+																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+															  </div>
+														  <?php } ?>
 													 </div>
 												</div>
 
@@ -247,9 +261,16 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 												</div>
 
 												<div class='form-group'>
-													 <label for='prodChange' class="control-label col-xs-2">Production Changes:</label>
+													 <label for='prodChanges' class="control-label col-xs-2">Production Changes:</label>
 													 <div class="col-xs-10">
-														  <textarea name='prodChange' id='prodChange' class='form-control' rows="5" ><?php echo $row_rsMaintenanceNotif['prodChanges']; ?></textarea>
+														  <?php if ($my_get['function'] != "view") { ?>
+															  <textarea name='prodChanges' id='prodChanges' class='form-control' rows="5" required><?php echo $row_rsMaintenanceNotif['prodChanges']; ?></textarea>
+														  <?php } else { ?>
+															  <div class='input-group'>
+																	<textarea name='prodChanges' id='prodChanges' class='form-control' rows="5" readonly><?php echo $row_rsMaintenanceNotif['prodChanges']; ?></textarea>
+																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+															  </div>
+														  <?php } ?>
 													 </div>
 												</div>
 
@@ -258,16 +279,16 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 													 <div class="col-xs-5">
 														  <div class="btn-group btn-group-justified" data-toggle="buttons">
 																<label class="btn btn-default active">
-																	 <input type="checkbox" name="prodOps" id="prodOps"/>Tech Support
+																	 <input type="checkbox" name="prodOps" id="prodOps" value="y" checked='checked'/>Tech Support
 																</label>
 																<label class="btn btn-default">
-																	 <input type="checkbox" name="noc" id="noc"/>Product Dev
+																	 <input type="checkbox" name="noc" id="noc" value="y"/>Product Dev
 																</label>
 																<label class="btn btn-default">
-																	 <input type="checkbox" name="syseng" id="syseng"/>Sales
+																	 <input type="checkbox" name="syseng" id="syseng" value="y"/>Sales
 																</label>
 																<label class="btn btn-default">
-																	 <input type="checkbox" name="neteng" id="neteng"/>Projects
+																	 <input type="checkbox" name="neteng" id="neteng" value="y"/>Projects
 																</label>
 														  </div>
 													 </div>
@@ -281,41 +302,43 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 									 </div>
 									 <div class="box-footer">
-												<div class="form-group">
-													 <div class="col-xs-offset-2 col-xs-10">
-														  <button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Maintenance Notification</button>
-														  <?php if ($my_get['function'] != 'add') { ?>
-															  <a class="btn btn-default" href="../statusReports/statusReport.php?function=add&amp;maintenance=<?php
-															  echo $row_rsMaintenanceNotif['maintenanceNotifsID'];
-															  if ($row_rsAnyPEforMN > 0) {
-																  echo "&amp;project=" . $row_rsAnyPEforMN['projectID'] . "&amp;module=statusReport&amp;projectEvent=" . $row_rsAnyPEforMN['projectTaskID'] . "&amp;function=add";
-															  }
-															  ?>"><span class="glyphicon glyphicon-new-window"></span>&nbsp;Generate Status Report</a>
-															  <?php } ?>
-													 </div>
+										  <div class="form-group">
+												<div class="col-xs-offset-2 col-xs-10">
+													 <?php if (($row_rsMaintenanceNotif['status'] != "Closed") && ($row_rsMaintenanceNotif['status'] != "Canceled")) { ?>
+														 <button type="submit" class="btn btn-primary"><span class='glyphicon glyphicon-save'></span>&nbsp;Send Maintenance Notification</button>
+													 <?php } ?>
+													 <?php if ($my_get['function'] != 'add') { ?>
+														 <a class="btn btn-default" href="../statusReports/statusReport.php?function=add&amp;maintenance=<?php
+														 echo $row_rsMaintenanceNotif['maintenanceNotifsID'];
+														 if ($row_rsAnyPEforMN > 0) {
+															 echo "&amp;project=" . $row_rsAnyPEforMN['projectID'] . "&amp;module=statusReport&amp;projectEvent=" . $row_rsAnyPEforMN['projectTaskID'] . "&amp;function=add";
+														 }
+														 ?>"><span class="glyphicon glyphicon-new-window"></span>&nbsp;Generate Status Report</a>
+														 <?php } ?>
 												</div>
+										  </div>
 
-												<?php if ($my_get['function'] != "add") { ?>
-													<input type="hidden" name="maintenance" id="maintenance" value="<?php echo $my_get['maintenance']; ?>" />
-													<input type="hidden" name="MM_update" id="MM_update" value="maintenanceUpdate" />
-												<?php } else { ?>
-													<input type="hidden" name="MM_insert" value="maintenanceNotif1" />
-													<input type="hidden" name="status" value="Open" />
-													<?php
-													if (isset($my_get['module'])) {
-														echo "<input type=\"hidden\" name=\"module\" value=\"" . $my_get['module'] . "\" />";
-														if (isset($my_get['project'])) {
-															echo "<input type=\"hidden\" name=\"project\" value=\"" . $my_get['project'] . "\" />";
-														}
-														if (isset($my_get['projectEvent'])) {
-															echo "<input type=\"hidden\" name=\"projectEvent\" value=\"" . $my_get['projectEvent'] . "\" />";
-														}
-														if (isset($my_get['rfa'])) {
-															echo "<input type=\"hidden\" name=\"rfa\" value=\"" . $my_get['rfa'] . "\" />";
-														}
-													}
-												}
-												?>
+										  <?php if ($my_get['function'] != "add") { ?>
+											  <input type="hidden" name="maintenance" id="maintenance" value="<?php echo $my_get['maintenance']; ?>" />
+											  <input type="hidden" name="MM_update" id="MM_update" value="maintenanceUpdate" />
+										  <?php } else { ?>
+											  <input type="hidden" name="MM_insert" value="maintenanceNotif1" />
+											  <input type="hidden" name="status" value="Open" />
+											  <?php
+											  if (isset($my_get['module'])) {
+												  echo "<input type=\"hidden\" name=\"module\" value=\"" . $my_get['module'] . "\" />";
+												  if (isset($my_get['project'])) {
+													  echo "<input type=\"hidden\" name=\"project\" value=\"" . $my_get['project'] . "\" />";
+												  }
+												  if (isset($my_get['projectEvent'])) {
+													  echo "<input type=\"hidden\" name=\"projectEvent\" value=\"" . $my_get['projectEvent'] . "\" />";
+												  }
+												  if (isset($my_get['rfa'])) {
+													  echo "<input type=\"hidden\" name=\"rfa\" value=\"" . $my_get['rfa'] . "\" />";
+												  }
+											  }
+										  }
+										  ?>
 
 										  </form>
 										  <script>

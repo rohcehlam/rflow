@@ -21,6 +21,10 @@ $args = array(
 	'maintenance' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'projectEvent' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'module' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'prodOps' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'noc' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'syseng' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'neteng' => FILTER_SANITIZE_SPECIAL_CHARS,
 );
 $my_post = filter_input_array(INPUT_POST, $args);
 $my_server = filter_input_array(INPUT_SERVER, array(
@@ -28,10 +32,19 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 	'HTTP_HOST' => FILTER_SANITIZE_SPECIAL_CHARS,
 	), true);
 
+echo "<pre>";
+print_r($my_post);
+echo "</pre>\n";
+
 if ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "maintenanceNotif1")) {
+	$my_post['startTime'] = (isset($my_post['startHour']) && $my_post['startHour'] != '' ? $my_post['startHour'] : '00') . ':' . (isset($my_post['startMinute']) && $my_post['startMinute'] != '' ? $my_post['startMinute'] : '00') . ':00';
+	$helper_insert = array('startDate', 'reason', 'customerImpact', 'nocImpact', 'prodChanges', 'engineer', 'startTime', 'estHours', 'estMins');
+	foreach ($helper_insert as $data) {
+		$temp[$data] = (isset($my_post[$data]) && $my_post[$data] != '' && $my_post[$data]) ? "'{$my_post[$data]}'" : 'NULL';
+	}
 	$insertSQL = "INSERT INTO maintenancenotifs (startDate, reason, customerImpact, nocImpact, prodChanges, employeeID, startTime, estimatedHours, estimatedMinutes) VALUES"
-		. " ('{$my_post['startDate']}', '{$my_post['reason']}', '{$my_post['customerImpact']}', '{$my_post['nocImpact']}', '{$my_post['prodChanges']}', {$my_post['engineer']}"
-		. ", {$my_post['startHour']}{$my_post['startMinute']}00, {$my_post['estHours']}, {$my_post['estMins']})";
+		. " (" . implode(', ', $temp) . ")";
+	echo $insertSQL;
 	//TODO Default Values?
 	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 

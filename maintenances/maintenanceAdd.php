@@ -121,9 +121,9 @@ $rsEngineers = $conn->query($query_rsEngineers) or die("<div class='alert alert-
 													 </div>
 												</div>
 												<div class='form-group'>
-													 <label for='prodChange' class="control-label col-xs-2">Production Changes:</label>
+													 <label for='prodChanges' class="control-label col-xs-2">Production Changes:</label>
 													 <div class="col-xs-10">
-														  <textarea name='prodChange' id='prodChange' class='form-control' rows="5" ><?php echo $row_rsMaintenanceNotif['prodChanges']; ?></textarea>
+														  <textarea name='prodChanges' id='prodChanges' class='form-control' rows="5" ><?php echo $row_rsMaintenanceNotif['prodChanges']; ?></textarea>
 													 </div>
 												</div>
 

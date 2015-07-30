@@ -4,7 +4,6 @@ require_once('../inc/functions.php');
 session_start();
 
 $args = array(
-	'pageNum_rsMaintenanceNotifs' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'employee' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'status' => FILTER_SANITIZE_SPECIAL_CHARS,
 );
@@ -16,55 +15,56 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 	), true);
 
 $currentPage = $my_server["PHP_SELF"];
-
-$maxRows_rsMaintenanceNotifs = 25;
-$pageNum_rsMaintenanceNotifs = (isset($my_get['pageNum_rsMaintenanceNotifs']) ? $my_get['pageNum_rsMaintenanceNotifs'] : 0);
-$startRow_rsMaintenanceNotifs = $pageNum_rsMaintenanceNotifs * $maxRows_rsMaintenanceNotifs;
+$where = " AND (maintenancenotifs.status='Open' OR maintenancenotifs.status='Extended')";
+if (isset($my_get['employee'])) {
+	$where = " AND maintenancenotifs.employeeID={$my_get['employee']}";
+	$result = $conn->query("SELECT displayName FROM employees WHERE employeeID={$my_get['employee']}");
+	$row = $result->fetch_assoc();
+	$filter_text = "&nbsp;<span class='glyphicon glyphicon-filter'></span>&nbsp;Filter: <em>Engineer: </em>{$row['displayName']}\n";
+}
+if (isset($my_get['status'])) {
+	$where = " AND maintenancenotifs.status='{$my_get['status']}'";
+	$filter_text = "&nbsp;<span class='glyphicon glyphicon-filter'></span>&nbsp;Filter: <em>Status: </em>{$my_get['status']}\n";
+}
 
 $varEmployee_rsMaintenanceNotifs = (isset($my_get['employee']) ? addslashes($my_get['employee']) : "1");
 $varStatus_rsMaintenanceNotifs = (isset($my_get['status']) ? addslashes($my_get['status']) : "1");
 
 
-$query_rsMaintenanceNotifs = "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
+$query_rsMaintenanceNotifs = str_replace('%%where%%', $where, "SELECT maintenancenotifs.maintenanceNotifsID, maintenancenotifs.reason, maintenancenotifs.employeeID, startTime AS startTimeSort"
 	. ", startDate AS startDateSort, TIME_FORMAT(startTime, '%H:%i') as startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, employees.displayName"
 	. ", maintenancenotifs.status"
 	. " FROM maintenancenotifs, employees"
-	. " WHERE maintenancenotifs.employeeID=employees.employeeID AND (maintenancenotifs.status='Open' OR maintenancenotifs.status='Extended')"
-	. " ORDER BY startDateSort DESC, startTimeSort DESC";
+	. " WHERE maintenancenotifs.employeeID=employees.employeeID"
+	. " %%where%%"
+	. " ORDER BY startDateSort DESC, startTimeSort DESC");
 
-$query_limit_rsMaintenanceNotifs = sprintf("%s LIMIT %d, %d", $query_rsMaintenanceNotifs, $startRow_rsMaintenanceNotifs, $maxRows_rsMaintenanceNotifs);
-$rsMaintenanceNotifs = $conn->query($query_limit_rsMaintenanceNotifs) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-//$row_rsMaintenanceNotifs = $rsMaintenanceNotifs->fetch_assoc();
+$rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
+/*
+  if (isset($my_get['totalRows_rsMaintenanceNotifs'])) {
+  $totalRows_rsMaintenanceNotifs = $my_get['totalRows_rsMaintenanceNotifs'];
+  } else {
+  $all_rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
+  $totalRows_rsMaintenanceNotifs = $all_rsMaintenanceNotifs->num_rows;
+  }
+  $totalPages_rsMaintenanceNotifs = ceil($totalRows_rsMaintenanceNotifs / $maxRows_rsMaintenanceNotifs) - 1;
 
-if (isset($my_get['totalRows_rsMaintenanceNotifs'])) {
-	$totalRows_rsMaintenanceNotifs = $my_get['totalRows_rsMaintenanceNotifs'];
-} else {
-	$all_rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-	$totalRows_rsMaintenanceNotifs = $all_rsMaintenanceNotifs->num_rows;
-}
-$totalPages_rsMaintenanceNotifs = ceil($totalRows_rsMaintenanceNotifs / $maxRows_rsMaintenanceNotifs) - 1;
-
-$queryString_rsMaintenanceNotifs = "";
-if (!empty($my_server['QUERY_STRING'])) {
-	$params = explode("&", $my_server['QUERY_STRING']);
-	$newParams = array();
-	foreach ($params as $param) {
-		if (stristr($param, "pageNum_rsMaintenanceNotifs") == false &&
-			stristr($param, "totalRows_rsMaintenanceNotifs") == false) {
-			array_push($newParams, $param);
-		}
-	}
-	if (count($newParams) != 0) {
-		$queryString_rsMaintenanceNotifs = "&" . htmlentities(implode("&", $newParams));
-	}
-}
-$queryString_rsMaintenanceNotifs = sprintf("&totalRows_rsMaintenanceNotifs=%d%s", $totalRows_rsMaintenanceNotifs, $queryString_rsMaintenanceNotifs);
-
-//employee filter list
-$query_rsEmployees = "SELECT employeeID, engineer, displayName FROM employees WHERE engineer = 'y' ORDER BY displayName ASC";
-$rsEmployees = $conn->query($query_rsEmployees) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsEmployees = $rsEmployees->fetch_assoc();
-$totalRows_rsEmployees = $rsEmployees->num_rows;
+  $queryString_rsMaintenanceNotifs = "";
+  if (!empty($my_server['QUERY_STRING'])) {
+  $params = explode("&", $my_server['QUERY_STRING']);
+  $newParams = array();
+  foreach ($params as $param) {
+  if (stristr($param, "pageNum_rsMaintenanceNotifs") == false &&
+  stristr($param, "totalRows_rsMaintenanceNotifs") == false) {
+  array_push($newParams, $param);
+  }
+  }
+  if (count($newParams) != 0) {
+  $queryString_rsMaintenanceNotifs = "&" . htmlentities(implode("&", $newParams));
+  }
+  }
+  $queryString_rsMaintenanceNotifs = sprintf("&totalRows_rsMaintenanceNotifs=%d%s", $totalRows_rsMaintenanceNotifs, $queryString_rsMaintenanceNotifs);
+ */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -92,7 +92,79 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 					 <div class="row">
 						  <div class='box box-primary'>
 								<div class='box-header with-border'>
-									 <h3 class="box-title">Maintenance Notifications</h3>
+									 <h3 class="box-title">Maintenance Notifications<?php echo $filter_text; ?></h3>
+									 <div class="box-tools pull-right">
+										  <div id="div_flt_nofilter">
+												<form class="form-inline" role="form">
+													 <div class="input-group">
+														  <div class="input-group-btn">
+																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter&nbsp;<span class="caret"></span></button>
+																<ul class="dropdown-menu">
+																	 <li class="active"><a href="#">No Filter</a></li>
+																	 <li class="divider"></li>
+																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																	 <li><a href="#" onclick="display_filter('div_flt_status')">Status</a></li>
+																</ul>
+														  </div>
+														  <label class="form-control">No Filter</label>
+														  <div class="input-group-btn">
+																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+														  </div>
+													 </div>
+												</form>
+										  </div> <!-- /#div_flt_nofilter -->
+										  <div id="div_flt_engineer" style="display: none;">
+												<form class="form-inline" role="form">
+													 <div class="input-group">
+														  <div class="input-group-btn">
+																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																<ul class="dropdown-menu">
+																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																	 <li class="divider"></li>
+																	 <li class="active"><a href="#">Engineer</a></li>
+																	 <li><a href="#" onclick="display_filter('div_flt_status')">Status</a></li>
+														  </div>
+														  <label class="input-group-addon">Engineer:&nbsp;</label>
+														  <select name="employee" class="form-control">
+																<?php
+																$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
+																while ($row = $result->fetch_assoc()) {
+																	echo "<option value='{$row['employeeID']}'" . ($my_get['employee'] == $row['employeeID'] ? " selected='selected'" : '') . ">{$row['displayName']}</option>\n";
+																}
+																?>
+														  </select>
+														  <div class="input-group-btn">
+																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+														  </div>
+													 </div>
+												</form>
+										  </div> <!-- /#div_flt_engineer -->
+										  <div id="div_flt_status" style="display: none;">
+												<form class="form-inline" role="form">
+													 <div class="input-group">
+														  <div class="input-group-btn">
+																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																<ul class="dropdown-menu">
+																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																	 <li class="divider"></li>
+																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																	 <li class="active"><a href="#">Status</a></li>
+														  </div>
+														  <label class="input-group-addon">Status:&nbsp;</label>
+														  <select name="status" class="form-control">
+																<?php
+																foreach (['Open', 'Closed', 'Canceled', 'Extended'] as $data) {
+																	echo "<option value='$data'" . ($data == $my_get['status'] ? " selected='selected'" : '') . ">$data</option>";
+																}
+																?>
+														  </select>
+														  <div class="input-group-btn">
+																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+														  </div>
+													 </div>
+												</form>
+										  </div> <!-- /#div_flt_status -->
+									 </div>
 								</div>
 								<div class='box-body'>
 									 <table id="table_maintenance_notificacions" class="table table-bordered table-striped">
@@ -137,6 +209,14 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
                                $(document).ready(function () {
                                    $('#table_maintenance_notificacions').dataTable({"order": [[2, 'desc']], "pageLength": 25});
                                });
+                               function display_filter(filter) {
+                                   $("#div_flt_nofilter").hide();
+                                   $("#div_flt_engineer").hide();
+                                   $("#div_flt_status").hide();
+                                   $("#" + filter).show();
+                               }
+<?php echo isset($my_get['employee']) ? "display_filter('div_flt_engineer');\n" : ''; ?>
+<?php echo isset($my_get['status']) ? "display_filter('div_flt_status');\n" : ''; ?>
 									 </script>
 								</div><!-- /.box-body -->
 						  </div><!-- /.box -->
