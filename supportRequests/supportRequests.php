@@ -16,7 +16,7 @@ function priority_icon($priority) {
 	switch ($priority) {
 		case 'Fire':
 			?>
-			<span class='label bg-red'><label class='glyphicon glyphicon-fire text-yellow'></label></span>
+			<span class='label bg-red'><label class='glyphicon glyphicon-fire'></label></span>
 			<?php
 			break;
 		case 'Hot':
@@ -26,7 +26,7 @@ function priority_icon($priority) {
 			break;
 		case 'Medium':
 			?>
-			<span class='label bg-green'><label class='glyphicon glyphicon-inbox'></label></span>
+			<span class='label bg-gray'><label class='glyphicon glyphicon-inbox'></label></span>
 			<?php
 			break;
 		case 'Low':
@@ -123,7 +123,7 @@ function escalation_level($colorme, $id) {
 		} elseif (($colorme >= 2) && ($colorme < 12)) {
 			return "<span class=\"label bg-yellow\">$id</span>";
 		} elseif (($colorme >= 0) && ($colorme < 2)) {
-			return "<span class=\"label bg-white\">$id</span>";
+			return "<span class=\"label bg-gray\">$id</span>";
 		}
 	}
 }

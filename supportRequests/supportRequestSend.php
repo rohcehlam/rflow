@@ -39,6 +39,12 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 	'QUERY_STRING' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'HTTP_HOST' => FILTER_SANITIZE_SPECIAL_CHARS,
 	), true);
+/*
+  echo "<pre>\n";
+  print_r($_REQUEST);
+  print_r($my_post);
+  echo "</pre>\n";
+ */
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -46,18 +52,19 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 	 <head>
 		  <title>Submitting Support Request..</title>
 		  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		  <?php build_header(); ?>
 	 </head>
 	 <body>
 		  <?php
 		  if (( (isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "supportRequestAdd"))) {
+			  $temp = array();
+			  $helper_insert = array('dateEscalated', 'timeEscalated', 'submittedBy', 'application', 'category', 'subject', 'description', 'recreateSteps'
+				  , 'WhatWasTested', 'customerImpact', 'logs', 'status', 'ticket', 'addInfo', 'dept', 'targetDate', 'priority', 'customer');
+			  foreach ($helper_insert as $data) {
+				  $temp[$data] = (isset($my_post[$data]) && $my_post[$data] != '' && $my_post[$data]) ? "'{$my_post[$data]}'" : 'NULL';
+			  }
 			  $insertSQL = "INSERT INTO escalations (dateEscalated, timeEscalated, submittedBy, applicationID, categoryID, subject, description, recreateSteps, whatWasTested"
-				  . ", customerImpact, logs, status, ticket, addInfo, deptID, targetDate, priority, customerID) VALUES"
-				  . " ('{$my_post['dateEscalated']}', '{$my_post['timeEscalated']}', {$my_post['submittedBy']}, {$my_post['application']}, {$my_post['category']}"
-				  . ", '{$my_post['subject']}', '{$my_post['description']}', '{$my_post['recreateSteps']}', '{$my_post['whatWasTested']}', '{$my_post['customerImpact']}'"
-				  . ", '{$my_post['logs']}', '{$my_post['status']}', '{$my_post['ticket']}', '{$my_post['addInfo']}', {$my_post['dept']}, '{$my_post['targetDate']}',"
-				  . " '{$my_post['priority']}', {$my_post['customer']})";
-
+				  . ", customerImpact, logs, status, ticket, addInfo, deptID, targetDate, priority, customerID) VALUES (" . implode(', ', $temp) . ")";
+			  echo $insertSQL;
 			  $Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 
 			  $insertGoTo = "supportRequest.php?function=add&sent=y";
@@ -70,14 +77,12 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 
 //if updating a Support Request, but not updating the target date
 		  if (( (isset($my_post["MM_update"])) && ($my_post["MM_update"] == "supportRequestUpdate") ) && (!isset($my_post['targetDate']))) {
-			  //$updateSQL = sprintf("UPDATE escalations SET submittedBy=%s, applicationID=%s, categoryID=%s, subject=%s, description=%s, customerImpact=%s, assignedTo=%s, status=%s, dateClosed=%s, timeClosed=%s, ticket=%s, addInfo=%s, outcome=%s, deptID=%s, priority=%s, customerID=%s, recreateSteps=%s, whatWasTested=%s, logs=%s WHERE escalationID=%s", GetSQLValueString($my_post['submittedBy'], "int"), GetSQLValueString($my_post['application'], "int"), GetSQLValueString($my_post['category'], "int"), GetSQLValueString($my_post['subject'], "text"), GetSQLValueString($my_post['description'], "text"), GetSQLValueString($my_post['customerImpact'], "text"), GetSQLValueString($my_post['assignedTo'], "int"), GetSQLValueString($my_post['status'], "text"), GetSQLValueString($my_post['dateUpdated'], "date"), GetSQLValueString($my_post['timeUpdated'], "date"), GetSQLValueString($my_post['ticket'], "text"), GetSQLValueString($my_post['addInfo'], "text"), GetSQLValueString($my_post['comments'], "text"), GetSQLValueString($my_post['dept'], "int"), GetSQLValueString($my_post['priority'], "text"), GetSQLValueString($my_post['customer'], "int"), GetSQLValueString($my_post['recreateSteps'], "text"), GetSQLValueString($my_post['whatWasTested'], "text"), GetSQLValueString($my_post['logs'], "text"), GetSQLValueString($my_post['supportRequestID'], "int"));
 			  $updateSQL = "UPDATE escalations SET submittedBy={$my_post['submittedBy']}, applicationID={$my_post['application']}, categoryID={$my_post['category']}"
 				  . ", subject='{$my_post['subject']}', description='{$my_post['description']}', customerImpact='{$my_post['customerImpact']}', assignedTo={$my_post['assignedTo']}"
 				  . ", status='{$my_post['status']}', dateClosed='{$my_post['dateUpdated']}', timeClosed='{$my_post['timeUpdated']}', ticket='{$my_post['ticket']}'"
 				  . ", addInfo='{$my_post['addInfo']}', outcome='{$my_post['comments']}', deptID={$my_post['dept']}, priority='{$my_post['priority']}'"
 				  . ", customerID={$my_post['customer']}, recreateSteps='{$my_post['recreateSteps']}', whatWasTested='{$my_post['whatWasTested']}', logs='{$my_post['logs']}'"
 				  . " WHERE escalationID={$my_post['supportRequestID']}";
-
 			  $Result1 = $conn->query($updateSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 
 			  $updateGoTo = "supportRequest.php?function=add&sent=y";

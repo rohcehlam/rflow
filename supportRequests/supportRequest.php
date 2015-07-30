@@ -44,39 +44,27 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 //Departments
 $query_rsDepartments = "SELECT departmentID, department FROM departments ORDER BY department ASC";
 $rsDepartments = $conn->query($query_rsDepartments) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsDepartments = $rsDepartments->fetch_assoc();
-$totalRows_rsDepartments = $rsDepartments->num_rows;
 
 //Applications
 $query_rsApplication = "SELECT applicationID, application FROM applications ORDER BY application ASC";
 $rsApplication = $conn->query($query_rsApplication) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsApplication = $rsApplication->fetch_assoc();
-$totalRows_rsApplication = $rsApplication->num_rows;
 
 //Categories
 if (!isset($_SESSION['MM_Username'])) {
 	$query_rsCategories = "SELECT reportTypeID, reportType FROM reporttypes WHERE reportTypeID <> 15 ORDER BY reportType ASC";
 	$rsCategories = $conn->query($query_rsCategories) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-	$row_rsCategories = $rsCategories->fetch_assoc();
-	$totalRows_rsCategories = $rsCategories->num_rows;
 } else {
 	$query_rsCategories = "SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC";
 	$rsCategories = $conn->query($query_rsCategories) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-	$row_rsCategories = $rsCategories->fetch_assoc();
-	$totalRows_rsCategories = $rsCategories->num_rows;
 }
 
 //Engineers
 $query_rsAssignedTo = "SELECT employeeID, displayName FROM employees WHERE engineer='y' AND active='t' ORDER BY displayName ASC";
 $rsAssignedTo = $conn->query($query_rsAssignedTo) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsAssignedTo = $rsAssignedTo->fetch_assoc();
-$totalRows_rsAssignedTo = $rsAssignedTo->num_rows;
 
 //Customers
 $query_rsCustomers = "SELECT customerID, customer FROM customers ORDER BY customer ASC";
 $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsCustomers = $rsCustomers->fetch_assoc();
-$totalRows_rsCustomers = $rsCustomers->num_rows;
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -123,14 +111,14 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 															 <div class="col-xs-4">
 																  <div class="input-group">
 																		<span class="input-group-addon">Updated on:</span>
-																		<input type="text" id="dateUpdated" name='dateUpdated' class="form-control" value="<?php echo date('Y-m-d') ?>"/>
+																		<input type="text" id="dateUpdated" name='dateUpdated' class="form-control" value="<?php echo date('Y-m-d') ?>" required/>
 																		<span class="input-group-addon" onclick='opendsdatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
 																  </div>
 															 </div>
 															 <div class="col-xs-3">
 																  <div class="input-group">
 																		<span class="input-group-addon">at:</span>
-																		<input type="text" id="timeUpdated" name='timeUpdated' class="form-control" value="<?php echo date('H:i') ?>"/>
+																		<input type="text" id="timeUpdated" name='timeUpdated' class="form-control" value="<?php echo date('H:i') ?>" required/>
 																		<span class="input-group-addon">UTC</span>
 																  </div>
 															 </div>
@@ -283,13 +271,13 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																	<div class="col-xs-2">
 																		 <div class="input-group">
 																			  <span class="input-group-addon" onclick='openEddatepicker();'><span class="glyphicon glyphicon-calendar"></span></span>
-																			  <input type="text" id="dateEscalated" name='dateEscalated' class="form-control" placeholder="<?php echo date('Y-m-d') ?>" value="<?php echo $row_rsEscalations['dateEscalated']; ?>"/>
+																			  <input type="text" id="dateEscalated" name='dateEscalated' class="form-control" value="<?php echo date('Y-m-d') ?>" required/>
 																		 </div>
 																	</div>
 																	<div class="col-xs-3">
 																		 <div class="input-group">
 																			  <span class="input-group-addon">&nbsp;<strong>at: </strong>&nbsp;</span>
-																			  <input type="text" name="timeEscalated" id="timeEscalated" class='form-control' placeholder='<?php echo date('H:i'); ?>' value="<?php echo $row_rsEscalations['timeEscalated']; ?>" maxlength="5"/>
+																			  <input type="text" name="timeEscalated" id="timeEscalated" class='form-control' value='<?php echo date('H:i'); ?>' maxlength="5" required/>
 																			  <span class="input-group-addon">&nbsp;<strong>UTC</strong>&nbsp;</span>
 																		 </div>
 																	</div>
@@ -335,7 +323,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																<label for='ticket' class="control-label col-xs-2">Ticket:</label>
 																<div class="col-xs-4">
 																	 <?php if (($my_get['function'] == "add") || ($my_get['function'] == "update")) { ?>
-																		 <input type="text" name="ticket" id="ticket" class='form-control' placeholder='Ticket' value="<?php echo $row_rsEscalations['ticket']; ?>"/>
+																		 <input type="text" name="ticket" id="ticket" class='form-control' placeholder='Ticket' value="<?php echo $row_rsEscalations['ticket']; ?>" required/>
 																	 <?php } else { ?>
 																		 <div class="input-group">
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['ticket']; ?>" readonly />
@@ -348,7 +336,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																<label for='subject' class="control-label col-xs-2">Subject:</label>
 																<div class="col-xs-10">
 																	 <?php if (($my_get['function'] == "add") || ($my_get['function'] == "update")) { ?>
-																		 <input type="text" name="subject" id="subject" class='form-control' placeholder='Subject' value="<?php echo $row_rsEscalations['subject']; ?>"/>
+																		 <input type="text" name="subject" id="subject" class='form-control' placeholder='Subject' value="<?php echo $row_rsEscalations['subject']; ?>" required/>
 																	 <?php } else { ?>
 																		 <div class="input-group">
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['subject']; ?>" readonly />
@@ -474,7 +462,7 @@ $totalRows_rsCustomers = $rsCustomers->num_rows;
 																<label for='description' class="control-label col-xs-2">Description:</label>
 																<div class="col-xs-10">
 																	 <?php if (($my_get['function'] == "add") || ($my_get['function'] == "update")) { ?>
-																		 <textarea name='description' id='description' class='form-control' rows="5" placeholder="Description"><?php echo $row_rsEscalations['description']; ?></textarea>
+																		 <textarea name='description' id='description' class='form-control' rows="5" placeholder="Description" required><?php echo $row_rsEscalations['description']; ?></textarea>
 																	 <?php } else { ?>
 																		 <div class="input-group">
 																			  <textarea id='description' class='form-control' rows="5" placeholder="Description" readonly><?php echo $row_rsEscalations['description']; ?></textarea>
