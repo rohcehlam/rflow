@@ -9,7 +9,11 @@ $label_colors = array(
 	"Closed" => 'success',
 	"In Progress" => 'default',
 	"On Hold" => 'warning',
-	"Returned" => 'danger'
+	"Returned" => 'danger',
+	"Closed - Sucessful" => 'success',
+	"Closed - Failed" => 'danger',
+	"Completed" => 'success',
+	"Completed - Under review" => 'warning',
 );
 
 function priority_icon($priority) {
@@ -341,7 +345,7 @@ function escalation_level($colorme, $id) {
 														  <label class="input-group-addon">Status:&nbsp;</label>
 														  <select id="input_div_flt_status" name="status" class="form-control">
 																<?php
-																foreach (["Open", "Analysis", "Closed", "In Progress", "On Hold", "Returned"] as $data) {
+																foreach (["Open", "Analysis", "Closed", "Closed - Sucessful", "Closed - Failed", "Completed", "Completed - Under review", "In Progress", "On Hold", "Returned"] as $data) {
 																	$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
 																	//while ($row = $result->fetch_assoc()) {
 																	//echo "<option value='{$row['employeeID']}'" . ($my_get['engineer'] == $row['employeeID'] ? " selected='selected'" : '') . ">{$row['displayName']}</option>\n";
@@ -508,7 +512,7 @@ function escalation_level($colorme, $id) {
                                    $("#div_flt_ticket").hide();
                                    $("#div_flt_id").hide();
                                    $("#" + filter).show();
-											  $("#input_" + filter).focus();
+                                   $("#input_" + filter).focus();
                                }
 <?php echo isset($my_get['application']) ? "display_filter('div_flt_application');\n" : ''; ?>
 <?php echo isset($my_get['category']) ? "display_filter('div_flt_category');\n" : ''; ?>

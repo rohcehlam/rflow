@@ -127,7 +127,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																		<span class="input-group-addon">to:</span>
 																		<select name="status" id="status" class="form-control">
 																			 <?php
-																			 foreach (["Open", "Analysis", "Closed", "In Progress", "On Hold", "Returned"] as $data) {
+																			 foreach (["Open", "Analysis", "Closed", "Closed - Sucessful", "Closed - Failed", "Completed", "Completed - Under review", "In Progress", "On Hold", "Returned"] as $data) {
 																				 echo "<option value='$data'" . ($data == $row_rsEscalations['status'] ? ' selected="selected"' : '') . ">$data</option>\n";
 																			 }
 																			 ?>
