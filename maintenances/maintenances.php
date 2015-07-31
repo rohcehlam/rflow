@@ -125,7 +125,7 @@ $rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div cla
 																	 <li><a href="#" onclick="display_filter('div_flt_status')">Status</a></li>
 														  </div>
 														  <label class="input-group-addon">Engineer:&nbsp;</label>
-														  <select name="employee" class="form-control">
+														  <select id="input_div_flt_engineer" name="employee" class="form-control">
 																<?php
 																$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -151,7 +151,7 @@ $rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div cla
 																	 <li class="active"><a href="#">Status</a></li>
 														  </div>
 														  <label class="input-group-addon">Status:&nbsp;</label>
-														  <select name="status" class="form-control">
+														  <select id="input_div_flt_status" name="status" class="form-control">
 																<?php
 																foreach (['Open', 'Closed', 'Canceled', 'Extended'] as $data) {
 																	echo "<option value='$data'" . ($data == $my_get['status'] ? " selected='selected'" : '') . ">$data</option>";
@@ -214,6 +214,7 @@ $rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div cla
                                    $("#div_flt_engineer").hide();
                                    $("#div_flt_status").hide();
                                    $("#" + filter).show();
+                                   $("#input_" + filter).focus();
                                }
 <?php echo isset($my_get['employee']) ? "display_filter('div_flt_engineer');\n" : ''; ?>
 <?php echo isset($my_get['status']) ? "display_filter('div_flt_status');\n" : ''; ?>

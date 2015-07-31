@@ -103,7 +103,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 				<div class="container-fluid">
 
 					 <?php
-					 buildNewHeader('statusReports.php', 'Status Report', "{$my_get['function']} a Status Report");
+					 buildNewHeader('statusReports.php', 'Status Reports', "{$my_get['function']} a Status Report");
 					 ?>
 
 					 <div class='row'>

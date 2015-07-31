@@ -149,7 +149,7 @@ $rsChangeRequests = $conn->query($query_rsChangeRequests) or die("<div class='al
 												</ul>
 											</div>
 											<label class="input-group-addon">Application:&nbsp;</label>
-											<select name="application" class="form-control">
+											<select id="input_div_flt_application" name="application" class="form-control">
 												<?php
 												$result = $conn->query("SELECT applicationID, application FROM applications ORDER BY application ASC");
 												while ($row = $result->fetch_assoc()) {
@@ -177,7 +177,7 @@ $rsChangeRequests = $conn->query($query_rsChangeRequests) or die("<div class='al
 													<li><a href="#" onclick="display_filter('div_flt_summary')">Summary</a></li>												</ul>
 											</div>
 											<label class="input-group-addon">Engineer:&nbsp;</label>
-											<select name="engineer" class="form-control">
+											<select id="input_div_flt_engineer" name="engineer" class="form-control">
 												<?php
 												$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
 												while ($row = $result->fetch_assoc()) {
@@ -205,7 +205,7 @@ $rsChangeRequests = $conn->query($query_rsChangeRequests) or die("<div class='al
 													<li><a href="#" onclick="display_filter('div_flt_summary')">Summary</a></li>												</ul>
 											</div>
 											<label class="input-group-addon">Status:&nbsp;</label>
-											<select name="status" class="form-control">
+											<select id="input_div_flt_status" name="status" class="form-control">
 												<?php
 												foreach (['Pending Approval', 'Pre-approved', 'Approved', 'Declined', 'Returned', 'Submitted for CAB Approval', 'Approved by CAB', 'Rejected by CAB'
 												, 'Returned by CAB', 'Completed', 'Resolved'] as $data) {
@@ -233,7 +233,7 @@ $rsChangeRequests = $conn->query($query_rsChangeRequests) or die("<div class='al
 													<li class="active"><a href="#">Summary</a></li>												</ul>
 											</div>
 											<label class="input-group-addon">Summary:&nbsp;</label>
-											<input name="summary" value="<?php echo $my_get['summary']; ?>" size="16" class="form-control"/>
+											<input id="input_div_flt_summary" name="summary" value="<?php echo $my_get['summary']; ?>" size="16" class="form-control"/>
 											<div class="input-group-btn">
 												<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
 											</div>
@@ -307,6 +307,7 @@ $rsChangeRequests = $conn->query($query_rsChangeRequests) or die("<div class='al
 									$("#div_flt_status").hide();
 									$("#div_flt_summary").hide();
 									$("#" + filter).show();
+									$("#input_" + filter).focus();
 								}
 <?php echo isset($my_get['application']) ? "display_filter('div_flt_application');\n" : ''; ?>
 <?php echo isset($my_get['engineer']) ? "display_filter('div_flt_engineer');\n" : ''; ?>

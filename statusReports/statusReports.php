@@ -146,7 +146,7 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Application:&nbsp;</label>
-														  <select name="application" class="form-control">
+														  <select id="input_div_flt_application" name="application" class="form-control">
 																<?php
 																$result = $conn->query("SELECT applicationID, application FROM applications ORDER BY application ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -179,7 +179,7 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Customer:&nbsp;</label>
-														  <select name="customer" class="form-control">
+														  <select id="input_div_flt_customer" name="customer" class="form-control">
 																<?php
 																$result = $conn->query("SELECT customerID, customer FROM customers ORDER BY customer ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -212,7 +212,7 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Engineer:&nbsp;</label>
-														  <select name="engineer" class="form-control">
+														  <select id="input_div_flt_engineer" name="engineer" class="form-control">
 																<?php
 																$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -245,7 +245,7 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Report Type:&nbsp;</label>
-														  <select name="reporttype" class="form-control">
+														  <select id="input_div_flt_reporttype" name="reporttype" class="form-control">
 																<?php
 																$result = $conn->query("SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -278,7 +278,7 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Subject:&nbsp;</label>
-														  <input name="subject" value="<?php echo $my_get['subject']; ?>" size="16" class="form-control"/>
+														  <input id="input_div_flt_subject" name="subject" value="<?php echo $my_get['subject']; ?>" size="16" class="form-control"/>
 														  <div class="input-group-btn">
 																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
 														  </div>
@@ -304,7 +304,7 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Ticket:&nbsp;</label>
-														  <input name="ticket" value="<?php echo $my_get['ticket']; ?>" size="16" class="form-control"/>
+														  <input id="input_div_flt_ticket" name="ticket" value="<?php echo $my_get['ticket']; ?>" size="16" class="form-control"/>
 														  <div class="input-group-btn">
 																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
 														  </div>
@@ -330,7 +330,7 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Case:&nbsp;</label>
-														  <input name="case" value="<?php echo $my_get['case']; ?>" size="16" class="form-control"/>
+														  <input id="input_div_flt_case" name="case" value="<?php echo $my_get['case']; ?>" size="16" class="form-control"/>
 														  <div class="input-group-btn">
 																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
 														  </div>
@@ -425,6 +425,7 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
                                    $("#div_flt_ticket").hide();
                                    $("#div_flt_case").hide();
                                    $("#" + filter).show();
+                                   $("#input_" + filter).focus();
                                }
 <?php echo isset($my_get['application']) ? "display_filter('div_flt_application');\n" : ''; ?>
 <?php echo isset($my_get['customer']) ? "display_filter('div_flt_customer');\n" : ''; ?>
