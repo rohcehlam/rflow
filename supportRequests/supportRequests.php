@@ -16,22 +16,22 @@ function priority_icon($priority) {
 	switch ($priority) {
 		case 'Fire':
 			?>
-			<span class='label bg-red'><label class='glyphicon glyphicon-fire'></label></span>
+			<span class='label bg-red' title="Fire"><label class='glyphicon glyphicon-fire'></label></span>
 			<?php
 			break;
 		case 'Hot':
 			?>
-			<span class='label'><label class='glyphicon glyphicon-chevron-up text-red'></label></span>
+			<span class='label bg-gray' title="High"><label class='glyphicon glyphicon-chevron-up text-red'></label></span>
 			<?php
 			break;
 		case 'Medium':
 			?>
-			<span class='label bg-gray'><label class='glyphicon glyphicon-inbox'></label></span>
+			<span class='label bg-gray' title="Medium"><label class='glyphicon glyphicon-inbox'></label></span>
 			<?php
 			break;
 		case 'Low':
 			?>
-			<span class='label'><label class='glyphicon glyphicon-chevron-down text-blue'></label></span>
+			<span class='label bg-gray' title="Low"><label class='glyphicon glyphicon-chevron-down text-blue'></label></span>
 			<?php
 			break;
 	}
@@ -203,7 +203,7 @@ function escalation_level($colorme, $id) {
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Application:&nbsp;</label>
-														  <select name="application" class="form-control">
+														  <select id="input_div_flt_application" name="application" class="form-control">
 																<?php
 																$result = $conn->query("SELECT applicationID, application FROM applications ORDER BY application ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -237,7 +237,7 @@ function escalation_level($colorme, $id) {
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Category:&nbsp;</label>
-														  <select name="category" class="form-control">
+														  <select id="input_div_flt_category" name="category" class="form-control">
 																<?php
 																$result = $conn->query("SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -271,7 +271,7 @@ function escalation_level($colorme, $id) {
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Department:&nbsp;</label>
-														  <select name="department" class="form-control">
+														  <select id="input_div_flt_department" name="department" class="form-control">
 																<?php
 																$result = $conn->query("SELECT departmentID, department FROM departments ORDER BY department ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -305,7 +305,7 @@ function escalation_level($colorme, $id) {
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Engineer:&nbsp;</label>
-														  <select name="engineer" class="form-control">
+														  <select id="input_div_flt_engineer" name="engineer" class="form-control">
 																<?php
 																$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
 																while ($row = $result->fetch_assoc()) {
@@ -339,7 +339,7 @@ function escalation_level($colorme, $id) {
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Status:&nbsp;</label>
-														  <select name="status" class="form-control">
+														  <select id="input_div_flt_status" name="status" class="form-control">
 																<?php
 																foreach (["Open", "Analysis", "Closed", "In Progress", "On Hold", "Returned"] as $data) {
 																	$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
@@ -375,7 +375,7 @@ function escalation_level($colorme, $id) {
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Subject:&nbsp;</label>
-														  <input name="subject" value="<?php echo $my_get['subject']; ?>" size="16" class="form-control"/>
+														  <input id="input_div_flt_subject" name="subject" value="<?php echo $my_get['subject']; ?>" size="16" class="form-control"/>
 														  <div class="input-group-btn">
 																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
 														  </div>
@@ -402,7 +402,7 @@ function escalation_level($colorme, $id) {
 																</ul>
 														  </div>
 														  <label class="input-group-addon">ID:&nbsp;</label>
-														  <input name="id" value="<?php echo $my_get['id']; ?>" size="16" class="form-control"/>
+														  <input id="input_div_flt_id" name="id" value="<?php echo $my_get['id']; ?>" size="16" class="form-control"/>
 														  <div class="input-group-btn">
 																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
 														  </div>
@@ -429,7 +429,7 @@ function escalation_level($colorme, $id) {
 																</ul>
 														  </div>
 														  <label class="input-group-addon">Ticket:&nbsp;</label>
-														  <input name="ticket" value="<?php echo $my_get['ticket']; ?>" size="16" class="form-control"/>
+														  <input id="input_div_flt_ticket" name="ticket" value="<?php echo $my_get['ticket']; ?>" size="16" class="form-control"/>
 														  <div class="input-group-btn">
 																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
 														  </div>
@@ -508,6 +508,7 @@ function escalation_level($colorme, $id) {
                                    $("#div_flt_ticket").hide();
                                    $("#div_flt_id").hide();
                                    $("#" + filter).show();
+											  $("#input_" + filter).focus();
                                }
 <?php echo isset($my_get['application']) ? "display_filter('div_flt_application');\n" : ''; ?>
 <?php echo isset($my_get['category']) ? "display_filter('div_flt_category');\n" : ''; ?>

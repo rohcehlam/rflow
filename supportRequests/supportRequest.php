@@ -90,7 +90,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 				<div class="container-fluid">
 
 					 <?php
-					 buildNewHeader('supportRequests.php', 'Support request', "{$my_get['function']} a Support Request");
+					 buildNewHeader('supportRequests.php', 'Support requests', "{$my_get['function']} a Support Request");
 					 ?>
 
 					 <div class='row'>
