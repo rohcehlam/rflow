@@ -6,7 +6,7 @@ class tEmail{
 	
 	private $mail;
 	
-	function __construct($from ="RFC Notification"){
+	function __construct($from = ""){
 		$this->mail = new PHPMailer();
 		$this->mail->IsSMTP();
 		$this->mail->SMTPSecure = 'ssl';

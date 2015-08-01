@@ -1,6 +1,7 @@
 <?php
 require_once('../Connections/connection.php');
 require_once('../inc/functions.php');
+require_once("../inc/class.email.php");
 
 $args = array(
 	'MM_insert' => FILTER_SANITIZE_SPECIAL_CHARS,
@@ -122,14 +123,14 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 			  $varSupportRequest_rsSupportRequest = addslashes($lastID);
 		  }
 
-		  $query_rsSupportRequest = sprintf("SELECT escalations.escalationID, escalations.applicationID, applications.application, escalations.subject, escalations.description, escalations.customerImpact, escalations.assignedTo, employees.displayName, escalations.status, escalations.outcome, escalations.customerID, customers.customer, employees.workEmail, departments.email, departments.department FROM escalations LEFT JOIN applications ON escalations.applicationID=applications.applicationID LEFT JOIN customers ON escalations.customerID=customers.customerID LEFT JOIN employees ON escalations.assignedTo=employees.employeeID LEFT JOIN departments ON escalations.deptID=departments.departmentID WHERE escalations.escalationID = %s", GetSQLValueString($varSupportRequest_rsSupportRequest, "int"));
+		  $query_rsSupportRequest = "SELECT escalations.escalationID, escalations.applicationID, applications.application, escalations.subject, escalations.description, escalations.customerImpact, escalations.assignedTo, employees.displayName, escalations.status, escalations.outcome, escalations.customerID, customers.customer, employees.workEmail, departments.email, departments.department FROM escalations LEFT JOIN applications ON escalations.applicationID=applications.applicationID LEFT JOIN customers ON escalations.customerID=customers.customerID LEFT JOIN employees ON escalations.assignedTo=employees.employeeID LEFT JOIN departments ON escalations.deptID=departments.departmentID WHERE escalations.escalationID = $varSupportRequest_rsSupportRequest";
 		  $rsSupportRequest = $conn->query($query_rsSupportRequest) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 		  $row_rsSupportRequest = $rsSupportRequest->fetch_assoc();
 		  $totalRows_rsSupportRequest = $rsSupportRequest->num_rows;
 
-		  $email = new tEmail();
+		  $email = new tEmail('Support Request');
 
-		  $email->AddAddress('orlando@markssystems.com', 'RFCs - Change Management');
+		  $email->AddAddress('rflow@markssystems.com', 'Support Requests');
 
 		  if ($my_post["MM_insert"] == "supportRequestAdd") {
 			  $body = "A new Support Request has been submitted. An overview of the Support Request appears below.<br /><br />";
@@ -138,7 +139,7 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		  } elseif (($my_post["MM_update"] == "supportRequestUpdate") && ($row_rsSupportRequest['status'] != "Closed")) {
 			  $body = "Support Request #" . $row_rsSupportRequest['escalationID'] . " has been updated. An overview of the Support Request appears below.<br /><br />";
 		  }
-		  $body .= "You can view this &amp; other Support Requests by visiting <a title=\"Production Operation's Support Requests\" href=\"http://" . $_SERVER['HTTP_HOST'] . "/rflow_karen/supportRequests/supportRequests.php?function=view\">http://" . $_SERVER['HTTP_HOST'] . "/rflow_karen/supportRequests/supportRequests.php?function=view</a><br />";
+		  $body .= "You can view this &amp; other Support Requests by visiting <a title=\"Production Operation's Support Requests\" href=\"http://" . $_SERVER['HTTP_HOST'] . "/rflow/supportRequests/supportRequests.php?function=view\">http://" . $_SERVER['HTTP_HOST'] . "/rflow/supportRequests/supportRequests.php?function=view</a><br />";
 		  $body .= "Note: Please consult the website for information regarding the status of Support Requests.<br /><br />";
 		  $body .= "**************************<br />";
 		  $body .= "<b>Subject:</b> " . stripslashes($row_rsSupportRequest['subject']) . "<br />";
@@ -155,7 +156,7 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		  } elseif (($my_post["MM_update"] == "supportRequestUpdate") && ($my_post['status'] != "Closed")) {
 			  $txtbody = "Support Request #" . $row_rsSupportRequest['escalationID'] . " has been updated. An overview of the Support Request appears below.<br /><br />";
 		  }
-		  $txtbody .= "You can view this &amp; other recent Support Requests by visiting http://" . $_SERVER['HTTP_HOST'] . "/rflow_karen/supportRequests/supportRequests.php?function=view<br />";
+		  $txtbody .= "You can view this &amp; other recent Support Requests by visiting http://" . $_SERVER['HTTP_HOST'] . "/rflow/supportRequests/supportRequests.php?function=view<br />";
 		  $txtbody .= "Note: Please consult the website for information regarding the status of Support Requests.<br /><br />";
 		  $txtbody .= "**************************<br />";
 		  $txtbody .= "Subject: " . stripslashes($row_rsSupportRequest['subject']) . "<br />";
@@ -166,9 +167,9 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		  $txtbody .= "**************************";
 
 		  if ($my_post["MM_insert"] == "supportRequestAdd") {
-			  $subject = "Support Request (US): " . stripslashes($row_rsSupportRequest['subject']);
+			  $subject = "Support Request " . stripslashes($row_rsSupportRequest['subject']);
 		  } elseif ($my_post["MM_update"] == "supportRequestUpdate") {
-			  $subject = "Support Request (US): " . stripslashes($row_rsSupportRequest['subject']);
+			  $subject = "Support Request " . stripslashes($row_rsSupportRequest['subject']);
 			  if ($row_rsSupportRequest['status'] != null) {
 				  $subject .= " **" . $row_rsSupportRequest['status'] . "**";
 			  }

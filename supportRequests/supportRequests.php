@@ -30,7 +30,7 @@ function priority_icon($priority) {
 			break;
 		case 'Medium':
 			?>
-			<span class='label bg-gray' title="Medium"><label class='glyphicon glyphicon-inbox'></label></span>
+			<span class='label bg-gray' title="Medium"><label class='glyphicon glyphicon-minus text-yellow'></label></span>
 			<?php
 			break;
 		case 'Low':
@@ -125,7 +125,7 @@ function escalation_level($colorme, $id) {
 		} elseif (($colorme >= 12) && ($colorme < 20)) {
 			return "<span class=\"label bg-orange\">$id</span>";
 		} elseif (($colorme >= 2) && ($colorme < 12)) {
-			return "<span class=\"label bg-yellow\">$id</span>";
+			return "<span class=\"label bg-yellow text-black\">$id</span>";
 		} elseif (($colorme >= 0) && ($colorme < 2)) {
 			return "<span class=\"label bg-gray\">$id</span>";
 		}
@@ -491,7 +491,7 @@ function escalation_level($colorme, $id) {
 															 echo "<td nowrap=\"nowrap\">" . $row_rsEscalations['receiver'] . "</td>\n";
 														 }
 														 ?>
-														 <td class='text-center'><?php echo "<span class=\"label label-{$label_colors[$row_rsEscalations['status']]}\">{$row_rsEscalations['status']}</span>"; ?></td>
+														 <td><?php echo $row_rsEscalations['status']; ?></td>
 														 <?php sudoAuthData("supportRequest.php", "Update Support Request", "td", "edit", "function=update&amp;supportRequest=" . $row_rsEscalations['escalationID']); ?>
 													</tr>
 												<?php } ?>
@@ -499,7 +499,7 @@ function escalation_level($colorme, $id) {
 									 </table>
 									 <script type="text/javascript">
                                $(document).ready(function () {
-                                   $('#supportRequests_table').dataTable({"order": [[2, 'desc']], "pageLength": 25});
+                                   $('#supportRequests_table').dataTable({"order": [[2, 'asc']], "pageLength": 25});
                                });
                                function display_filter(filter) {
                                    $("#div_flt_nofilter").hide();

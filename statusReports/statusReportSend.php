@@ -107,24 +107,24 @@ header(sprintf("Location: %s", $insertGoTo));
 		  if (isset($lastID)) {
 			  $varStatusReport_rsStatusReport = addslashes($lastID);
 		  }
-		  $query_rsStatusReport = sprintf("SELECT statusreports.statusReportID, statusreports.employeeID, statusreports.customerID, statusreports.subject, statusreports.applicationID, DATE_FORMAT(startDate, '%%m/%%d/%%Y') as startDate, TIME_FORMAT(startTime,'%%k:%%i') as startTime, DATE_FORMAT(endDate, '%%m/%%d/%%Y') as endDate, TIME_FORMAT(endTime,'%%k:%%i') as endTime, statusreports.magicTicket, statusreports.wrm, statusreports.maintenanceNotifID, statusreports.notes, statusreports.actionItems, statusreports.reportTypeID, applications.application, customers.customer, employees.displayName, reporttypes.reportType FROM statusreports, applications, customers, employees, reporttypes WHERE statusReportID = %s AND statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.employeeID=employees.employeeID AND statusreports.reporttypeID=reporttypes.reporttypeID", $varStatusReport_rsStatusReport);
+		  $query_rsStatusReport = sprintf("SELECT statusreports.statusReportID, statusreports.employeeID, statusreports.customerID, statusreports.subject, statusreports.applicationID, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, TIME_FORMAT(startTime,'%k:%i') as startTime, DATE_FORMAT(endDate, '%m/%d/%Y') as endDate, TIME_FORMAT(endTime,'%k:%i') as endTime, statusreports.magicTicket, statusreports.wrm, statusreports.maintenanceNotifID, statusreports.notes, statusreports.actionItems, statusreports.reportTypeID, applications.application, customers.customer, employees.displayName, reporttypes.reportType FROM statusreports, applications, customers, employees, reporttypes WHERE statusReportID = %s AND statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.employeeID=employees.employeeID AND statusreports.reporttypeID=reporttypes.reporttypeID", $varStatusReport_rsStatusReport);
 		  $rsStatusReport = $conn->query($query_rsStatusReport) or die($conn->error);
 		  $row_rsStatusReport = $rsStatusReport->fetch_assoc();
 		  $totalRows_rsStatusReport = $rsStatusReport->num_rows;
 
-		  $email = new tEmail();
+		  $email = new tEmail('Status Report');
 
 		  if (($my_post['prodOps'] == 'y')) {
-			  $email->AddAddress("techsupport@markssystems.com", "Tech Support");
+			  $email->AddAddress("rflow@markssystems.com", "Tech Support");
 		  }
 		  if (($my_post['noc'] == 'y')) {
-			  $email->AddAddress("product@markssystems.com", "Product Dev");
+			  $email->AddAddress("rflow@markssystems.com", "Product Dev");
 		  }
 		  if (($my_post['neteng'] == 'y')) {
-			  $email->AddAddress("sales@markssystems.com", "Sales");
+			  $email->AddAddress("rflow@markssystems.com", "Sales");
 		  }
 		  if (($my_post['syseng'] == 'y')) {
-			  $email->AddAddress("projects@markssystems.com", "Projects");
+			  $email->AddAddress("rflow@markssystems.com", "Projects");
 		  }
 		  if ((isset($my_post['cc'])) && ($my_post['cc'] != null)) {
 			  $email->AddAddress("" . $my_post['cc'] . "", "cc");
@@ -164,9 +164,9 @@ header(sprintf("Location: %s", $insertGoTo));
 		  $body .= "*********************";
 
 		  if (($row_rsStatusReport['wrm'] == "0") || ($row_rsStatusReport['wrm'] == "n/a") || ($row_rsStatusReport['wrm'] == "N/A") || ($row_rsStatusReport['wrm'] == "NA")) {
-			  $subject = "Status Reports (US): #" . $row_rsStatusReport['statusReportID'] . " " . $row_rsStatusReport['subject'];
+			  $subject = "Status Reports #" . $row_rsStatusReport['statusReportID'] . " " . $row_rsStatusReport['subject'];
 		  } else {
-			  $subject = "Status Reports (US): #" . $row_rsStatusReport['statusReportID'] . " " . $row_rsStatusReport['subject'] . " Case #" . $row_rsStatusReport['wrm'];
+			  $subject = "Status Reports #" . $row_rsStatusReport['statusReportID'] . " " . $row_rsStatusReport['subject'] . " Case #" . $row_rsStatusReport['wrm'];
 		  }
 
 		  $email->set_subject($subject);

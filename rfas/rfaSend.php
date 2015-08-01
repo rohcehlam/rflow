@@ -26,7 +26,7 @@ $args = array(
 	'flagged' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'changeRequestID' => FILTER_SANITIZE_SPECIAL_CHARS,
 );
-$my_post = filter_input_array(INPUT_POST, $args);
+$my_post = filter_input_array(INPUT_POST, $args, true);
 /*
   echo "<pre>\n";
   print_r($_REQUEST);
@@ -67,21 +67,18 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		  }
 
 		  if ((isset($my_post["MM_update"])) && ($my_post["MM_update"] == "rfaUpdate") && (!isset($my_post['windowStartDate']))) {
-			  $temp = array();
-			  $helper_update = array('summary', 'description', 'applicationID', 'subapplicationID', 'layerID', 'status', 'comments', 'requestOrigin', 'requestOriginID', 'flagged', 'risk', 'reviewedBy');
-			  foreach ($helper_update as $data) {
-				  $temp[$data] = (isset($my_post[$data]) && $my_post[$data] != '' && $my_post[$data]) ? "$data='{$my_post[$data]}'" : "$data=NULL";
-			  }
-			  $updateSQL = "UPDATE changerequests SET " . implode(', ', $temp) . " WHERE changeRequestID='{$my_post['changeRequestID']}'";
+			  $updateSQL = "UPDATE changerequests SET summary='{$my_post['summary']}', description='{$my_post['description']}', applicationID={$my_post['application']}"
+				  . ", subapplicationID={$my_post['subapplication']}, layerID={$my_post['layer']}, status='{$my_post['status']}', comments='{$my_post['comments']}'"
+				  . ", requestOrigin={$my_post['requestOrigin']}, requestOriginID={$my_post['requestoriginID']}, flagged='{$my_post['flagged']}', risk='{$my_post['risk']}'"
+				  . ", reviewedBy={$my_post['reviewedBy']} WHERE changeRequestID='{$my_post['changeRequestID']}'";
 			  echo $updateSQL;
 			  $Result1 = $conn->query($updateSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 		  } elseif ((isset($my_post["MM_update"])) && ($my_post["MM_update"] == "rfaUpdate") && (isset($my_post['windowStartDate']))) {
-			  $temp = array();
-			  $helper_update = array('summary', 'description', 'applicationID', 'subapplicationID', 'layerID', 'status', 'comments', 'requestOrigin', 'requestOriginID', 'flagged', 'windowStartDate', 'windowStartTime', 'windowEndDate', 'windowEndTime', 'risk', 'reviewedBy');
-			  foreach ($helper_update as $data) {
-				  $temp[$data] = (isset($my_post[$data]) && $my_post[$data] != '' && $my_post[$data]) ? "$data='{$my_post[$data]}'" : "$data=NULL";
-			  }
-			  $updateSQL = "UPDATE changerequests SET " . implode(', ', $temp) . " WHERE changeRequestID='{$my_post['changeRequestID']}'";
+			  $updateSQL = "UPDATE changerequests SET summary='{$my_post['summary']}', description='{$my_post['description']}', applicationID={$my_post['application']}"
+				  . ", subapplicationID={$my_post['subapplication']}, layerID={$my_post['layer']}, status='{$my_post['status']}', comments='{$my_post['comments']}'"
+				  . ", requestOrigin={$my_post['requestOrigin']}, requestOriginID='{$my_post['requestoriginID']}', flagged='{$my_post['flagged']}', risk='{$my_post['risk']}'"
+				  . ", reviewedBy={$my_post['reviewedBy']}, windowStartDate='{$my_post['windowStartDate']}', windowStartTime='{$my_post['windowStartTime']}"
+				  . ", windowEndDate='{$my_post['windowEndDate']}', windowEndTime='{$my_post['windowEndTime']}' WHERE changeRequestID='{$my_post['changeRequestID']}'";
 			  echo $updateSQL;
 			  $Result1 = $conn->query($updateSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 			  $updateGoTo = "rfa.php?function=view&rfa=" . $my_post['changeRequestID'] . "&sent=y";
@@ -100,21 +97,21 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		  } else {
 			  $varRFA_rsRFA = $lastID;
 		  }
-		  $query_rsRFA = "SELECT changerequests.changeRequestID, employees.displayName as submittedBy, DATE_FORMAT(dateSubmitted, '%%m/%%d/%%Y') AS dateSubmitted, TIME_FORMAT(timeSubmitted,'%%k:%%i') AS timeSubmitted, changerequests.summary, changerequests.description, changerequests.status, changerequests.comments, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%%m/%%d/%%Y') AS windowStartDate, TIME_FORMAT(windowStartTime,'%%k:%%i') AS windowStartTime, DATE_FORMAT(windowEndDate, '%%m/%%d/%%Y') AS windowEndDate, TIME_FORMAT(windowEndTime,'%%k:%%i') AS windowEndTime, changerequests.applicationID, applications.application, changerequests.subapplicationID, subapplications.subapplication, changerequests.layerID, layers.layer, changerequests.risk, employees.workEmail FROM changerequests LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID LEFT JOIN applications ON changerequests.applicationID=applications.applicationID LEFT JOIN subapplications ON changerequests.subapplicationID=subapplications.subapplicationID LEFT JOIN layers ON changerequests.layerID=layers.layerID WHERE changerequests.changeRequestID = $varRFA_rsRFA";
+		  $query_rsRFA = "SELECT changerequests.changeRequestID, employees.displayName as submittedBy, DATE_FORMAT(dateSubmitted, '%Y-%m-%d') AS dateSubmitted, TIME_FORMAT(timeSubmitted,'%k:%i') AS timeSubmitted, changerequests.summary, changerequests.description, changerequests.status, changerequests.comments, changerequests.requestOrigin, changerequests.requestOriginID, changerequests.flagged, DATE_FORMAT(windowStartDate, '%Y-%m-%d') AS windowStartDate, TIME_FORMAT(windowStartTime,'%k:%i') AS windowStartTime, DATE_FORMAT(windowEndDate, '%Y-%m-%d') AS windowEndDate, TIME_FORMAT(windowEndTime,'%k:%i') AS windowEndTime, changerequests.applicationID, applications.application, changerequests.subapplicationID, subapplications.subapplication, changerequests.layerID, layers.layer, changerequests.risk, employees.workEmail FROM changerequests LEFT JOIN employees ON changerequests.submittedBy=employees.employeeID LEFT JOIN applications ON changerequests.applicationID=applications.applicationID LEFT JOIN subapplications ON changerequests.subapplicationID=subapplications.subapplicationID LEFT JOIN layers ON changerequests.layerID=layers.layerID WHERE changerequests.changeRequestID = $varRFA_rsRFA";
 		  $rsRFA = $conn->query($query_rsRFA) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 		  $row_rsRFA = $rsRFA->fetch_assoc();
 		  $totalRows_rsRFA = $rsRFA->num_rows;
 
-		  $email = new tEmail();
+		  $email = new tEmail('RFC');
 
-		  $email->AddAddress('orlando@markssystems.com', 'RFCs - Change Management');
+		  $email->AddAddress('rflow@markssystems.com', 'RFCs - Change Management');
 
 		  if ($my_post["MM_insert"] == "rfaAdd") {
 			  $body = "An RFC has been submitted, and is awaiting review. An overview of the RFC appears below.<br /><br />";
 		  } elseif ($my_post["MM_update"] == "rfaUpdate") {
 			  $body = "RFC #" . $row_rsRFA['changeRequestID'] . " has been <b>" . $row_rsRFA['status'] . "</b>. An overview of the RFC appears below.<br />";
 		  }
-		  $body .= "You can view the RFC by visiting <a title=\"Production Operation's RFCs\" href=\"http://" . $my_server['HTTP_HOST'] . "/rflow_karen/rfas/rfa.php?function=view&amp;rfa=" . $row_rsRFA['changeRequestID'] . "\">http://" . $my_server['HTTP_HOST'] . "/rflow_karen/rfas/rfa.php?function=view&amp;rfa=" . $row_rsRFA['changeRequestID'] . "</a>.<br /><br />";
+		  $body .= "You can view the RFC by visiting <a title=\"Production Operation's RFCs\" href=\"http://" . $my_server['HTTP_HOST'] . "/rflow/rfas/rfa.php?function=view&amp;rfa=" . $row_rsRFA['changeRequestID'] . "\">http://" . $my_server['HTTP_HOST'] . "/rflow/rfas/rfa.php?function=view&amp;rfa=" . $row_rsRFA['changeRequestID'] . "</a>.<br /><br />";
 		  $body .= "<b>Submitted By:</b> " . $row_rsRFA['submittedBy'] . "<br />";
 		  $body .= "<b>Subject:</b> " . stripslashes($row_rsRFA['summary']) . "<br />";
 		  $body .= "<b>Application:</b> " . $row_rsRFA['application'] . "<br />";
@@ -122,7 +119,7 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		  $body .= "<b>Layer:</b> " . $row_rsRFA['layer'] . "<br />";
 		  $body .= "<b>Request Origin:</b> ";
 		  if ($row_rsRFA['requestOrigin'] == "Support Request") {
-			  $body .= " <a href=\"http://" . $my_server['HTTP_HOST'] . "/rflow_karen/supportRequests/supportRequest.php?function=view&amp;supportRequest=" . $row_rsRFA['requestOriginID'] . "\">";
+			  $body .= " <a href=\"http://" . $my_server['HTTP_HOST'] . "/rflow/supportRequests/supportRequest.php?function=view&amp;supportRequest=" . $row_rsRFA['requestOriginID'] . "\">";
 		  }
 		  $body .= "" . $row_rsRFA['requestOrigin'] . " #" . $row_rsRFA['requestOriginID'] . "</a><br />";
 		  $body .= "<b>Window:</b>";
@@ -138,10 +135,10 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		  } elseif ($my_post["MM_update"] == "rfaUpdate") {
 			  $txtbody = "RFC #" . $row_rsRFA['changeRequestID'] . " has been " . $row_rsRFA['status'] . ". An overview of the RFA appears below.<br />";
 		  }
-		  $txtbody .= "You can view the RFC by visiting http://" . $my_server['HTTP_HOST'] . "/rflow_karen/rfas/rfa.php?function=view&amp;rfa=" . $row_rsRFA['changeRequestID'] . ".<br />";
-		  $txtbody .= "You can login by visiting http://" . $my_server['HTTP_HOST'] . "/rflow_karen/userPortals/index.php?ref=" . $my_server['HTTP_HOST'] . "/rflow_karen/rfas/rfas.php.<br />";
-		  $txtbody .= "You can also view the ProdOps US Calendar by visiting http://" . $my_server['HTTP_HOST'] . "/rflow_karen/calendar/month.php.<br /><br />";
-		  $txtbody .= "*********************";
+		  $txtbody .= "You can view the RFC by visiting http://" . $my_server['HTTP_HOST'] . "/rflow/rfas/rfa.php?function=view&amp;rfa=" . $row_rsRFA['changeRequestID'] . ".<br />";
+		  $txtbody .= "You can login by visiting http://" . $my_server['HTTP_HOST'] . "/rflow/userPortals/index.php?ref=" . $my_server['HTTP_HOST'] . "/rflow/rfas/rfas.php.<br />";
+		  $txtbody .= "You can also view the ProdOps US Calendar by visiting http://" . $my_server['HTTP_HOST'] . "/rflow/calendar/month.php.<br /><br />";
+		  $txtbody .= '*********************';
 		  $txtbody .= "Subject: " . stripslashes($row_rsRFA['summary']) . "<br />";
 		  $txtbody .= "Application: " . $row_rsRFA['application'] . "<br />";
 		  $txtbody .= "Subapplication: " . $row_rsRFA['subapplication'] . "<br />";

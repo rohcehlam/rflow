@@ -96,19 +96,19 @@ $totalRows_rsMaintenanceNotif = $rsMaintenanceNotif->num_rows;
 	 </head>
 	 <body>
 		  <?php
-		  $email = new tEmail();
+		  $email = new tEmail('Maintenance');
 
 		  if (($my_post['prodOps'] == 'y')) {
-			  $email->AddAddress("techsupport@markssystems.com", "Tech Support");
+			  $email->AddAddress("rflow@markssystems.com", "Tech Support");
 		  }
 		  if (($my_post['noc'] == 'y')) {
-			  $email->AddAddress("product@markssystems.com", "Product Dev");
+			  $email->AddAddress("rflow@markssystems.com", "Product Dev");
 		  }
 		  if (($my_post['neteng'] == 'y')) {
-			  $email->AddAddress("sales@markssystems.com", "Sales");
+			  $email->AddAddress("rflow@markssystems.com", "Sales");
 		  }
 		  if (($my_post['syseng'] == 'y')) {
-			  $email->AddAddress("projects@markssystems.com", "Projects");
+			  $email->AddAddress("rflow@markssystems.com", "Projects");
 		  }
 		  if ((isset($my_post['cc'])) && ($my_post['cc'] != null)) {
 			  $email->AddAddress("" . $my_post['cc'] . "", "cc");
