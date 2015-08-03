@@ -38,7 +38,7 @@ if ($my_get['function'] != "add") {
 //Employees
 $query_rsEmployees = "SELECT employees.employeeID, employees.lastName, employees.displayName FROM employees ORDER BY employees.displayName ASC";
 $rsEmployees = $conn->query($query_rsEmployees) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsEmployees = $rsEmployees->fetch_assoc();
+//$row_rsEmployees = $rsEmployees->fetch_assoc();
 $totalRows_rsEmployees = $rsEmployees->num_rows;
 
 //Departments
@@ -140,7 +140,6 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																		<input type="text" class="form-control" value="<?php echo $row_rsEscalations['dateClosed']; ?>" readonly />
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																	  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['dateClosed'];                                         ?></p> -->
 															 </div>
 															 <div class="col-xs-3">
 																  <div class="input-group">
@@ -149,7 +148,6 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																		<span class="input-group-addon"><span>UTC</span></span>
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																  <!-- <p class="form-control-static">at&nbsp;<?php //echo $row_rsEscalations['timeClosed'];                                        ?>&nbsp;UTC</p> -->
 															 </div>
 															 <div class="col-xs-3">
 																  <div class="input-group">
@@ -167,7 +165,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																		<?php
 																		$commenter_name = 'Unknown';
 																		while ($row_rsAssignedTo = $rsAssignedTo->fetch_assoc()) {
-																			echo "<option value='{$row_rsAssignedTo['employeeID']}'" . (($row_rsAssignedTo['employeeID'] == $row_rsEscalations['assignedTo']) ? ' selected="selected"' : '') . ">{$row_rsAssignedTo['displayName']}</option>\n";
+																			echo "<option value='{$row_rsAssignedTo['employeeID']}'" . (($row_rsAssignedTo['employeeID'] == $row_rsEscalations['assignedTo'] || $row_rsAssignedTo['employeeID'] == $_SESSION['employee']) ? ' selected="selected"' : '') . ">{$row_rsAssignedTo['displayName']}</option>\n";
 																			if ($row_rsAssignedTo['employeeID'] == $_SESSION['employee']) {
 																				$commenter_name = $row_rsAssignedTo['displayName'] . ':';
 																			}
@@ -179,7 +177,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																		<input type="text" class="form-control" value="<?php echo $row_rsEscalations['receiver']; ?>" readonly />
 																		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																  </div>
-																  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['receiver'];                                      ?></p> -->
+																  <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['receiver'];                                         ?></p> -->
 															  <?php } ?>
 														 </div>
 														 <div class="col-xs-6">&nbsp;</div>
@@ -254,7 +252,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																		 <select name="submittedBy" id="submittedBy" class="form-control">
 																			  <?php
 																			  while ($row = $rsEmployees->fetch_assoc()) {
-																				  echo "<option " . (($row['employeeID'] == $row_rsEscalations['submittedBy']) ? 'selected="selected"' : '') . " value='{$row['employeeID']}'>{$row['displayName']}</option>\n";
+																				  echo "<option " . ((($row['employeeID'] == $row_rsEscalations['submittedBy']) || ($row['employeeID'] == $_SESSION['employee'])) ? 'selected="selected"' : '') . " value='{$row['employeeID']}'>{$row['displayName']}</option>\n";
 																			  }
 																			  ?>
 																		 </select>
@@ -263,7 +261,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['escalator']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['escalator'];                               ?></p> -->
+																		 <!-- <p class="form-control-static"><?php //echo $row_rsEscalations['escalator'];                                  ?></p> -->
 																	 <?php } ?>
 																</div>
 																<?php if ($my_get['function'] == "add") { ?>
@@ -288,7 +286,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['dateEscalated']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">on:&nbsp;<?php //echo $row_rsEscalations['dateEscalated'];                               ?></p> -->
+																		 <!-- <p class="form-control-static">on:&nbsp;<?php //echo $row_rsEscalations['dateEscalated'];                                  ?></p> -->
 																	</div>
 																	<div class="col-xs-3">
 																		 <div class="input-group">
@@ -297,7 +295,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																			  <span class="input-group-addon">UTC</span>
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['timeEscalated'];                               ?>&nbsp;UTC</p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['timeEscalated'];                                  ?>&nbsp;UTC</p> -->
 																	</div>
 																<?php } ?>
 														  </div>
@@ -317,7 +315,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['department']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['department'];                               ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['department'];                                  ?></p> -->
 																	 <?php } ?>
 																</div>
 																<label for='ticket' class="control-label col-xs-2">Ticket:</label>
@@ -416,7 +414,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['customer']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['customer'];               ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['customer'];                  ?></p> -->
 																	 <?php } ?>
 																</div>
 														  </div>
@@ -436,7 +434,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['application']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['application'];             ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['application'];                ?></p> -->
 																	 <?php } ?>
 																</div>
 																<label for='category' class="control-label col-xs-2">Category:</label>
@@ -454,7 +452,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																			  <input type="text" class="form-control" value="<?php echo $row_rsEscalations['category']; ?>" readonly />
 																			  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 																		 </div>
-																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['category'];             ?></p> -->
+																		 <!-- <p class="form-control-static">at:&nbsp;<?php //echo $row_rsEscalations['category'];                ?></p> -->
 																	 <?php } ?>
 																</div>
 														  </div>

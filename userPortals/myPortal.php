@@ -85,7 +85,6 @@ $query_rsMyProjects = "SELECT projectID, projectName, status, applications.appli
 	. " WHERE organizingEngineerID = $varEmployee AND status <> 'Completed'"
 	. " ORDER BY targetDate ASC";
 $rsMyProjects = $conn->query($query_rsMyProjects) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsMyProjects = $rsMyProjects->fetch_assoc();
 $totalRows_rsMyProjects = $rsMyProjects->num_rows;
 
 //my support requests
@@ -97,16 +96,13 @@ $query_rsSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscalated, '%m/
 	. " WHERE assignedTo = $varEmployee AND status <> 'Closed' AND status <> 'Returned'"
 	. " ORDER BY targetDate ASC";
 $rsSupportRequests = $conn->query($query_rsSupportRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-//$row_rsSupportRequests = $rsSupportRequests->fetch_assoc();
-//$totalRows_rsSupportRequests = $rsSupportRequests->num_rows;
+
 //pending maintenances
 $query_rsPendingMaintenances = "SELECT maintenanceNotifsID, reason, TIME_FORMAT(startTime,'%k:%i') AS startTime, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate"
 	. " FROM maintenancenotifs"
 	. " WHERE status = 'Open' OR status='Extended'"
 	. " ORDER BY startDate DESC, startTime DESC";
 $rsPendingMaintenances = $conn->query($query_rsPendingMaintenances) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-//$row_rsPendingMaintenances = $rsPendingMaintenances->fetch_assoc();
-//$totalRows_rsPendingMaintenances = $rsPendingMaintenances->num_rows;
 
 $query_rsEmployeeInfo = "SELECT employeeID, firstName, displayName FROM employees WHERE employeeID = $varEmployee";
 $rsEmployeeInfo = $conn->query($query_rsEmployeeInfo) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
@@ -122,8 +118,7 @@ $query_rsUnassignedSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscal
 	. " WHERE assignedTo='48' AND status <> 'Closed' AND status <> 'Returned'"
 	. " ORDER BY targetDate ASC";
 $rsUnassignedSupportRequests = $conn->query($query_rsUnassignedSupportRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-//$row_rsUnassignedSupportRequests = $rsUnassignedSupportRequests->fetch_assoc();
-//$totalRows_rsUnassignedSupportRequests = $rsUnassignedSupportRequests->num_rows;
+
 //my project tasks
 $query_rsMyProjectTasks = "SELECT projectevents.projectEventID, projectevents.projectEvent, projectevents.projectID, projects.projectName, projectevents.order"
 	. ", projectevents.engineerID, employees.displayName, DATE_FORMAT(projectevents.targetDate, '%m/%d/%Y') as targetDate, projectevents.status"
@@ -135,12 +130,13 @@ $query_rsMyProjectTasks = "SELECT projectevents.projectEventID, projectevents.pr
 $rsMyProjectTasks = $conn->query($query_rsMyProjectTasks) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 $row_rsMyProjectTasks = $rsMyProjectTasks->fetch_assoc();
 $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
+
 $labels = array();
 $data0 = array();
 $data1 = array();
 $conn0 = new mysqli("23.23.213.234", "mfroot", "Mfroo7", "masflightdb");
 $result = $conn0->query("SELECT PROCESS, LEFT(datetime_event, 15) AS hora, AVG(processed_rec) as records"
-	. " FROM logmas_201507"
+	. " FROM logmas_" . date('Ym')
 	. " WHERE (PROCESS='oag_global' OR PROCESS='pinkfroot_demo')"
 	. "  AND type_proc='ES'"
 	. "  AND (datetime_event BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW())"
@@ -204,7 +200,7 @@ $avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
 					 </div>
 
 					 <div class="row">
-						  <div class="col-md-8">
+						  <section class="col-lg-8 connectedSortable">
 
 								<div class="box box-primary">
 									 <div class="box-header with-border">
@@ -403,8 +399,8 @@ $avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
 									 </div>
 								</div>
 
-						  </div>
-						  <div class="col-md-4">
+						  </section>
+						  <section class="col-lg-4 connectedSortable">
 
 								<div class="box box-danger">
 									 <div class="box-header with-border">
@@ -414,7 +410,6 @@ $avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
 										  </div>
 									 </div>
 									 <div class="box-body">
-
 										  <table class="table table-striped table-condensed">
 												<thead>
 													 <tr>
@@ -434,9 +429,59 @@ $avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
 												</tbody>
 										  </table>
 									 </div>
-								</div> <!-- /panel -->
-						  </div>
-					 </div>
+								</div> <!-- /.box-danger -->
+
+								<?php
+								$conn_skybot = new mysqli('50.19.240.104', 'serviceuser', 'H!ghZ3cret', 'masflightdb');
+								$rsAlarms = $conn_skybot->query("SELECT comment FROM alarms WHERE active=TRUE");
+								?>
+								<div class="box box-danger">
+									 <div class="box-header with-border">
+										  <h4 class="panel-title"><span class="badge"><?php echo $rsAlarms->num_rows; ?></span>&nbsp;<strong>Active Alarms</strong></h4>
+										  <div class="pull-right box-tools">
+												<button class="btn btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+										  </div>
+									 </div>
+									 <div class="box-body">
+										  <table class="table table-striped table-condensed">
+												<thead>
+													 <tr>
+														  <th>DataBase</th>
+														  <th>Table</th>
+														  <th>Last Check</th>
+													 </tr>
+												</thead>
+												<tbody>
+													 <?php
+													 while ($row = $rsAlarms->fetch_assoc()) {
+														 $temp = explode('strong', preg_replace('/<|\/|>/', '', $row['comment']));
+														 echo "<tr>\n";
+														 echo "<td>{$temp[3]}</td>\n";
+														 echo "<td>{$temp[1]}</td>\n";
+														 echo "<td>{$temp[5]}</td>\n";
+														 echo "</tr>\n";
+													 }
+													 ?>
+												</tbody>
+										  </table>
+									 </div>
+								</div> <!-- /.box-danger -->
+
+						  </section>
+						  <script>
+                       $(function () {
+                           //Make the dashboard widgets sortable Using jquery UI
+                           $(".connectedSortable").sortable({
+                               placeholder: "sort-highlight",
+                               connectWith: ".connectedSortable",
+                               handle: ".box-header, .nav-tabs",
+                               forcePlaceholderSize: true,
+                               zIndex: 999999
+                           });
+                           $(".connectedSortable .box-header, .connectedSortable .nav-tabs-custom").css("cursor", "move");
+                       });
+						  </script>
+					 </div> <!-- /.row -->
 
 				</div> <!-- /container -->
 		  </div> <!-- /content-wrapper -->
