@@ -75,18 +75,18 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
 }
 
 $varEmployee = (isset($_SESSION['employee']) ? addslashes($_SESSION['employee']) : "1");
-
-//my projects
-$query_rsMyProjects = "SELECT projectID, projectName, status, applications.application, customers.customer, organizingEngineerID"
-	. ", DATE_FORMAT(targetDate, '%m/%d/%Y') as targetDate, wrm, ticket"
-	. " FROM projects"
-	. " LEFT JOIN applications ON projects.applicationID=applications.applicationID"
-	. " LEFT JOIN customers ON projects.primaryCustomerID=customers.customerID"
-	. " WHERE organizingEngineerID = $varEmployee AND status <> 'Completed'"
-	. " ORDER BY targetDate ASC";
-$rsMyProjects = $conn->query($query_rsMyProjects) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$totalRows_rsMyProjects = $rsMyProjects->num_rows;
-
+/*
+  //my projects
+  $query_rsMyProjects = "SELECT projectID, projectName, status, applications.application, customers.customer, organizingEngineerID"
+  . ", DATE_FORMAT(targetDate, '%m/%d/%Y') as targetDate, wrm, ticket"
+  . " FROM projects"
+  . " LEFT JOIN applications ON projects.applicationID=applications.applicationID"
+  . " LEFT JOIN customers ON projects.primaryCustomerID=customers.customerID"
+  . " WHERE organizingEngineerID = $varEmployee AND status <> 'Completed'"
+  . " ORDER BY targetDate ASC";
+  $rsMyProjects = $conn->query($query_rsMyProjects) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
+  $totalRows_rsMyProjects = $rsMyProjects->num_rows;
+ */
 //my support requests
 $query_rsSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscalated, '%m/%d/%Y') as dateEscalated, applications.application, subject, assignedTo, status, ticket"
 	. ", customers.customer, DATE_FORMAT(targetDate, '%m/%d/%Y') as targetDate"
@@ -118,18 +118,21 @@ $query_rsUnassignedSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscal
 	. " WHERE assignedTo='48' AND status <> 'Closed' AND status <> 'Returned'"
 	. " ORDER BY targetDate ASC";
 $rsUnassignedSupportRequests = $conn->query($query_rsUnassignedSupportRequests) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-
-//my project tasks
-$query_rsMyProjectTasks = "SELECT projectevents.projectEventID, projectevents.projectEvent, projectevents.projectID, projects.projectName, projectevents.order"
-	. ", projectevents.engineerID, employees.displayName, DATE_FORMAT(projectevents.targetDate, '%m/%d/%Y') as targetDate, projectevents.status"
-	. " FROM projectevents"
-	. " LEFT JOIN projects ON projects.projectID=projectevents.projectID"
-	. " LEFT JOIN employees ON employees.employeeID=projectevents.engineerID"
-	. " WHERE projectevents.engineerID = '$varEmployee' AND projectevents.status <> 'Complete'"
-	. " ORDER BY projectevents.projectID ASC, projectevents.order";
-$rsMyProjectTasks = $conn->query($query_rsMyProjectTasks) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsMyProjectTasks = $rsMyProjectTasks->fetch_assoc();
-$totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
+/*
+  //my project tasks
+  $query_rsMyProjectTasks = "SELECT projectevents.projectEventID, projectevents.projectEvent, projectevents.projectID, projects.projectName, projectevents.order"
+  . ", projectevents.engineerID, employees.displayName, DATE_FORMAT(projectevents.targetDate, '%m/%d/%Y') as targetDate, projectevents.status"
+  . " FROM projectevents"
+  . " LEFT JOIN projects ON projects.projectID=projectevents.projectID"
+  . " LEFT JOIN employees ON employees.employeeID=projectevents.engineerID"
+  . " WHERE projectevents.engineerID = '$varEmployee' AND projectevents.status <> 'Complete'"
+  . " ORDER BY projectevents.projectID ASC, projectevents.order";
+  $rsMyProjectTasks = $conn->query($query_rsMyProjectTasks) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
+  $row_rsMyProjectTasks = $rsMyProjectTasks->fetch_assoc();
+  $totalRows_rsMyProjectTasks = $rsMyProjectTasks->num_rows;
+ */
+$conn_skybot = new mysqli('50.19.240.104', 'serviceuser', 'H!ghZ3cret', 'masflightdb');
+$rsAlarms = $conn_skybot->query("SELECT comment FROM alarms WHERE active=TRUE");
 
 $labels = array();
 $data0 = array();
@@ -139,7 +142,7 @@ $result = $conn0->query("SELECT PROCESS, LEFT(datetime_event, 15) AS hora, AVG(p
 	. " FROM logmas_" . date('Ym')
 	. " WHERE (PROCESS='oag_global' OR PROCESS='pinkfroot_demo')"
 	. "  AND type_proc='ES'"
-	. "  AND (datetime_event BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW())"
+	. "  AND (datetime_event BETWEEN DATE_SUB(NOW(), INTERVAL 3 HOUR) AND NOW())"
 	. " GROUP BY PROCESS, hora"
 	. " ORDER BY hora ASC;");
 $max_oag = 0;
@@ -165,6 +168,23 @@ while ($row = $result->fetch_assoc()) {
 }
 $avg_oag = $max_oag != 0 ? floor(end($data0) / $max_oag * 100) : 0;
 $avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
+
+$result = $conn_skybot->query("SELECT LEFT(TIMESTAMP, 15) AS hora, AVG(ROWS) AS total_rows FROM table_status_plus WHERE NAME ='air_nav_" . date('Ym') . "' AND SERVER=41 GROUP BY hora ORDER BY id ASC;");
+$data2 = array();
+$prev = -1;
+$max_an = 0;
+while ($row = $result->fetch_assoc()) {
+	if ($prev == -1) {
+		$prev = $row['total_rows'];
+	} else {
+		$data2[$row['hora']] = $row['total_rows'] - $prev;
+		$prev = $row['total_rows'];
+		if ($data2[$row['hora']] > $max_an) {
+			$max_an = $data2[$row['hora']];
+		}
+	}
+}
+$avg_an = $max_an != 0 ? floor(end($data2) / $max_an * 100) : 0;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -206,120 +226,16 @@ $avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
 									 <div class="box-header with-border">
 										  <h3 class="box-title">Graph Area</h3>
 										  <div class="pull-right box-tools">
+												<button class="btn btn-sm" onclick="refresh_graph();"><span class="glyphicon glyphicon-refresh"></span></button>
 												<button class="btn btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
 										  </div>
 									 </div>
 									 <div class="box-body">
-										  <div class="chart">
-												<canvas id="areaChart" style="height:120px"></canvas>
-										  </div>
-										  <div class="row row-border">
-												<div class="col-md-2">
-													 <div class="description-block">
-														  <input type="text" class="knob" value="<?php echo $avg_oag; ?>" data-width="90" data-height="90" data-fgColor="rgba(210, 214, 222, 1)" readonly/>
-													 </div><!-- /.description-block -->
-												</div>
-												<div class="col-md-2 border-right">
-													 <div class="description-block">
-														  <span class="description-header">OAG global</span><br/>
-														  <span class="description-text">Max: <?php echo number_format($max_oag, 2); ?></span><br/>
-														  <span class="description-text">Current: <?php echo number_format(end($data0), 2); ?></span>
-														  <span class="description-text">Percent: <?php echo $avg_oag; ?>%</span>
-													 </div>
-												</div>
-												<div class="col-md-2">
-													 <div class="description-block">
-														  <input type="text" class="knob" value="<?php echo $avg_pf; ?>" data-width="90" data-height="90" data-fgColor="rgba(60,141,188,0.9)" readonly/>
-													 </div><!-- /.description-block -->
-												</div>
-												<div class="col-md-2 border-right">
-													 <div class="description-block">
-														  <span class="description-header">Pinkfroot Demo</span><br/>
-														  <span class="description-text">Max: <?php echo number_format($max_pf, 2); ?></span><br/>
-														  <span class="description-text">Current: <?php echo number_format(end($data1), 2); ?></span>
-														  <span class="description-text">Percent: <?php echo $avg_pf; ?>%</span>
-													 </div>
-												</div>
-										  </div>
-									 </div>
+										  <div id="graph_data"></div>
+										  <div id="graph_data_load" style="display: none;" class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
+									 </div> <!-- /.box-body -->
 								</div>
-								<script src="../js/Chart.min.js" type="text/javascript"></script>
-								<script src="../js/jquery.knob.js" type="text/javascript"></script>
-								<script>
-                           $(function () {
-                               var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
-                               // This will get the first returned node in the jQuery collection.
-                               var areaChart = new Chart(areaChartCanvas);
 
-                               var areaChartData = {
-                                   labels: [<?php echo implode(', ', $labels); ?>],
-                                   datasets: [
-                                       {
-                                           label: "OAG Global",
-                                           fillColor: "rgba(210, 214, 222, 1)",
-                                           strokeColor: "rgba(210, 214, 222, 1)",
-                                           pointColor: "rgba(210, 214, 222, 1)",
-                                           pointStrokeColor: "#c1c7d1",
-                                           pointHighlightFill: "#fff",
-                                           pointHighlightStroke: "rgba(220,220,220,1)",
-                                           data: [<?php echo implode(', ', $data0); ?>]
-                                       },
-                                       {
-                                           label: "Pinkfroot Demo",
-                                           fillColor: "rgba(60,141,188,0.9)",
-                                           strokeColor: "rgba(60,141,188,0.8)",
-                                           pointColor: "#3b8bba",
-                                           pointStrokeColor: "rgba(60,141,188,1)",
-                                           pointHighlightFill: "#fff",
-                                           pointHighlightStroke: "rgba(60,141,188,1)",
-                                           data: [<?php echo implode(', ', $data1); ?>]
-                                       }
-                                   ]
-                               };
-
-                               var areaChartOptions = {
-                                   //Boolean - If we should show the scale at all
-                                   showScale: true,
-                                   //Boolean - Whether grid lines are shown across the chart
-                                   scaleShowGridLines: false,
-                                   //String - Colour of the grid lines
-                                   scaleGridLineColor: "rgba(0,0,0,.05)",
-                                   //Number - Width of the grid lines
-                                   scaleGridLineWidth: 1,
-                                   //Boolean - Whether to show horizontal lines (except X axis)
-                                   scaleShowHorizontalLines: true,
-                                   //Boolean - Whether to show vertical lines (except Y axis)
-                                   scaleShowVerticalLines: true,
-                                   //Boolean - Whether the line is curved between points
-                                   bezierCurve: true,
-                                   //Number - Tension of the bezier curve between points
-                                   bezierCurveTension: 0.3,
-                                   //Boolean - Whether to show a dot for each point
-                                   pointDot: false,
-                                   //Number - Radius of each point dot in pixels
-                                   pointDotRadius: 4,
-                                   //Number - Pixel width of point dot stroke
-                                   pointDotStrokeWidth: 1,
-                                   //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-                                   pointHitDetectionRadius: 20,
-                                   //Boolean - Whether to show a stroke for datasets
-                                   datasetStroke: true,
-                                   //Number - Pixel width of dataset stroke
-                                   datasetStrokeWidth: 2,
-                                   //Boolean - Whether to fill the dataset with a color
-                                   datasetFill: false,
-                                   //String - A legend template
-                                   legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
-                                   //Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-                                   maintainAspectRatio: true,
-                                   //Boolean - whether to make the chart responsive to window resizing
-                                   responsive: true
-                               };
-                               areaChart.Line(areaChartData, areaChartOptions);
-
-                               $(".knob").knob();
-                           });
-								</script>
 
 								<div class="box box-success">
 									 <div class="box-header with-border">
@@ -431,10 +347,6 @@ $avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
 									 </div>
 								</div> <!-- /.box-danger -->
 
-								<?php
-								$conn_skybot = new mysqli('50.19.240.104', 'serviceuser', 'H!ghZ3cret', 'masflightdb');
-								$rsAlarms = $conn_skybot->query("SELECT comment FROM alarms WHERE active=TRUE");
-								?>
 								<div class="box box-danger">
 									 <div class="box-header with-border">
 										  <h4 class="panel-title"><span class="badge"><?php echo $rsAlarms->num_rows; ?></span>&nbsp;<strong>Active Alarms</strong></h4>
@@ -480,7 +392,21 @@ $avg_pf = $max_pf != 0 ? floor(end($data1) / $max_pf * 100) : 0;
                            });
                            $(".connectedSortable .box-header, .connectedSortable .nav-tabs-custom").css("cursor", "move");
                        });
+                       function refresh_graph() {
+                           $('#graph_data_load').show();
+                           $.ajax({
+                               url: '../ajax/dashboard_graph.php',
+                               success: function (data) {
+                                   //$('#graph_data').show();
+                                   $('#graph_data').html(data);
+                                   $('#graph_data_load').hide();
+                               }
+                           });
+                       }
+                       refresh_graph();
 						  </script>
+						  <script src="../js/Chart.min.js" type="text/javascript"></script>
+						  <script src="../js/jquery.knob.js" type="text/javascript"></script>
 					 </div> <!-- /.row -->
 
 				</div> <!-- /container -->
