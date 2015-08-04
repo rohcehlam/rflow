@@ -366,8 +366,10 @@ function build_navbar($conn, $active = 0) {
 						 <li<?php echo ($active == 2) ? ' class="active"' : ''; ?>><a href="../statusReports/statusReports.php">Status Reports</a></li>
 						 <li<?php echo ($active == 3) ? ' class="active"' : ''; ?>><a href="../maintenances/maintenances.php">Maintenance Notifications</a></li>
 						 <li<?php echo ($active == 4) ? ' class="active"' : ''; ?>><a href="../supportRequests/supportRequests.php">Support Requests</a></li>
-						 <li<?php echo ($active == 5) ? ' class="active"' : ''; ?>><a href="http://54.144.64.79/masflight_projects/index.php">Projects</a></li>                                
-					</ul>                      
+						 <li<?php echo ($active == 5) ? ' class="active"' : ''; ?>><a href="../../projects">Projects</a></li>
+						 <li<?php echo ($active == 5) ? ' class="active"' : ''; ?>><a href="../../tickets">Tickets</a></li>
+						<li<?php echo ($active == 5) ? ' class="active"' : ''; ?>><a href="../../masflight_process">Process</a></li>
+					</ul>
 			  </div><!-- /.navbar-collapse -->
 			  <!-- Navbar Right Menu -->
 			  <div class="navbar-custom-menu">
