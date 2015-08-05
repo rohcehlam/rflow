@@ -1,6 +1,15 @@
 <?php
 require_once('../Connections/connection.php');
 
+$label_colors = array(
+	"Open" => 'primary',
+	"Analysis" => 'info',
+	"Closed" => 'success',
+	"In Progress" => 'default',
+	"On Hold" => 'warning',
+	"Returned" => 'danger'
+);
+
 $query_rsUnassignedSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscalated, '%m/%d/%Y') as dateEscalated, applications.application, subject, assignedTo, status"
 	. ", ticket, customers.customer, DATE_FORMAT(targetDate, '%m/%d/%Y') as targetDate"
 	. " FROM escalations"
@@ -16,11 +25,9 @@ while ($row = $rsUnassignedSupportRequests->fetch_assoc()) {
 	foreach ($row as $key => $value) {
 		$temp[$key] = $value;
 	}
+	$temp['subject'] = "<a href=\"../supportRequests/supportRequest.php?supportRequest={$temp['escalationID']}&amp;function=view\">{$temp['subject']}</a>";
+	$temp['ticket'] = $temp['ticket'] == '0' ? '-' : $temp['ticket'];
+	$temp['status'] = "<span class=\"label label-{$label_colors[$temp['status']]}\">{$temp['status']}</span>";
 	$records[] = $temp;
 }
-echo json_encode($records);
-/*
-$f = fopen('unassigned_supportRequest.json', 'w');
-fwrite($f, json_encode($records));
-fclose($f);
-*/
+echo json_encode(['records' => $rsUnassignedSupportRequests->num_rows, 'list' => $records]);

@@ -76,7 +76,7 @@ $totalRows_rsReportTypes = $rsReportTypes->num_rows;
 
 $query_rsEmployees = "SELECT employeeID, engineer, displayName FROM employees WHERE engineer = 'y' AND active = 't' ORDER BY displayName ASC";
 $rsEmployees = $conn->query($query_rsEmployees) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsEmployees = $rsEmployees->fetch_assoc();
+//$row_rsEmployees = $rsEmployees->fetch_assoc();
 $totalRows_rsEmployees = $rsEmployees->num_rows;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

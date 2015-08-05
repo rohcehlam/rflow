@@ -1,4 +1,5 @@
 <?php
+
 require_once('../Connections/connection.php');
 
 session_start();
@@ -18,6 +19,7 @@ while ($row = $rsSupportRequests->fetch_assoc()) {
 	foreach ($row as $key => $value) {
 		$temp[$key] = $value;
 	}
+	$temp['subject'] = "<a href=\"../supportRequests/supportRequest.php?supportRequest={$temp['escalationID']}&amp;function=view\">{$temp['subject']}</a>";
 	$records[] = $temp;
 }
-echo json_encode($records);
+echo json_encode(array('records' => $rsSupportRequests->num_rows, 'list' => $records));
