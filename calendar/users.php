@@ -92,7 +92,7 @@ print_header($INC);
 				" name=\"useriframe\" id=\"useriframe\" style=\"width:90%;border-width:0px; height:280px;\"></iframe>";
 		?>
 <?php } else { ?>
-<iframe src="edit_user.php" name="accountiframe" id="accountiframe" style="width:90%;border-width:0px; height:210px;\"></iframe>
+<iframe src="edit_user.php" name="accountiframe" id="accountiframe" style="width:90%;border-width:0px; height:210px;"></iframe>
 <?php } ?>
 </div>
 
