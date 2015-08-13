@@ -14,22 +14,22 @@ $my_get = filter_input_array(INPUT_GET, $args);
 
 $query_rsApplications = "SELECT applicationID, `application` FROM applications ORDER BY `application` ASC";
 $rsApplications = $conn->query($query_rsApplications);
-$row_rsApplications = $rsApplications->fetch_assoc();
+//$row_rsApplications = $rsApplications->fetch_assoc();
 $totalRows_rsApplications = $rsApplications->num_rows;
 
 $query_rsSubapplications = "SELECT subapplicationID, subapplication FROM subapplications ORDER BY subapplication ASC";
 $rsSubapplications = $conn->query($query_rsSubapplications);
-$row_rsSubapplications = $rsSubapplications->fetch_assoc();
+//$row_rsSubapplications = $rsSubapplications->fetch_assoc();
 $totalRows_rsSubapplications = $rsSubapplications->num_rows;
 
 $query_rsEmployees = "SELECT employeeID, displayName FROM employees ORDER BY displayName ASC";
 $rsEmployees = $conn->query($query_rsEmployees);
-$row_rsEmployees = $rsEmployees->fetch_assoc();
+//$row_rsEmployees = $rsEmployees->fetch_assoc();
 $totalRows_rsEmployees = $rsEmployees->num_rows;
 
 $query_rsLayers = "SELECT layerID, layer FROM layers ORDER BY layer ASC";
 $rsLayers = $conn->query($query_rsLayers);
-$row_rsLayers = $rsLayers->fetch_assoc();
+//$row_rsLayers = $rsLayers->fetch_assoc();
 $totalRows_rsLayers = $rsLayers->num_rows;
 
 if ($my_get['function'] != "add") {
@@ -264,7 +264,7 @@ if ($my_get['function'] != "add") {
 														  <?php } else { ?>
 															  <div class="input-group">
 																	<span class="input-group-addon">Starting</span>
-																	<input type="text" name='windowEndDate' class="form-control" value="<?php echo $row_rsRFA['windowStartDate']; ?>" readonly />
+																	<input type="text" name='windowStartDate' class="form-control" value="<?php echo $row_rsRFA['windowStartDate']; ?>" readonly />
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
@@ -301,7 +301,7 @@ if ($my_get['function'] != "add") {
 													 <div class="col-xs-4">
 														  <div class="input-group">
 																<span class="input-group-addon">&nbsp;<strong>at: </strong>&nbsp;</span>
-																<input type="text" name="windowStartTime" id="windowStartTime" class='form-control' value='<?php echo date('H:i'); ?>' maxlength="5"/>
+																<input type="text" name="windowEndTime" id="windowEndTime" class='form-control' value='<?php echo date('H:i'); ?>' maxlength="5"/>
 																<span class="input-group-addon">&nbsp;<strong>UTC</strong>&nbsp;</span>
 														  </div>
 													 </div>

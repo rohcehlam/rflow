@@ -3,6 +3,8 @@ require_once('../Connections/connection.php');
 require_once('../inc/functions.php');
 require_once("../inc/class.email.php");
 
+//error_reporting(E_ALL);
+
 $args = array(
 	'MM_insert' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'link' => FILTER_SANITIZE_SPECIAL_CHARS,
@@ -34,15 +36,20 @@ $args = array(
 	'neteng' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'cc' => FILTER_SANITIZE_SPECIAL_CHARS,
 );
-$my_post = filter_input_array(INPUT_POST, $args);
-$my_server = filter_input_array(INPUT_SERVER, [
-	'PHP_SELF' => FILTER_SANITIZE_SPECIAL_CHARS,
-	'QUERY_STRING' => FILTER_SANITIZE_SPECIAL_CHARS,
-	]);
 
-echo "<pre>";
-print_r($my_post);
-echo "</pre>\n";
+$my_post = filter_input_array(INPUT_POST, $args);
+
+$my_server = filter_input_array(INPUT_SERVER, array(
+	'QUERY_STRING' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'HTTP_HOST' => FILTER_SANITIZE_SPECIAL_CHARS,
+	)
+);
+
+/*
+  echo "<pre>";
+  print_r($my_post);
+  echo "</pre>\n";
+ */
 
 //insert statement for when the user wants to link the Status Report to the Maintenance Notification
 if ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd") && ($my_post['link'] == "y")) {
@@ -50,7 +57,7 @@ if ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd
 		. ", startTime, endTime, maintenanceNotifID) VALUES ({$my_post['engineer']}, {$my_post['customers']}, '{$my_post['subject']}', {$my_post['app']}"
 		. ", {$my_post['magic']}, {$my_post['wrm']}, '{$my_post['notes']}', '{$my_post['actions']}', {$my_post['reportType']}, '{$my_post['startDate']}'"
 		. ", '{$my_post['endDate']}', '{$my_post['startTime']}', '{$my_post['endHour']}{$my_post['endMinute']}', {$my_post['maintenance']})";
-	echo $insertSQL;
+	//echo $insertSQL;
 	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 //insert for when the user doesn't want to link this Status Report to a Maintenance Notification (we still force them to use the startDate from the Maintenance Notification)
 } elseif ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd") && (isset($my_post['maintenance'])) && ($my_post['link'] != "y")) {
@@ -58,7 +65,7 @@ if ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd
 		. ", startTime, endTime) VALUES ({$my_post['engineer']}, {$my_post['customers']}, '{$my_post['subject']}', {$my_post['app']}"
 		. ", {$my_post['magic']}, {$my_post['wrm']}, '{$my_post['notes']}', '{$my_post['actions']}', {$my_post['reportType']}, '{$my_post['startDate']}'"
 		. ", '{$my_post['endDate']}', '{$my_post['startTime']}', '{$my_post['endHour']}{$my_post['endMinute']}')";
-	echo $insertSQL;
+	//echo $insertSQL;
 	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 //insert for when the user is writing a Status Report without originating from a Maintenance Notification
 } elseif ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd") && (!isset($my_post['maintenance']))) {
@@ -70,7 +77,7 @@ if ((isset($my_post["MM_insert"])) && ($my_post["MM_insert"] == "statusReportAdd
 	}
 	$insertSQL = "INSERT INTO statusreports (employeeID, customerID, subject, applicationID, startDate, startTime, endDate, endTime, magicTicket, wrm, notes"
 		. ", actionItems, reportTypeID) VALUES (" . implode(', ', $temp) . ")";
-	echo $insertSQL;
+	//echo $insertSQL;
 	$Result1 = $conn->query($insertSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
 }
 
@@ -107,7 +114,13 @@ header(sprintf("Location: %s", $insertGoTo));
 		  if (isset($lastID)) {
 			  $varStatusReport_rsStatusReport = addslashes($lastID);
 		  }
-		  $query_rsStatusReport = sprintf("SELECT statusreports.statusReportID, statusreports.employeeID, statusreports.customerID, statusreports.subject, statusreports.applicationID, DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, TIME_FORMAT(startTime,'%k:%i') as startTime, DATE_FORMAT(endDate, '%m/%d/%Y') as endDate, TIME_FORMAT(endTime,'%k:%i') as endTime, statusreports.magicTicket, statusreports.wrm, statusreports.maintenanceNotifID, statusreports.notes, statusreports.actionItems, statusreports.reportTypeID, applications.application, customers.customer, employees.displayName, reporttypes.reportType FROM statusreports, applications, customers, employees, reporttypes WHERE statusReportID = %s AND statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID AND statusreports.employeeID=employees.employeeID AND statusreports.reporttypeID=reporttypes.reporttypeID", $varStatusReport_rsStatusReport);
+		  $query_rsStatusReport = "SELECT statusreports.statusReportID, statusreports.employeeID, statusreports.customerID, statusreports.subject, statusreports.applicationID"
+			  . ", DATE_FORMAT(startDate, '%m/%d/%Y') as startDate, TIME_FORMAT(startTime,'%k:%i') as startTime, DATE_FORMAT(endDate, '%m/%d/%Y') as endDate"
+			  . ", TIME_FORMAT(endTime,'%k:%i') as endTime, statusreports.magicTicket, statusreports.wrm, statusreports.maintenanceNotifID, statusreports.notes"
+			  . ", statusreports.actionItems, statusreports.reportTypeID, applications.application, customers.customer, employees.displayName, reporttypes.reportType"
+			  . " FROM statusreports, applications, customers, employees, reporttypes"
+			  . " WHERE statusReportID = {$varStatusReport_rsStatusReport} AND statusreports.applicationID=applications.applicationID AND statusreports.customerID=customers.customerID"
+			  . "  AND statusreports.employeeID=employees.employeeID AND statusreports.reporttypeID=reporttypes.reporttypeID";
 		  $rsStatusReport = $conn->query($query_rsStatusReport) or die($conn->error);
 		  $row_rsStatusReport = $rsStatusReport->fetch_assoc();
 		  $totalRows_rsStatusReport = $rsStatusReport->num_rows;
@@ -115,16 +128,16 @@ header(sprintf("Location: %s", $insertGoTo));
 		  $email = new tEmail('Status Report');
 
 		  if (($my_post['prodOps'] == 'y')) {
-			  $email->AddAddress("rflow@markssystems.com", "Tech Support");
+			  $email->AddAddress("karen@markssystems.com", "Tech Support");
 		  }
 		  if (($my_post['noc'] == 'y')) {
-			  $email->AddAddress("rflow@markssystems.com", "Product Dev");
+			  $email->AddAddress("karen@markssystems.com", "Product Dev");
 		  }
 		  if (($my_post['neteng'] == 'y')) {
-			  $email->AddAddress("rflow@markssystems.com", "Sales");
+			  $email->AddAddress("karen@markssystems.com", "Sales");
 		  }
 		  if (($my_post['syseng'] == 'y')) {
-			  $email->AddAddress("rflow@markssystems.com", "Projects");
+			  $email->AddAddress("karen@markssystems.com", "Projects");
 		  }
 		  if ((isset($my_post['cc'])) && ($my_post['cc'] != null)) {
 			  $email->AddAddress("" . $my_post['cc'] . "", "cc");
@@ -138,11 +151,11 @@ header(sprintf("Location: %s", $insertGoTo));
 		  }
 		  $body .= "<b>End Date:</b> " . $row_rsStatusReport['endDate'] . "<br />";
 		  if (!isset($my_post['maintenance'])) {
-			  $body .= "<b>Start Time:</b> " . $row_rsStatusReport['startTime'] . "&nbsp;EST<br />";
+			  $body .= "<b>Start Time:</b> " . $row_rsStatusReport['startTime'] . "&nbsp;UTC<br />";
 		  } else {
-			  $body .= "<b>Start Time:</b> " . $my_post['startHour'] . ":" . $my_post['startMinute'] . "&nbsp;EST<br />";
+			  $body .= "<b>Start Time:</b> " . $my_post['startHour'] . ":" . $my_post['startMinute'] . "&nbsp;UTC<br />";
 		  }
-		  $body .= "<b>End Time:</b> " . $row_rsStatusReport['endTime'] . "&nbsp;EST<br /><br />";
+		  $body .= "<b>End Time:</b> " . $row_rsStatusReport['endTime'] . "&nbsp;UTC<br /><br />";
 		  if (($row_rsStatusReport['magicTicket'] == "0") || ($row_rsStatusReport['magicTicket'] == "n/a") || ($row_rsStatusReport['magicTicket'] == "N/A")) {
 			  $body .= "<b>Ticket #:</b> -<br />";
 		  } else {

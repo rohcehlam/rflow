@@ -61,17 +61,17 @@ if ($my_get['function'] == "add") {
 
 $query_rsCustomers = "SELECT customerID, customer FROM customers ORDER BY customer ASC";
 $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsCustomers = $rsCustomers->fetch_assoc();
+//$row_rsCustomers = $rsCustomers->fetch_assoc();
 $totalRows_rsCustomers = $rsCustomers->num_rows;
 
 $query_rsApplications = "SELECT applicationID, application FROM applications ORDER BY application ASC";
 $rsApplications = $conn->query($query_rsApplications) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsApplications = $rsApplications->fetch_assoc();
+//$row_rsApplications = $rsApplications->fetch_assoc();
 $totalRows_rsApplications = $rsApplications->num_rows;
 
 $query_rsReportTypes = "SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC";
 $rsReportTypes = $conn->query($query_rsReportTypes) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-$row_rsReportTypes = $rsReportTypes->fetch_assoc();
+//$row_rsReportTypes = $rsReportTypes->fetch_assoc();
 $totalRows_rsReportTypes = $rsReportTypes->num_rows;
 
 $query_rsEmployees = "SELECT employeeID, engineer, displayName FROM employees WHERE engineer = 'y' AND active = 't' ORDER BY displayName ASC";

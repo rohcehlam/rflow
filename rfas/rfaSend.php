@@ -20,6 +20,7 @@ $args = array(
 	'requestOriginID' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'risk' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'windowStartDate' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'windowStartTime' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'windowEndDate' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'windowEndTime' => FILTER_SANITIZE_SPECIAL_CHARS,
 	'reviewedBy' => FILTER_SANITIZE_SPECIAL_CHARS,
@@ -76,8 +77,8 @@ $my_server = filter_input_array(INPUT_SERVER, array(
 		  } elseif ((isset($my_post["MM_update"])) && ($my_post["MM_update"] == "rfaUpdate") && (isset($my_post['windowStartDate']))) {
 			  $updateSQL = "UPDATE changerequests SET summary='{$my_post['summary']}', description='{$my_post['description']}', applicationID={$my_post['application']}"
 				  . ", subapplicationID={$my_post['subapplication']}, layerID={$my_post['layer']}, status='{$my_post['status']}', comments='{$my_post['comments']}'"
-				  . ", requestOrigin={$my_post['requestOrigin']}, requestOriginID='{$my_post['requestoriginID']}', flagged='{$my_post['flagged']}', risk='{$my_post['risk']}'"
-				  . ", reviewedBy={$my_post['reviewedBy']}, windowStartDate='{$my_post['windowStartDate']}', windowStartTime='{$my_post['windowStartTime']}"
+				  . ", requestOrigin='{$my_post['requestOrigin']}', requestOriginID='{$my_post['requestoriginID']}', flagged='{$my_post['flagged']}', risk='{$my_post['risk']}'"
+				  . ", reviewedBy={$my_post['reviewedBy']}, windowStartDate='{$my_post['windowStartDate']}', windowStartTime='{$my_post['windowStartTime']}'"
 				  . ", windowEndDate='{$my_post['windowEndDate']}', windowEndTime='{$my_post['windowEndTime']}' WHERE changeRequestID='{$my_post['changeRequestID']}'";
 			  echo $updateSQL;
 			  $Result1 = $conn->query($updateSQL) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
