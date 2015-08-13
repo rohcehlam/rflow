@@ -77,25 +77,18 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 		  <script src="../js/bootstrap-datepicker.js"></script>
 		  <link rel="stylesheet" href="../css/datepicker.css"/>
 	 </head>
-	 <body class="skin-blue layout-top-nav">
+	 <body class="skin-blue sidebar-mini">
 
 		  <div class="wrapper">
-				<header class="main-header">
-					 <?php build_navbar($conn, 4); ?>
-				</header> 
-		  </div>
+				<?php build_navbar(); ?>
+				<?php build_sidebar(5); ?>
 
-		  <div class="content-wrapper">
+				<div class="content-wrapper">
 
-				<div class="container-fluid">
+					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'DashBoard'], ['url' => 'supportRequests.php', 'text' => 'Support Requests'], ['url' => '#', 'text' => ucwords($my_get['function']) . ' a Support Request']], ucwords($my_get['function']) . ' a Support Request') ?>
 
-					 <?php
-					 buildNewHeader('supportRequests.php', 'Support requests', "{$my_get['function']} a Support Request");
-					 ?>
+					 <section class="content">
 
-					 <div class='row'>
-						  <div class='col-md-2'></div>
-						  <div class='col-md-8'>
 								<form class="form-horizontal" action="supportRequestSend.php" method="post" enctype="multipart/form-data" name="supportRequestForm" id="supportRequestForm">
 
 									 <?php if (($my_get['function'] == "update") || ($my_get['function'] == "view")) { ?>
@@ -558,9 +551,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 														  </script>
 													 </div> <!-- /box-body -->
 												</div><!-- /box -->
-										  </div>
-										  <div class='col-md-2'></div>
-									 </div>
+									 </section>
 
 						  </div> <!-- /container -->
 					 </div> <!-- /content-wrapper -->

@@ -139,27 +139,21 @@ function escalation_level($colorme, $id) {
 		  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		  <?php build_header(); ?>
 	 </head>
-	 <body class="skin-blue layout-top-nav">
+	 <body class="skin-blue sidebar-mini">
 
 		  <div class="wrapper">
-				<header class="main-header">
-					 <?php build_navbar($conn, 4); ?>
-				</header> 
-		  </div>
+				<?php build_navbar(); ?>
+				<?php build_sidebar(5); ?>
 
-		  <div class="content-wrapper">
+				<div class="content-wrapper">
 
-				<div class="container-fluid">
+					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'DashBoard'], ['url' => 'supportRequests.php', 'text' => 'Support Requests']], 'Support Requests', $filter_text) ?>
 
-					 <?php
-					 buildNewHeader('supportRequests.php', 'Support Requests', '', 'supportRequest.php', 'Add a Support Request');
-					 ?>
-
-					 <div class="row">
+					 <section class="content">
 
 						  <div class='box box-primary'>
 								<div class='box-header with-border'>
-									 <h3 class="box-title">Support Requests<?php echo $filter_text; ?></h3>
+									 <a class='btn btn-primary' href='supportRequest.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add Support Request</a>
 									 <div class="pull-right box-tools">
 										  <div id="div_flt_nofilter">
 												<form class="form-inline" role="form">
@@ -526,11 +520,12 @@ function escalation_level($colorme, $id) {
 								</div> <!-- /.box-body -->
 						  </div> <!-- /.box -->
 
-					 </div> <!-- /row -->
+					 </section>
 
 				</div> <!-- /container -->
+				<?php build_footer(); ?>
 		  </div> <!-- /content-wrapper -->
 
-		  <?php build_footer(); ?>
+
 	 </body>
 </html>

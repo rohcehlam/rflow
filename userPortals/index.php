@@ -18,27 +18,39 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
 	$MM_redirectLoginFailed = "index.php?loginFailed=y";
 	$MM_redirecttoReferrer = true;
 
-	$LoginRS__query = sprintf("SELECT workEmail, password FROM employees WHERE workEmail='%s' AND password='%s'", get_magic_quotes_gpc() ? $loginUsername : addslashes($loginUsername), get_magic_quotes_gpc() ? $password : addslashes($password));
+	//$LoginRS__query = sprintf("SELECT workEmail, password FROM employees WHERE workEmail='%s' AND password='%s'", get_magic_quotes_gpc() ? $loginUsername : addslashes($loginUsername), get_magic_quotes_gpc() ? $password : addslashes($password));
+	$LoginQuery = "SELECT count(*) AS cant FROM employees WHERE (workEmail='{$loginUsername}' OR displayName='{$loginUsername}') AND SHA('{$password}')=hash_pass";
 
-	$colname_rsGetUser = (get_magic_quotes_gpc()) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS) : addslashes(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS));
-	$query_rsGetUser = sprintf("SELECT employeeID, workEmail, firstName, groupID, password, departmentID FROM employees WHERE workEmail='%s' AND password='%s'", get_magic_quotes_gpc() ? $loginUsername : addslashes($loginUsername), get_magic_quotes_gpc() ? $password : addslashes($password));
-	$rsGetUser = $conn->query($query_rsGetUser);
-	$row_rsGetUser = $rsGetUser->fetch_assoc();
-	$totalRows_rsGetUser = $rsGetUser->num_rows;
+	/*
+	  //$colname_rsGetUser = (get_magic_quotes_gpc()) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS) : addslashes(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS));
+	  $colname_rsGetUser = $loginUsername;
+	  $query_rsGetUser = sprintf("SELECT employeeID, workEmail, firstName, groupID, password, departmentID FROM employees WHERE workEmail='%s' AND password='%s'", get_magic_quotes_gpc() ? $loginUsername : addslashes($loginUsername), get_magic_quotes_gpc() ? $password : addslashes($password));
+	  $rsGetUser = $conn->query($query_rsGetUser);
+	  $row_rsGetUser = $rsGetUser->fetch_assoc();
+	  $totalRows_rsGetUser = $rsGetUser->num_rows;
+	 */
+	//echo $LoginQuery;
+	$result = $conn->query($LoginQuery) or die($conn->error);
+	$row_rsLoginRS = $result->fetch_assoc();
+	if ($row_rsLoginRS['cant'] > 0) {
 
-	$LoginRS = $conn->query($LoginRS__query);
-	$loginFoundUser = $LoginRS->num_rows;
-	if ($loginFoundUser) {
+		$query_rsGetUser = "SELECT employeeID, workEmail, firstName, groupID, departmentID"
+			. " FROM employees"
+			. " WHERE (workEmail='{$loginUsername}' OR displayName='{$loginUsername}') AND SHA('{$password}')=hash_pass";
+		$rsGetUser = $conn->query($query_rsGetUser);
+		$row_rsGetUser = $rsGetUser->fetch_assoc();
+
 		$loginStrGroup = "";
 
 		//declare two session variables and assign them
-		$GLOBALS['MM_Username'] = $loginUsername;
-		$GLOBALS['MM_UserGroup'] = $loginStrGroup;
-		$GLOBALS['employee'] = $row_rsGetUser['employeeID'];
-		$GLOBALS['firstName'] = $row_rsGetUser['firstName'];
-		$GLOBALS['group'] = $row_rsGetUser['groupID'];
-		$GLOBALS['dept'] = $row_rsGetUser['deptID'];
-
+		/*
+		  $GLOBALS['MM_Username'] = $loginUsername;
+		  $GLOBALS['MM_UserGroup'] = $loginStrGroup;
+		  $GLOBALS['employee'] = $row_rsGetUser['employeeID'];
+		  $GLOBALS['firstName'] = $row_rsGetUser['firstName'];
+		  $GLOBALS['group'] = $row_rsGetUser['groupID'];
+		  $GLOBALS['dept'] = $row_rsGetUser['deptID'];
+		 */
 		//register the session variables
 		$_SESSION["MM_Username"] = $loginUsername;
 		$_SESSION["MM_UserGroup"] = $loginStrGroup;
@@ -69,15 +81,15 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
         <!-- Force IE to use the most up to date rendering engine that it has available -->
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0' name='viewport'>
         <title></title>
-        <link href='../new_login/images/favicon.png' rel='shortcut icon'>        
-        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />       
-        
+        <link href='../images/favicon.png' rel='shortcut icon'>        
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />       
+
         <!-- Master stylesheet. All other stylesheets are imported from this one -->
-        <link href="../new_login/css/new_login.css" media="screen" rel="stylesheet" type="text/css" />
-        
+        <link href="../css/new_login.css" media="screen" rel="stylesheet" type="text/css" />
+
         <!-- Modernizr allows IE to support basic HTML5 tags. This is required to be called inside the <head>, before any other script -->
-        <script src="../new_login/js/modernizr.js" type="text/javascript"></script>
-        <script src="../new_login/js/jquery.min.js" type="text/javascript"></script>
+        <script src="../js/modernizr.js" type="text/javascript"></script>
+        <script src="../js/jQuery-2.1.4.min.js" type="text/javascript"></script>
         <!-- IE conditional comments for additional CSS needed to fix bugs (http://paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/) -->
         <!--[if lte IE 7 ]>
         <body class='ie8 ie7'></body>
@@ -87,12 +99,12 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
         <![endif]-->
         <!--[if (gte IE 9)|!(IE)]>  <![endif]-->
     </head>
-  <body class="login">
-      <div class='super-wrapper'>
+	 <body class="login">
+		  <div class='super-wrapper'>
             <!-- <![endif] -->
             <!-- Page layout -->
             <div id='wrapper'>
-                <div class='left-side'><img alt='' src='../new_login/images/login-logo.png'><h2>Powering business intelligence for the global aviation industry</h2>
+                <div class='left-side'><img alt='' src='../images/GEE_White_logo.png'><h3>Powering business intelligence for the global aviation industry</h3>
                     <h3>The Complete Real-Time Package</h3>
                     <p>masFlight offers the most comprehensive set of technologies to analyze aviation operations and performance to improve efficiency, identify problems, isolate under-performing assets, central data gathering and track the competition.</p>
                     <!-- %p#copyright © Copyright 2014 masFlight. Marks Systems Inc., All Rights Reserved -->
@@ -101,36 +113,36 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
                 <div class='right-side' id='content'>
                     <div class='form-container'>
                         <p>
-                            <strong>Welcome to masFlight.</strong>
+                            <strong>Welcome to rflow.</strong>
                             Please Log in.
                         </p>
-                        
-                        <?php
-                        if (filter_input(INPUT_GET, 'loggedoff', FILTER_SANITIZE_SPECIAL_CHARS) == "y") {
-                                ?>
-                                <div class="panel panel-success">
-                                        <div class="panel-heading">
-                                                <h3 class="panel-title">Success</h3>
-                                        </div>
-                                        <div class="panel-body">
-                                                <p>You have been successfully logged off</p>
-                                        </div>
-                                </div>
-                                <?php
-                        } elseif (filter_input(INPUT_GET, 'loginFailed', FILTER_SANITIZE_SPECIAL_CHARS) == "y") {
-                                ?>
-                                <div class="panel panel-warning">
-                                        <div class="panel-heading">
-                                                <h3 class="panel-title">Error</h3>
-                                        </div>
-                                        <div class="panel-body">
-                                                <p>Please try logging in again.</p>
-                                        </div>
-                                </div>
-                                <?php
-                        }
-                        ?>
-                        
+
+								<?php
+								if (filter_input(INPUT_GET, 'loggedoff', FILTER_SANITIZE_SPECIAL_CHARS) == "y") {
+									?>
+									<div class="panel panel-success">
+										 <div class="panel-heading">
+											  <h3 class="panel-title">Success</h3>
+										 </div>
+										 <div class="panel-body">
+											  <p>You have been successfully logged off</p>
+										 </div>
+									</div>
+									<?php
+								} elseif (filter_input(INPUT_GET, 'loginFailed', FILTER_SANITIZE_SPECIAL_CHARS) == "y") {
+									?>
+									<div class="panel panel-warning">
+										 <div class="panel-heading">
+											  <h3 class="panel-title">Error</h3>
+										 </div>
+										 <div class="panel-body">
+											  <p>Please try logging in again.</p>
+										 </div>
+									</div>
+									<?php
+								}
+								?>
+
                         <form action="<?php echo $loginFormAction; ?>" id="XloginForm" method="post">
                             <section>
                                 <form action=''>
@@ -144,11 +156,11 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
                                     </div>
                                     <div class='actions-holder'>
                                         <div class='pull-left'>
-                                        <input class='clear' id='remember_me' name='remember_me' type='checkbox'>
-                                        <label for='remember_me'>Remember me</label>
+														  <input class='clear' id='remember_me' name='remember_me' type='checkbox'>
+														  <label for='remember_me'>Remember me</label>
                                         </div>
                                         <div class='pull-right'>
-                                            <input class='login-btn' id='enviar-login' type='submit' value='Sign in'>
+                                            <input class='btn btn-primary' id='enviar-login' type='submit' value='Sign in'>
                                         </div>
                                     </div>
                                     <!--<p class='forgot'>
@@ -169,5 +181,5 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
             </div>
             <!-- #content END -->
         </div>
-  </body>
+	 </body>
 </html>

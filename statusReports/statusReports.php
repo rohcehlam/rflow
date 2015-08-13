@@ -80,27 +80,21 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 
 		  <?php build_header(); ?>
 	 </head>
-	 <body class="skin-blue layout-top-nav">
+	 <body class="skin-blue sidebar-mini">
 
 		  <div class="wrapper">
-				<header class="main-header">
-					 <?php build_navbar($conn, 2); ?>
-				</header> 
-		  </div>
+				<?php build_navbar(); ?>
+				<?php build_sidebar(3); ?>
 
-		  <div class="content-wrapper">
+				<div class="content-wrapper">
 
-				<div class="container-fluid">
+					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'DashBoard'], ['url' => 'statusReports.php', 'text' => 'Status Reports']], 'Status Reports', $filter_text) ?>
 
-					 <?php
-					 buildNewHeader('statusReports.php', 'Status Reports', '', 'statusReport.php', 'Add a Status Report');
-					 ?>
-
-					 <div class="row">
+					 <section class="content">
 
 						  <div class='box box-primary'>
 								<div class='box-header with-border'>
-									 <h3 class="box-title">Status Reports<?php echo $filter_text; ?></h3>
+									 <a class='btn btn-primary' href='statusReport.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add Status Report</a>
 									 <div class="box-tools pull-right">
 										  <div id="div_flt_nofilter">
 												<form class="form-inline" role="form">
@@ -438,11 +432,11 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 								</div><!-- /.box-body -->
 						  </div><!-- /.box -->
 
-					 </div> <!-- /row -->
+					 </section>
 
 				</div> <!-- /container -->
+				<?php build_footer(); ?>
 		  </div> <!-- /content-wrapper -->
 
-		  <?php build_footer(); ?>
 	 </body>
 </html>

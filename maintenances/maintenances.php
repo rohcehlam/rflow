@@ -40,31 +40,6 @@ $query_rsMaintenanceNotifs = str_replace('%%where%%', $where, "SELECT maintenanc
 	. " ORDER BY startDateSort DESC, startTimeSort DESC");
 
 $rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-/*
-  if (isset($my_get['totalRows_rsMaintenanceNotifs'])) {
-  $totalRows_rsMaintenanceNotifs = $my_get['totalRows_rsMaintenanceNotifs'];
-  } else {
-  $all_rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-  $totalRows_rsMaintenanceNotifs = $all_rsMaintenanceNotifs->num_rows;
-  }
-  $totalPages_rsMaintenanceNotifs = ceil($totalRows_rsMaintenanceNotifs / $maxRows_rsMaintenanceNotifs) - 1;
-
-  $queryString_rsMaintenanceNotifs = "";
-  if (!empty($my_server['QUERY_STRING'])) {
-  $params = explode("&", $my_server['QUERY_STRING']);
-  $newParams = array();
-  foreach ($params as $param) {
-  if (stristr($param, "pageNum_rsMaintenanceNotifs") == false &&
-  stristr($param, "totalRows_rsMaintenanceNotifs") == false) {
-  array_push($newParams, $param);
-  }
-  }
-  if (count($newParams) != 0) {
-  $queryString_rsMaintenanceNotifs = "&" . htmlentities(implode("&", $newParams));
-  }
-  }
-  $queryString_rsMaintenanceNotifs = sprintf("&totalRows_rsMaintenanceNotifs=%d%s", $totalRows_rsMaintenanceNotifs, $queryString_rsMaintenanceNotifs);
- */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -73,26 +48,21 @@ $rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div cla
 		  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		  <?php build_header(); ?>
 	 </head>
-	 <body class="skin-blue layout-top-nav">
+	 <body class="skin-blue sidebar-mini">
 
 		  <div class="wrapper">
-				<header class="main-header">
-					 <?php build_navbar($conn, 3); ?>
-				</header> 
-		  </div>
+				<?php build_navbar(); ?>
+				<?php build_sidebar(4); ?>
 
-		  <div class="content-wrapper">
+				<div class="content-wrapper">
 
-				<div class="container-fluid">
+					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'DashBoard'], ['url' => 'maintenances.php', 'text' => 'Maintenances']], 'Maintenances', $filter_text) ?>
 
-					 <?php
-					 buildNewHeader('maintenances.php', 'Maintenance Notifications', '', 'maintenance.php', 'Add a Maintenance Notification');
-					 ?>
+					 <section class="content">
 
-					 <div class="row">
 						  <div class='box box-primary'>
 								<div class='box-header with-border'>
-									 <h3 class="box-title">Maintenance Notifications<?php echo $filter_text; ?></h3>
+									 <a class='btn btn-primary' href='maintenance.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add Maintenance</a>
 									 <div class="box-tools pull-right">
 										  <div id="div_flt_nofilter">
 												<form class="form-inline" role="form">
@@ -222,11 +192,12 @@ $rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div cla
 								</div><!-- /.box-body -->
 						  </div><!-- /.box -->
 
-					 </div> <!-- /row -->
+					 </section>
 
 				</div> <!-- /container -->
+				<?php build_footer(); ?>
 		  </div> <!-- /content-wrapper -->
 
-		  <?php build_footer(); ?>
+
 	 </body>
 </html>

@@ -61,22 +61,18 @@ if ($my_get['function'] == "add") {
 
 $query_rsCustomers = "SELECT customerID, customer FROM customers ORDER BY customer ASC";
 $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-//$row_rsCustomers = $rsCustomers->fetch_assoc();
 $totalRows_rsCustomers = $rsCustomers->num_rows;
 
 $query_rsApplications = "SELECT applicationID, application FROM applications ORDER BY application ASC";
 $rsApplications = $conn->query($query_rsApplications) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-//$row_rsApplications = $rsApplications->fetch_assoc();
 $totalRows_rsApplications = $rsApplications->num_rows;
 
 $query_rsReportTypes = "SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC";
 $rsReportTypes = $conn->query($query_rsReportTypes) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-//$row_rsReportTypes = $rsReportTypes->fetch_assoc();
 $totalRows_rsReportTypes = $rsReportTypes->num_rows;
 
 $query_rsEmployees = "SELECT employeeID, engineer, displayName FROM employees WHERE engineer = 'y' AND active = 't' ORDER BY displayName ASC";
 $rsEmployees = $conn->query($query_rsEmployees) or die("<div class='alert alert-danger' role='alert'>{$conn->error}</div>");
-//$row_rsEmployees = $rsEmployees->fetch_assoc();
 $totalRows_rsEmployees = $rsEmployees->num_rows;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -90,28 +86,20 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 		  <script src="../js/bootstrap-datepicker.js"></script>
 		  <link rel="stylesheet" href="../css/datepicker.css"/>
 	 </head>
-	 <body class="skin-blue layout-top-nav">
+	 <body class="skin-blue sidebar-mini">
 
 		  <div class="wrapper">
-				<header class="main-header">
-					 <?php build_navbar($conn, 2); ?>
-				</header> 
-		  </div>
+				<?php build_navbar(); ?>
+				<?php build_sidebar(3); ?>
 
-		  <div class="content-wrapper">
+				<div class="content-wrapper">
 
-				<div class="container-fluid">
-
-					 <?php
-					 buildNewHeader('statusReports.php', 'Status Reports', "{$my_get['function']} a Status Report");
-					 ?>
-
-					 <div class='row'>
-						  <div class='col-md-2'></div>
-						  <div class='col-md-8'>
+					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'DashBoard'], ['url' => 'statusReports.php', 'text' => 'Status Reports'], ['url' => '#', 'text' => ucwords($my_get['function']) . ' a Status Report']], ucwords($my_get['function']) . ' a Status Report') ?>
+					 <section class="content">
+						  
 								<div class='box box-primary'>
 									 <div class='box-header with-border'>
-										  <h3 class="box-title"><?php echo $my_get['function']; ?> a Status Report</h3>
+										  <h3 class="box-title"><?php echo ucwords($my_get['function']); ?> a Status Report</h3>
 									 </div>
 									 <div class='box-body'>
 										  <form class="form-horizontal" action="statusReportSend.php" method="post" name="statusReportForm" id="statusReportForm">
@@ -139,7 +127,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 																	<input type="text" class="form-control" value="<?php echo $row_rsStatusReport['startDate']; ?>" readonly />
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['startDate'];                         ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['startDate'];                          ?></p> -->
 														  <?php } ?>
 													 </div>
 													 <label for='enddate' class="control-label col-xs-2">End Date:</label>
@@ -154,7 +142,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 																	<input type="text" class="form-control" value="<?php echo $row_rsStatusReport['endDate']; ?>" readonly />
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['endDate'];                        ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['endDate'];                         ?></p> -->
 														  <?php } ?>
 													 </div>
 												</div>
@@ -169,7 +157,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 																	<input type="text" class="form-control" value="<?php echo $row_rsStatusReport['subject']; ?>" readonly />
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['subject'];                        ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo $row_rsStatusReport['subject'];                         ?></p> -->
 														  <?php } ?>
 													 </div>
 												</div>
@@ -350,7 +338,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 																	<textarea rows="5" class="form-control" readonly><?php echo nl2br($row_rsStatusReport['notes']); ?></textarea>
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo nl2br($row_rsStatusReport['notes']);    ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo nl2br($row_rsStatusReport['notes']);     ?></p> -->
 														  <?php } ?>
 													 </div>
 												</div>
@@ -365,7 +353,7 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 																	<textarea rows="5" class="form-control" readonly><?php echo nl2br($row_rsStatusReport['actionItems']); ?></textarea>
 																	<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 															  </div>
-															  <!-- <p class="form-control-static"><?php //echo nl2br($row_rsStatusReport['actionItems']);   ?></p> -->
+															  <!-- <p class="form-control-static"><?php //echo nl2br($row_rsStatusReport['actionItems']);    ?></p> -->
 														  <?php } ?>
 													 </div>
 												</div>
@@ -436,13 +424,12 @@ $totalRows_rsEmployees = $rsEmployees->num_rows;
 										  </script>
 									 </div><!-- /.box-body -->
 								</div><!-- /.box -->
-						  </div>
-						  <div class='col-md-2'></div>
-					 </div>
+					 </section>
 
 				</div> <!-- /container -->
+				<?php build_footer(); ?>
 		  </div> <!-- /content-wrapper -->
 
-		  <?php build_footer(); ?>
+
 	 </body>
 </html>
