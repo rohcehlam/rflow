@@ -12,6 +12,7 @@ $my_get = filter_input_array(INPUT_GET, $args);
 
 $currentPage = filter_input(INPUT_SERVER, 'PHP_SELF', FILTER_SANITIZE_SPECIAL_CHARS);
 session_start();
+check_permission();
 
 $where = " WHERE changerequests.status='Pending Approval' OR changerequests.status='Submitted for CAB Approval' OR changerequests.status='Returned'";
 $filter_text = '&nbsp;';

@@ -389,8 +389,8 @@ if ($my_get['function'] != "add") {
 					 </section>
 
 				</div> <!-- /container -->
+				<?php build_footer(); ?>
 		  </div> <!-- /content-wrapper -->
 
-		  <?php build_footer(); ?>
 	 </body>
 </html>
