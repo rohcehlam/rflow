@@ -2,6 +2,7 @@
 require_once('../Connections/connection.php');
 require_once('../inc/functions.php');
 session_start();
+check_permission();
 
 $label_colors = array(
 	"Open" => 'primary',
