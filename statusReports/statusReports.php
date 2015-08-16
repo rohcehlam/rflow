@@ -95,243 +95,247 @@ $rsStatusReports = $conn->query(str_replace('%%where%%', $where, $query_rsStatus
 
 						  <div class='box box-primary'>
 								<div class='box-header with-border'>
-									 <a class='btn btn-primary' href='statusReport.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add Status Report</a>
-									 <div class="box-tools pull-right">
-										  <div id="div_flt_nofilter">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li class="active"><a href="#">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
-																</ul>
+									 <div class="col-xs-6">
+										  <a class='btn btn-primary' href='statusReport.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add Status Report</a>
+									 </div>
+									 <div class="col-xs-6">
+										  <div class="box-tools pull-right">
+												<div id="div_flt_nofilter">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li class="active"><a href="#">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
+																	 </ul>
+																</div>
+																<label class="form-control">No Filter</label>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-														  <label class="form-control">No Filter</label>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+													 </form>
+												</div> <!-- /#div_flt_nofilter -->
+												<div id="div_flt_application" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li class="active"><a href="#">Application</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
+																	 </ul>
+																</div>
+																<label class="input-group-addon">Application:&nbsp;</label>
+																<select id="input_div_flt_application" name="application" class="form-control">
+																	 <?php
+																	 $result = $conn->query("SELECT applicationID, application FROM applications ORDER BY application ASC");
+																	 while ($row = $result->fetch_assoc()) {
+																		 echo "<option value='{$row['applicationID']}'" . ($my_get['application'] == $row['applicationID'] ? " selected='selected'" : '') . ">{$row['application']}</option>\n";
+																	 }
+																	 ?>
+																</select>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_nofilter -->
-										  <div id="div_flt_application" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li class="active"><a href="#">Application</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
-																</ul>
+													 </form>
+												</div> <!-- /#div_flt_application -->
+												<div id="div_flt_customer" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
+																		  <li class="active"><a href="#">Customer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
+																	 </ul>
+																</div>
+																<label class="input-group-addon">Customer:&nbsp;</label>
+																<select id="input_div_flt_customer" name="customer" class="form-control">
+																	 <?php
+																	 $result = $conn->query("SELECT customerID, customer FROM customers ORDER BY customer ASC");
+																	 while ($row = $result->fetch_assoc()) {
+																		 echo "<option value='{$row['customerID']}'" . ($my_get['customer'] == $row['customerID'] ? " selected='selected'" : '') . ">{$row['customer']}</option>\n";
+																	 }
+																	 ?>
+																</select>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-														  <label class="input-group-addon">Application:&nbsp;</label>
-														  <select id="input_div_flt_application" name="application" class="form-control">
-																<?php
-																$result = $conn->query("SELECT applicationID, application FROM applications ORDER BY application ASC");
-																while ($row = $result->fetch_assoc()) {
-																	echo "<option value='{$row['applicationID']}'" . ($my_get['application'] == $row['applicationID'] ? " selected='selected'" : '') . ">{$row['application']}</option>\n";
-																}
-																?>
-														  </select>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+													 </form>
+												</div> <!-- /#div_flt_customer -->
+												<div id="div_flt_engineer" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
+																		  <li class="active"><a href="#">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
+																	 </ul>
+																</div>
+																<label class="input-group-addon">Engineer:&nbsp;</label>
+																<select id="input_div_flt_engineer" name="engineer" class="form-control">
+																	 <?php
+																	 $result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
+																	 while ($row = $result->fetch_assoc()) {
+																		 echo "<option value='{$row['employeeID']}'" . ($my_get['engineer'] == $row['employeeID'] ? " selected='selected'" : '') . ">{$row['displayName']}</option>\n";
+																	 }
+																	 ?>
+																</select>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_application -->
-										  <div id="div_flt_customer" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
-																	 <li class="active"><a href="#">Customer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
-																</ul>
+													 </form>
+												</div> <!-- /#div_flt_engineer -->
+												<div id="div_flt_reporttype" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li class="active"><a href="#">Report Type</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
+																	 </ul>
+																</div>
+																<label class="input-group-addon">Report Type:&nbsp;</label>
+																<select id="input_div_flt_reporttype" name="reporttype" class="form-control">
+																	 <?php
+																	 $result = $conn->query("SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC");
+																	 while ($row = $result->fetch_assoc()) {
+																		 echo "<option value='{$row['reportTypeID']}'" . ($my_get['reporttype'] == $row['reportTypeID'] ? " selected='selected'" : '') . ">{$row['reportType']}</option>\n";
+																	 }
+																	 ?>
+																</select>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-														  <label class="input-group-addon">Customer:&nbsp;</label>
-														  <select id="input_div_flt_customer" name="customer" class="form-control">
-																<?php
-																$result = $conn->query("SELECT customerID, customer FROM customers ORDER BY customer ASC");
-																while ($row = $result->fetch_assoc()) {
-																	echo "<option value='{$row['customerID']}'" . ($my_get['customer'] == $row['customerID'] ? " selected='selected'" : '') . ">{$row['customer']}</option>\n";
-																}
-																?>
-														  </select>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+													 </form>
+												</div> <!-- /#div_flt_reporttype -->
+												<div id="div_flt_subject" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
+																		  <li class="divider"></li>
+																		  <li class="active"><a href="#">Subject</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
+																	 </ul>
+																</div>
+																<label class="input-group-addon">Subject:&nbsp;</label>
+																<input id="input_div_flt_subject" name="subject" value="<?php echo $my_get['subject']; ?>" size="16" class="form-control"/>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_customer -->
-										  <div id="div_flt_engineer" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
-																	 <li class="active"><a href="#">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
-																</ul>
+													 </form>
+												</div> <!-- /#div_flt_subject -->
+												<div id="div_flt_ticket" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
+																		  <li class="active"><a href="#">Ticket</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
+																	 </ul>
+																</div>
+																<label class="input-group-addon">Ticket:&nbsp;</label>
+																<input id="input_div_flt_ticket" name="ticket" value="<?php echo $my_get['ticket']; ?>" size="16" class="form-control"/>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-														  <label class="input-group-addon">Engineer:&nbsp;</label>
-														  <select id="input_div_flt_engineer" name="engineer" class="form-control">
-																<?php
-																$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
-																while ($row = $result->fetch_assoc()) {
-																	echo "<option value='{$row['employeeID']}'" . ($my_get['engineer'] == $row['employeeID'] ? " selected='selected'" : '') . ">{$row['displayName']}</option>\n";
-																}
-																?>
-														  </select>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+													 </form>
+												</div> <!-- /#div_flt_ticket -->
+												<div id="div_flt_case" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_case')">Ticket</a></li>
+																		  <li class="active"><a href="#">Case</a></li>
+																	 </ul>
+																</div>
+																<label class="input-group-addon">Case:&nbsp;</label>
+																<input id="input_div_flt_case" name="case" value="<?php echo $my_get['case']; ?>" size="16" class="form-control"/>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_engineer -->
-										  <div id="div_flt_reporttype" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li class="active"><a href="#">Report Type</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
-																</ul>
-														  </div>
-														  <label class="input-group-addon">Report Type:&nbsp;</label>
-														  <select id="input_div_flt_reporttype" name="reporttype" class="form-control">
-																<?php
-																$result = $conn->query("SELECT reportTypeID, reportType FROM reporttypes ORDER BY reportType ASC");
-																while ($row = $result->fetch_assoc()) {
-																	echo "<option value='{$row['reportTypeID']}'" . ($my_get['reporttype'] == $row['reportTypeID'] ? " selected='selected'" : '') . ">{$row['reportType']}</option>\n";
-																}
-																?>
-														  </select>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
-														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_reporttype -->
-										  <div id="div_flt_subject" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
-																	 <li class="divider"></li>
-																	 <li class="active"><a href="#">Subject</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_ticket')">Ticket</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
-																</ul>
-														  </div>
-														  <label class="input-group-addon">Subject:&nbsp;</label>
-														  <input id="input_div_flt_subject" name="subject" value="<?php echo $my_get['subject']; ?>" size="16" class="form-control"/>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
-														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_subject -->
-										  <div id="div_flt_ticket" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
-																	 <li class="active"><a href="#">Ticket</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_case')">Case</a></li>
-																</ul>
-														  </div>
-														  <label class="input-group-addon">Ticket:&nbsp;</label>
-														  <input id="input_div_flt_ticket" name="ticket" value="<?php echo $my_get['ticket']; ?>" size="16" class="form-control"/>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
-														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_ticket -->
-										  <div id="div_flt_case" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_application')">Application</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_customer')">Customer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_reporttype')">Report Type</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_subject')">Subject</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_case')">Ticket</a></li>
-																	 <li class="active"><a href="#">Case</a></li>
-																</ul>
-														  </div>
-														  <label class="input-group-addon">Case:&nbsp;</label>
-														  <input id="input_div_flt_case" name="case" value="<?php echo $my_get['case']; ?>" size="16" class="form-control"/>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
-														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_case -->
+													 </form>
+												</div> <!-- /#div_flt_case -->
+										  </div>
 									 </div>
 								</div>
 								<div class='box-body'>

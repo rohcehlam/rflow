@@ -1,59 +1,6 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 
-function buildMenu() {
-	if (isset($_SESSION['MM_Username'])) {
-		echo "<div id='menucontainer' style='float:left;'>\n";
-		echo "	<div id=\"menunav\">\n";
-		echo "		<ul>\n";
-		echo "			<li><a href=\"../rfas/rfas.php\">RFCs</a></li>\n";
-		echo "			<li><a href=\"../statusReports/statusReports.php\">Status Reports</a></li>\n";
-		echo "			<li><a href=\"../maintenances/maintenances.php\">Maintenance Notifications</a></li>\n";
-		echo "			<li><a href=\"../supportRequests/supportRequests.php\">Support Requests</a></li>\n";
-		echo "			<li><a href=\"../userPortals/myPortal.php\">My Portal</a></li>\n";
-		echo "		</ul>\n";
-		echo "<div style='float:right;'>"
-		. "<img src='../images/masflight-logo.png' alt='masFlight' height='50'>"
-		. "</div>";
-
-		echo "	</div>\n";
-		echo "	<div id=\"menu_inner\">\n";
-		echo "	</div>\n";
-		echo "</div>\n";
-	} else {
-		echo "<div id='menucontainer' style='float:left;'>\n";
-		echo "	<div id=\"menunav\">\n";
-		echo "		<ul>\n";
-		echo "			<li><a href=\"../userPortals/index.php\">User Portals</a></li>\n";
-		echo "		</ul>\n";
-		echo "<div style='float:right;'>"
-		. "<img src='../images/masflight-logo.png' alt='masFlight' height='50'>"
-		. "</div>";
-		echo "	</div>\n";
-		echo "	<div id=\"menu_inner\">\n";
-		echo "	</div>\n";
-		echo "</div>\n";
-	}
-
-	/* echo "<div id=\"menucontainer\">\n";
-	  echo "	<div id=\"menunav\">\n";
-	  echo "		<ul>\n";
-	  echo "			<li><a href=\"../rfas/rfas.php\" rel=\"cman\">Change Management</a></li>\n";
-	  echo "			<li><a href=\"../statusReports/statusReports.php\" rel=\"reporting\">Reporting</a></li>\n";
-	  echo "		</ul>\n";
-	  echo "	</div>\n";
-	  echo "	<div id=\"menu_inner\">\n";
-	  echo "		<ul id=\"cman\" class=\"innercontent\">\n";
-	  echo "			<li><a href=\"../rfas/rfas.php\">RFCs</a></li>\n";
-	  echo "			<li><a href=\"../maintenances/maintenances.php\">Maintenance Notifications</a></li>\n";
-	  echo "		</ul>\n";
-	  echo "		<ul id=\"reporting\" class=\"innercontent\">\n";
-	  echo "			<li><a href=\"../statusReports/statusReports.php\">Status Reports</a></li>\n";
-	  echo "		</ul>\n";
-	  echo "	</div>\n";
-	  echo "</div>\n"; */
-}
-
 function buildNewHeader($rootPage, $rootPageText, $pageText = '', $destiny = '', $addText = '') {
 	?>
 	<div class="page-header">
@@ -102,7 +49,7 @@ function sudoAuthData($linkedPage, $linkedText, $tdth, $icon, $param) {
 		} elseif ($tdth == "td") {
 			?>
 			<td align="center">
-				 <a title="<?php echo $linkedText; ?>" href="<?php echo "{$linkedPage}?{$param}"; ?>">
+				 <a href="<?php echo "{$linkedPage}?{$param}"; ?>">
 					  <span class="glyphicon <?php echo (($icon == 'edit') ? 'glyphicon-edit' : 'glyphicon-remove-sign'); ?>"></span>
 				 </a>
 			</td>
@@ -124,16 +71,13 @@ function sentSuccessful($message) {
 	}
 }
 
-function buildTitle($remainder, $company = "masflight: ") {
-	echo $company;
-	if (isset($_GET['function']) && ($_GET['function'] == "update")) {
-		echo "Update";
-	} elseif (isset($_GET['function']) && ($_GET['function'] == "add")) {
-		echo "Add";
-	} elseif (isset($_GET['function']) && ($_GET['function'] == "view")) {
-		echo "View";
+function buildTitle($remainder, $company = "GEE:") {
+	$my_get = filter_input_array(INPUT_GET, ['function' => FILTER_SANITIZE_SPECIAL_CHARS]);
+	echo $company . '&nbsp;';
+	if (isset($my_get['function'])) {
+		echo ucwords($my_get['function']);
 	}
-	echo " " . $remainder;
+	echo '&nbsp;' . $remainder;
 }
 
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") {
@@ -389,23 +333,23 @@ function build_sidebar($active = 0) {
 					<li class="header">HEADER</li>
 					<!-- Optionally, you can add icons to the links -->
 					<li <?php echo $active == 0 ? 'class="active"' : ''; ?>><a href="../userPortals/myPortal.php"><i class="fa fa-dashboard"></i> <span>DashBoard</span></a></li>
-					<li <?php echo $active == 1 ? 'class="active"' : ''; ?>><a href="#"><i class="fa fa-users"></i> <span>Employees</span></a></li>
+					<li <?php echo $active == 1 ? 'class="active"' : ''; ?>><a href="../employees/employees.php"><i class="fa fa-users"></i> <span>Employees</span></a></li>
 					<li class='treeview<?php echo ($active == 2 || $active == 3 || $active == 4 || $active == 5) ? ' active' : ''; ?>'>
 						 <a href='#'><i class='fa fa-stack-overflow'></i><span>Rflow</span> <i class="fa fa-angle-left pull-right"></i></a>
 						 <ul class='treeview-menu'>
-							  <li <?php echo $active == 2 ? 'class="active"' : ''; ?>><a href='../rfas/rfas.php'><i class='fa fa-cog'></i>RFC</a></li>
-							  <li <?php echo $active == 3 ? 'class="active"' : ''; ?>><a href='../statusReports/statusReports.php'><i class='fa fa-flag'></i>Status Reports</a></li>
-							  <li <?php echo $active == 4 ? 'class="active"' : ''; ?>><a href='../maintenances/maintenances.php'><i class='fa fa-wrench'></i>Maintenances</a></li>
-							  <li <?php echo $active == 5 ? 'class="active"' : ''; ?>><a href='../supportRequests/supportRequests.php'><i class='fa fa-bullhorn'></i>Support Requests</a></li>
+							  <li<?php echo $active == 2 ? ' class="active"' : ''; ?>><a href='../rfas/rfas.php'><i class='fa fa-cog'></i>RFC</a></li>
+							  <li<?php echo $active == 3 ? ' class="active"' : ''; ?>><a href='../statusReports/statusReports.php'><i class='fa fa-flag'></i>Status Reports</a></li>
+							  <li<?php echo $active == 4 ? ' class="active"' : ''; ?>><a href='../maintenances/maintenances.php'><i class='fa fa-wrench'></i>Maintenances</a></li>
+							  <li<?php echo $active == 5 ? ' class="active"' : ''; ?>><a href='../supportRequests/supportRequests.php'><i class='fa fa-bullhorn'></i>Support Requests</a></li>
 						 </ul>
 					</li>
-					<li class='treeview'>
+					<li class='treeview<?php echo ($active == 6 || $active == 7 || $active == 8 || $active == 9) ? ' active' : ''; ?>'>
 						 <a href='#'><i class='fa fa-bell-o'></i><span>Alarms System</span> <i class="fa fa-angle-left pull-right"></i></a>
 						 <ul class='treeview-menu'>
-							  <li><a href='#'><i class='fa fa-bell-o'></i>Alarms</a></li>
-							  <li><a href='#'><i class='fa fa-bolt'></i>RCRON</a></li>
-							  <li><a href='#'><i class='fa fa-server'></i>Servers</a></li>
-							  <li><a href='#'><i class='fa fa-bomb'></i>CMQ</a></li>
+							  <li<?php echo $active == 6 ? ' class="active"' : ''; ?>><a href='#'><i class='fa fa-bell-o'></i>Alarms</a></li>
+							  <li<?php echo $active == 7 ? ' class="active"' : ''; ?>><a href='../rcron/rcrons.php'><i class='fa fa-bolt'></i>rCron</a></li>
+							  <li<?php echo $active == 8 ? ' class="active"' : ''; ?>><a href='#'><i class='fa fa-server'></i>Servers</a></li>
+							  <li<?php echo $active == 9 ? ' class="active"' : ''; ?>><a href='#'><i class='fa fa-bomb'></i>CMQ</a></li>
 						 </ul>
 					</li>
 					<li class='treeview'>
@@ -469,4 +413,21 @@ function breadcrumbs($breadcrumbs = array(), $header = '', $description = '') {
 		 </ol>		 
 	</section>
 	<?php
+}
+
+function check_permission() {
+	$MM_restrictGoTo = "../userPortals/index.php";
+	if (!isset($_SESSION['MM_Username'])) {
+		$MM_qsChar = "?";
+		$MM_referrer = filter_input(INPUT_SERVER, 'PHP_SELF', FILTER_SANITIZE_SPECIAL_CHARS);
+		if (strpos($MM_restrictGoTo, "?")) {
+			$MM_qsChar = "&";
+		}
+		if (isset($QUERY_STRING) && strlen($QUERY_STRING) > 0) {
+			$MM_referrer .= "?" . $QUERY_STRING;
+		}
+		$MM_restrictGoTo = $MM_restrictGoTo . $MM_qsChar . "accesscheck=" . urlencode($MM_referrer);
+		header("Location: " . $MM_restrictGoTo);
+		exit;
+	}
 }

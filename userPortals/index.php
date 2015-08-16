@@ -40,8 +40,6 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
 		$rsGetUser = $conn->query($query_rsGetUser);
 		$row_rsGetUser = $rsGetUser->fetch_assoc();
 
-		$loginStrGroup = "";
-
 		//declare two session variables and assign them
 		/*
 		  $GLOBALS['MM_Username'] = $loginUsername;
@@ -53,11 +51,11 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
 		 */
 		//register the session variables
 		$_SESSION["MM_Username"] = $loginUsername;
-		$_SESSION["MM_UserGroup"] = $loginStrGroup;
+		$_SESSION["MM_UserGroup"] = $row_rsGetUser['groupID'];
 		$_SESSION["employee"] = $row_rsGetUser['employeeID'];
 		$_SESSION["firstName"] = $row_rsGetUser['firstName'];
 		$_SESSION["group"] = $row_rsGetUser['groupID'];
-		$_SESSION["dept"] = $row_rsGetUser['deptID'];
+		$_SESSION["dept"] = $row_rsGetUser['departmentID'];
 
 		if (isset($_SESSION['PrevUrl']) && true) {
 			$MM_redirectLoginSuccess = $_SESSION['PrevUrl'];

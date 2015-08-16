@@ -63,78 +63,82 @@ $rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div cla
 
 						  <div class='box box-primary'>
 								<div class='box-header with-border'>
-									 <a class='btn btn-primary' href='maintenance.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add Maintenance</a>
-									 <div class="box-tools pull-right">
-										  <div id="div_flt_nofilter">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li class="active"><a href="#">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_status')">Status</a></li>
-																</ul>
+									 <div class="col-xs-6">
+										  <a class='btn btn-primary' href='maintenance.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add Maintenance</a>
+									 </div>
+									 <div class="col-xs-6">
+										  <div class="box-tools pull-right">
+												<div id="div_flt_nofilter">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li class="active"><a href="#">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_status')">Status</a></li>
+																	 </ul>
+																</div>
+																<label class="form-control">No Filter</label>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-														  <label class="form-control">No Filter</label>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+													 </form>
+												</div> <!-- /#div_flt_nofilter -->
+												<div id="div_flt_engineer" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li class="active"><a href="#">Engineer</a></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_status')">Status</a></li>
+																</div>
+																<label class="input-group-addon">Engineer:&nbsp;</label>
+																<select id="input_div_flt_engineer" name="employee" class="form-control">
+																	 <?php
+																	 $result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
+																	 while ($row = $result->fetch_assoc()) {
+																		 echo "<option value='{$row['employeeID']}'" . ($my_get['employee'] == $row['employeeID'] ? " selected='selected'" : '') . ">{$row['displayName']}</option>\n";
+																	 }
+																	 ?>
+																</select>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_nofilter -->
-										  <div id="div_flt_engineer" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li class="active"><a href="#">Engineer</a></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_status')">Status</a></li>
+													 </form>
+												</div> <!-- /#div_flt_engineer -->
+												<div id="div_flt_status" style="display: none;">
+													 <form class="form-inline" role="form">
+														  <div class="input-group">
+																<div class="input-group-btn">
+																	 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
+																	 <ul class="dropdown-menu">
+																		  <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
+																		  <li class="divider"></li>
+																		  <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
+																		  <li class="active"><a href="#">Status</a></li>
+																</div>
+																<label class="input-group-addon">Status:&nbsp;</label>
+																<select id="input_div_flt_status" name="status" class="form-control">
+																	 <?php
+																	 foreach (['Open', 'Closed', 'Canceled', 'Extended'] as $data) {
+																		 echo "<option value='$data'" . ($data == $my_get['status'] ? " selected='selected'" : '') . ">$data</option>";
+																	 }
+																	 ?>
+																</select>
+																<div class="input-group-btn">
+																	 <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
+																</div>
 														  </div>
-														  <label class="input-group-addon">Engineer:&nbsp;</label>
-														  <select id="input_div_flt_engineer" name="employee" class="form-control">
-																<?php
-																$result = $conn->query("SELECT employeeID, displayName FROM employees ORDER BY displayName ASC");
-																while ($row = $result->fetch_assoc()) {
-																	echo "<option value='{$row['employeeID']}'" . ($my_get['employee'] == $row['employeeID'] ? " selected='selected'" : '') . ">{$row['displayName']}</option>\n";
-																}
-																?>
-														  </select>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
-														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_engineer -->
-										  <div id="div_flt_status" style="display: none;">
-												<form class="form-inline" role="form">
-													 <div class="input-group">
-														  <div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Choose Filter:&nbsp;<span class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	 <li><a href="#" onclick="display_filter('div_flt_nofilter')">No Filter</a></li>
-																	 <li class="divider"></li>
-																	 <li><a href="#" onclick="display_filter('div_flt_engineer')">Engineer</a></li>
-																	 <li class="active"><a href="#">Status</a></li>
-														  </div>
-														  <label class="input-group-addon">Status:&nbsp;</label>
-														  <select id="input_div_flt_status" name="status" class="form-control">
-																<?php
-																foreach (['Open', 'Closed', 'Canceled', 'Extended'] as $data) {
-																	echo "<option value='$data'" . ($data == $my_get['status'] ? " selected='selected'" : '') . ">$data</option>";
-																}
-																?>
-														  </select>
-														  <div class="input-group-btn">
-																<button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-filter"></span>&nbsp;Apply</button>
-														  </div>
-													 </div>
-												</form>
-										  </div> <!-- /#div_flt_status -->
+													 </form>
+												</div> <!-- /#div_flt_status -->
+										  </div>
 									 </div>
 								</div>
 								<div class='box-body'>
@@ -162,8 +166,8 @@ $rsMaintenanceNotifs = $conn->query($query_rsMaintenanceNotifs) or die("<div cla
 													<tr>
 														 <td><?php echo $row_rsMaintenanceNotifs['startDate']; ?></td>
 														 <td><?php echo $row_rsMaintenanceNotifs['startTime']; ?></td>
-														 <td><a title="View Maintenance Notification" href="maintenance.php?function=view&amp;maintenance=<?php echo $row_rsMaintenanceNotifs['maintenanceNotifsID']; ?>"><?php echo $row_rsMaintenanceNotifs['maintenanceNotifsID']; ?></a></td>
-														 <td><a title="View Maintenance Notification" href="maintenance.php?function=view&amp;maintenance=<?php echo $row_rsMaintenanceNotifs['maintenanceNotifsID']; ?>"><?php echo stripslashes($row_rsMaintenanceNotifs['reason']); ?></a></td>
+														 <td><a href="maintenance.php?function=view&amp;maintenance=<?php echo $row_rsMaintenanceNotifs['maintenanceNotifsID']; ?>"><?php echo $row_rsMaintenanceNotifs['maintenanceNotifsID']; ?></a></td>
+														 <td><a href="maintenance.php?function=view&amp;maintenance=<?php echo $row_rsMaintenanceNotifs['maintenanceNotifsID']; ?>"><?php echo stripslashes($row_rsMaintenanceNotifs['reason']); ?></a></td>
 														 <?php
 														 if (!(isset($my_get['employee']))) {
 															 echo "<td>" . $row_rsMaintenanceNotifs['displayName'] . "</td>";
