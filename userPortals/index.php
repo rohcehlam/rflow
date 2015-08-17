@@ -34,7 +34,7 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
 	$row_rsLoginRS = $result->fetch_assoc();
 	if ($row_rsLoginRS['cant'] > 0) {
 
-		$query_rsGetUser = "SELECT employeeID, workEmail, firstName, groupID, departmentID"
+		$query_rsGetUser = "SELECT employeeID, workEmail, firstName, lastName, groupID, departmentID, title"
 			. " FROM employees"
 			. " WHERE (workEmail='{$loginUsername}' OR displayName='{$loginUsername}') AND SHA('{$password}')=hash_pass";
 		$rsGetUser = $conn->query($query_rsGetUser);
@@ -54,8 +54,10 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
 		$_SESSION["MM_UserGroup"] = $row_rsGetUser['groupID'];
 		$_SESSION["employee"] = $row_rsGetUser['employeeID'];
 		$_SESSION["firstName"] = $row_rsGetUser['firstName'];
+		$_SESSION["lastName"] = $row_rsGetUser['lastName'];
 		$_SESSION["group"] = $row_rsGetUser['groupID'];
 		$_SESSION["dept"] = $row_rsGetUser['departmentID'];
+		$_SESSION["title"] = $row_rsGetUser['title'];
 
 		if (isset($_SESSION['PrevUrl']) && true) {
 			$MM_redirectLoginSuccess = $_SESSION['PrevUrl'];

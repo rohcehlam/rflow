@@ -100,11 +100,7 @@ function get_date($format, $time) {
 
 										  </tbody>
 									 </table>
-									 <script type="text/javascript">
-                               $(document).ready(function () {
-                                   $('#table_rcrons').dataTable({"order": [[4, "desc"], [1, "asc"], [0, "asc"]], "displayLength": 25, });
-                               });
-									 </script>
+
 
 								</div>
 						  </div>
@@ -112,6 +108,11 @@ function get_date($format, $time) {
 					 </section>
 				</div>
 				<?php build_footer(); ?>
+				<script type="text/javascript">
+               $(document).ready(function () {
+                   $('#table_rcrons').dataTable({"order": [[4, "desc"], [1, "asc"], [0, "asc"]], "displayLength": 25, });
+               });
+				</script>
 		  </div>
 	 </body>
 </html>

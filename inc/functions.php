@@ -156,26 +156,17 @@ function build_navbar($active = 0) {
 			  <!-- Navbar Right Menu -->
 			  <div class="navbar-custom-menu">
 					<ul class="nav navbar-nav">
+						 <li id="icons_load" style="display: none;" class="overlay"><i class="fa fa-refresh fa-spin"></i></li>
 						 <!-- maintenances: style can be found in dropdown.less-->
 						 <li class="dropdown messages-menu">
 							  <!-- Menu toggle button -->
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="fa fa-wrench"></i>
-									<span class="label label-default">0</span>
+									<span id="span_maintenances" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
 									<li class="header">Pending Maintenances</li>
-									<li>
-										 <!-- Inner Menu: contains the notifications -->
-										 <ul class="menu">
-											  <li><!-- start notification -->
-													<a href="#">
-														 <i class="fa fa-wrench text-gray"></i> 0 Pending Maintenances
-													</a>
-											  </li><!-- end notification -->
-										 </ul>
-									</li>
-									<li class="footer"><a href="#">View all</a></li>
+									<li class="footer"><a href="../maintenances/maintenances.php">View all</a></li>
 							  </ul>
 						 </li><!-- /.maintenances-menu -->
 
@@ -184,7 +175,7 @@ function build_navbar($active = 0) {
 							  <!-- Menu toggle button -->
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="fa fa-bell-o"></i>
-									<span class="label label-default">0</span>
+									<span id="span_alarms" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
 									<li class="header">Active Alarms</li>
@@ -206,7 +197,7 @@ function build_navbar($active = 0) {
 							  <!-- Menu Toggle Button -->
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="fa fa-bullhorn"></i>
-									<span class="label label-default">0</span>
+									<span id="span_mysupport" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
 									<li class="header">Requests for my Support</li>
@@ -230,7 +221,7 @@ function build_navbar($active = 0) {
 							  <!-- Menu Toggle Button -->
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="fa fa-inbox"></i>
-									<span class="label label-default">0</span>
+									<span id="span_unassignedsupport" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
 									<li class="header">Unassigned Support Requests</li>
@@ -254,7 +245,7 @@ function build_navbar($active = 0) {
 							  <!-- Menu Toggle Button -->
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="fa fa-database"></i>
-									<span class="label label-default">0</span>
+									<span span="span_lowdisk" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
 									<li class="header">Low Disk Space Servers</li>
@@ -278,23 +269,23 @@ function build_navbar($active = 0) {
 							  <!-- Menu Toggle Button -->
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<!-- The user image in the navbar-->
-									<img src="../images/nano_001.jpg" class="user-image" alt="User Image" />
+									<img <?php echo user_photo(); ?> class="user-image" alt="User Image" />
 									<!-- hidden-xs hides the username on small devices so only the image appears. -->
-									<span class="hidden-xs">Orlando Jimenez</span>
+									<span class="hidden-xs"><?php echo "{$_SESSION['firstName']}&nbsp;{$_SESSION['lastName']}"; ?></span>
 							  </a>
 							  <ul class="dropdown-menu">
 									<!-- The user image in the menu -->
 									<li class="user-header">
-										 <img src="../images/nano_001.jpg" class="img-circle" alt="User Image" />
+										 <img <?php echo user_photo(); ?> class="img-circle" alt="User Image" />
 										 <p>
-											  Orlando Jimenez - Senior Programmer
+											  <?php echo "{$_SESSION['firstName']}&nbsp;{$_SESSION['lastName']}&nbsp;-&nbsp;{$_SESSION['title']}"; ?>
 											  <small>There's No place like 127.0.0.1</small>
 										 </p>
 									</li>
 									<!-- Menu Footer-->
 									<li class="user-footer">
 										 <div class="pull-left">
-											  <a href="#" class="btn btn-default btn-flat">Profile</a>
+											  <a href="../employees/employee.php?function=view&employeeID=<?php echo $_SESSION['employee']; ?>" class="btn btn-default btn-flat">Profile</a>
 										 </div>
 										 <div class="pull-right">
 											  <a href="../userPortals/myPortal.php?doLogout=true" class="btn btn-default btn-flat">Sign out</a>
@@ -303,10 +294,20 @@ function build_navbar($active = 0) {
 							  </ul>
 						 </li>
 					</ul>
+
 			  </div>
 		 </nav>
 	</header>
 	<?php
+}
+
+function user_photo() {
+	if (!file_exists("../images/user_photo{$_SESSION['employee']}.jpg")) {
+		//return "data-src='holder.js/42x42'";
+		return "src='../images/default_photo.jpg'";
+	} else {
+		return "src='../images/user_photo{$_SESSION['employee']}.jpg'";
+	}
 }
 
 function build_sidebar($active = 0) {
@@ -319,12 +320,12 @@ function build_sidebar($active = 0) {
 			  <!-- Sidebar user panel (optional) -->
 			  <div class="user-panel">
 					<div class="pull-left image">
-						 <img src="../images/nano_001.jpg" class="img-circle" alt="User Image" />
+						 <img <?php echo user_photo(); ?> class="img-circle" alt="User Image" />
 					</div>
 					<div class="pull-left info">
-						 <p>Orlando Jimenez</p>
+						 <p><?php echo "{$_SESSION['firstName']}&nbsp;{$_SESSION['lastName']}"; ?></p>
 						 <!-- Status -->
-						 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+						 <?php echo isset($_SESSION['employee']) ? '<a href="#"><i class="fa fa-circle text-success"></i> Online</a>' : '<a href="#"><i class="fa fa-circle text-danger"></i> Offline</a>'; ?>
 					</div>
 			  </div>
 
@@ -384,10 +385,12 @@ function build_footer() {
 	<script src="../js/app.min.js" type="text/javascript"></script>
 	<!-- jQuery UI 1.11.2 -->
 	<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="../js/docs.min.js"></script>
 
 	<!-- DATA TABES SCRIPT -->
 	<script src="../js/jquery.dataTables.min.js" type="text/javascript"></script>
 	<script src="../js/dataTables.bootstrap.js" type="text/javascript"></script>
+	<script src="../js/navbar_icons.js" type="text/javascript"></script>
 	<?php
 }
 

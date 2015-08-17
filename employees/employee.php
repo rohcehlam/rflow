@@ -70,7 +70,6 @@ $my_get = filter_input_array(INPUT_GET, $args);
 				</div> <!-- /container -->
 				<?php build_footer(); ?>
 				<script src="../js/bootstrap-datepicker.js"></script>
-				<script src="../js/docs.min.js"></script>
 				<link rel="stylesheet" href="../css/datepicker.css"/>
 		  </div> <!-- /content-wrapper -->
 
