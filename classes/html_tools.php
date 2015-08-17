@@ -64,14 +64,14 @@ class thtml_writer {
 				  <?php if (($this->function == "add") || ($this->function == "update")) { ?>
 					  <div class="btn-group btn-group-justified" data-toggle="buttons">
 							<label class="btn btn-default<?php echo $checked ? ' active' : ''; ?>">
-								 <input type="checkbox" value='<?php echo $value; ?>' name="<?php echo $name; ?>" id="<?php echo $id; ?>"<?php $checked ? ' checked="checked"' : ''; ?>/><?php echo $text; ?>
+								 <input type="checkbox" value='<?php echo $value; ?>' name="<?php echo $name; ?>" id="<?php echo $id; ?>"<?php echo $checked ? ' checked="checked"' : ''; ?>/><?php echo $text; ?>
 							</label>
 					  </div>
 				  <?php } else { ?>
 					  <div class="input-group">
 							<div class="btn-group btn-group-justified" data-toggle="buttons">
 								 <label class="btn btn-default<?php echo $checked ? ' active' : ''; ?>">
-									  <input type="checkbox" value='<?php echo $value; ?>' name="<?php echo $name; ?>" id="<?php echo $id; ?>"<?php $checked ? ' checked="checked"' : ''; ?> readonly=""/><?php echo $text; ?>
+									  <input type="checkbox" value='<?php echo $value; ?>' name="<?php echo $name; ?>" id="<?php echo $id; ?>"<?php echo $checked ? ' checked="checked"' : ''; ?> readonly=""/><?php echo $text; ?>
 								 </label>
 							</div>
 							<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
@@ -107,6 +107,27 @@ class thtml_writer {
 							<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
 					  </div>
 				  <?php } ?>
+			 </div>
+		</div>
+		<?php
+	}
+
+	function draw_fileupload($id = '', $label_text = '', $name = '', $filename = '') {
+		?>
+		<div class='form-group'>
+			 <label for='<?php echo $id; ?>' class="control-label col-xs-2"><?php echo $label_text; ?></label>
+			 <div class="col-xs-10">
+				  <?php if (($this->function == "add") || ($this->function == "update")) { ?>
+					  <input type="file" name="<?php echo $name; ?>" id="<?php echo $id; ?>"/>
+					  <?php
+				  } else {
+					  if (!file_exists("../images/$filename")) {
+						  echo "<img data-src='holder.js/160x160' class='img-thumbnail' alt='User Photo'>";
+					  } else {
+						  echo "<img src='../images/$filename' alt='User Photo'>";
+					  }
+				  }
+				  ?>
 			 </div>
 		</div>
 		<?php

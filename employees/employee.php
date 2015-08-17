@@ -54,10 +54,12 @@ $my_get = filter_input_array(INPUT_GET, $args);
 										  <?php if ($my_get['function'] == 'update') { ?>
 											  <div class="col-xs-offset-2 col-xs-6"><button class="btn btn-success" type='submit'><i class="fa fa-save"></i>&nbsp;Update Employee</button></div>
 											  <input type="hidden" name="function" value="update"/>
+											  <input type="hidden" name="employeeID" value="<?php echo $my_get['employeeID']; ?>"/>
 										  <?php } ?>
 										  <?php if ($my_get['function'] == 'delete') { ?>
 											  <div class="col-xs-offset-2 col-xs-6"><button class="btn btn-danger" type='submit'><i class="fa fa-remove"></i>&nbsp;Delete Employee</button></div>
 											  <input type="hidden" name="function" value="delete"/>
+											  <input type="hidden" name="employeeID" value="<?php echo $my_get['employeeID']; ?>"/>
 										  <?php } ?>
 
 									 </div>
@@ -68,6 +70,7 @@ $my_get = filter_input_array(INPUT_GET, $args);
 				</div> <!-- /container -->
 				<?php build_footer(); ?>
 				<script src="../js/bootstrap-datepicker.js"></script>
+				<script src="../js/docs.min.js"></script>
 				<link rel="stylesheet" href="../css/datepicker.css"/>
 		  </div> <!-- /content-wrapper -->
 

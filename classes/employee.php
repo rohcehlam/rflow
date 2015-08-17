@@ -25,7 +25,7 @@ class tEmployee {
 	public $error;
 
 	function __construct($conn = null, $id = 0, $firstName = '', $lastName = '', $displayName = '', $title = '', $cellPhone = '', $homePhone = '', $workEmail = ''
-	, $groupID = 0, $departmentID = 0, $engineer = 'n', $manager = 'n', $hireDate = '0000-00-00', $active = 'f') {
+	, $groupID = 0, $departmentID = 0, $engineer = 'n', $manager = 'f', $hireDate = '0000-00-00', $active = 'f') {
 		$this->conn = $conn;
 		$this->EmployeeID = $id;
 		$this->firstName = $firstName;
@@ -86,19 +86,22 @@ EOD;
 		}
 
 		$writer = new thtml_writer($function);
+		if ($function != 'update') {
+			$writer->draw_input('displayName', 'Display Name', 'displayName', $this->DisplayName, 'User Name', true);
+		}
 		$writer->draw_input('firstName', 'First Name', 'firstName', $this->firstName, 'First Name');
 		$writer->draw_input('lastName', 'Last Name', 'lastName', $this->lastName, 'Last Name');
-		$writer->draw_input('displayName', 'Display Name', 'displayName', $this->DisplayName, 'User Name', true);
 		$writer->draw_input('title', 'Title', 'title', $this->title, 'Title');
 		$writer->draw_input('cellPhone', 'Cell Phone', 'cellPhone', $this->cellPhone, 'Cell Phone');
 		$writer->draw_input('homePhone', 'Home Phone', 'homePhone', $this->homePhone, 'Work Phone');
 		$writer->draw_input('workEmail', 'Work Email', 'workEmail', $this->workEmail, 'Work Email');
 		$writer->draw_select('groupID', 'Group', 'groupID', $this->str_group, $array_groups, $this->groupID);
 		$writer->draw_select('departmentID', 'Department', 'departmentID', $this->str_department, $array_departments, $this->departmentID);
-		$writer->draw_check('engineer', 'Engineer', 'engineer', $this->engineer, 'Engineer', ($this->engineer == 'y'));
-		$writer->draw_check('manager', 'Manager', 'manager', $this->manager, 'Manager', ($this->manager == 'y'));
+		$writer->draw_check('engineer', 'Engineer', 'engineer', 'y', 'Engineer', ($this->engineer == 'y'));
+		$writer->draw_check('manager', 'Manager', 'manager', 't', 'Manager', ($this->manager == 't'));
 		$writer->draw_date('hireDate', 'Hire Date', 'hireDate', $function == 'add' ? date('Y-m-d') : $this->hireDate);
-		$writer->draw_check('active', 'Active', 'active', $this->active, 'Active', ($this->active == 't'));
+		$writer->draw_check('active', 'Active', 'active', 't', 'Active', ($this->active == 't'));
+		$writer->draw_fileupload('user_photo', 'Employee Portrait', 'user_photo', "user_photo{$this->EmployeeID}.jpg");
 	}
 
 	function get_employeeID() {
@@ -123,6 +126,10 @@ EOD;
 			$rs_last_employeeID = $this->conn->query("SELECT MAX(employeeID) FROM employees");
 			$row = $rs_last_employeeID->fetch_row();
 			$this->EmployeeID = $row[0];
+			$check = getimagesize($_FILES['user_photo']['tmp_name']);
+			if ($check !== false) {
+				move_uploaded_file($_FILES['user_photo']['tmp_name'], "../images/user_photo{$this->EmployeeID}.jpg");
+			}
 			$temp = true;
 		}
 		$this->error = implode('\n', $errors);
@@ -130,12 +137,13 @@ EOD;
 	}
 
 	function update() {
-		$this->conn->query("UPDATE employees SET firstName='{$this->firstName}', lastName='{$this->lastName}', displayName='{$this->DisplayName}', title='{$this->title}'"
+		$this->conn->query("UPDATE employees SET firstName='{$this->firstName}', lastName='{$this->lastName}', title='{$this->title}'"
 			. ", cellPhone='{$this->cellPhone}', homePhone='{$this->homePhone}', workEmail='{$this->workEmail}', groupID={$this->groupID}, departmentID={$this->departmentID}"
-			. ", engineer='{$this->engineer}', manager='{$this->manager}', hireDate='{$this->hireDate}', active='{$this->active}'");
-		$rs_last_employeeID = $this->conn->query("SELECT MAX(employeeID) FROM employees");
-		$row = $rs_last_employeeID->fetch_row();
-		$this->EmployeeID = $row[0];
+			. ", engineer='{$this->engineer}', manager='{$this->manager}', hireDate='{$this->hireDate}', active='{$this->active}' WHERE employeeID='{$this->EmployeeID}'");
+		$check = getimagesize($_FILES['user_photo']['tmp_name']);
+		if ($check !== false) {
+			move_uploaded_file($_FILES['user_photo']['tmp_name'], "../images/user_photo{$this->EmployeeID}.jpg");
+		}
 	}
 
 }

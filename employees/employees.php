@@ -133,15 +133,15 @@ $result = $conn->query($query);
 														 <td><?php echo $row['group']; ?></td>
 														 <td><?php echo $row['department']; ?></td>
 														 <td class='text-center'><?php echo $row['engineer'] == 'y' ? '<span class="label label-success">Yes</span>' : '<span class="label label-default">No</span>'; ?></td>
-														 <td class='text-center'><?php echo $row['manager'] == 'y' ? '<span class="label label-success">Yes</span>' : '<span class="label label-default">No</span>'; ?></td>
+														 <td class='text-center'><?php echo $row['manager'] == 't' ? '<span class="label label-success">Yes</span>' : '<span class="label label-default">No</span>'; ?></td>
 														 <td class='text-center'><?php echo $row['active'] == 't' ? '<span class="label label-success">Yes</span>' : '<span class="label label-default">No</span>'; ?></td>
 														 <?php
 														 if (isset($_SESSION['MM_Username']) and $_SESSION['MM_UserGroup'] == 1) {
 															 echo "<td>"
 															 . "<a href='employee.php?function=view&employeeID={$row['employeeID']}'><i class='fa fa-eye'></i></a>"
 															 . "&nbsp;<a href='employee.php?function=update&employeeID={$row['employeeID']}'><i class='fa fa-pencil'></i></a>"
-															 . "&nbsp;<a href='employee.php?function=pass&employeeID={$row['employeeID']}'><i class='fa fa-key'></i></a>"
-															 . "&nbsp;<a href='employee.php?function=delete&employeeID={$row['employeeID']}'><i class='fa fa-remove'></i></a>"
+															 //. "&nbsp;<a href='employee.php?function=pass&employeeID={$row['employeeID']}'><i class='fa fa-key'></i></a>"
+															 //. "&nbsp;<a href='employee.php?function=delete&employeeID={$row['employeeID']}'><i class='fa fa-remove'></i></a>"
 															 . "</td>";
 														 }
 														 ?>
