@@ -5,8 +5,17 @@ require_once('../inc/functions.php');
 session_start();
 check_permission();
 
+$args = array(
+	'added' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'updated' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'deleted' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'error' => FILTER_SANITIZE_SPECIAL_CHARS,
+);
+
+$my_get = filter_input_array(INPUT_GET, $args);
+
 $query = <<< EOD
-SELECT employeeID, firstName, lastName, displayName, title, workEmail, g.group AS `group`, d.department AS `department`, engineer, active
+SELECT employeeID, firstName, lastName, displayName, title, workEmail, g.group AS `group`, d.department AS `department`, engineer, manager, active
 	FROM employees AS e
 	LEFT JOIN(groups AS g) ON g.groupID=e.groupID
 	LEFT JOIN(departments AS d) ON d.departmentID=e.departmentID
@@ -33,6 +42,47 @@ $result = $conn->query($query);
 
 					 <section class="content">
 
+						  <?php if (isset($my_get['added'])) { ?>
+							  <div class='box box-success'>
+									<div class='box-header with-border'>
+										 <h3 class='box-title'>Success!</h3>
+									</div>
+									<div class="box-body">
+										 <p>New Employee Successfully Created</p>
+									</div>
+							  </div>
+						  <?php } ?>
+						  <?php if (isset($my_get['updated'])) { ?>
+							  <div class='box box-info'>
+									<div class='box-header with-border'>
+										 <h3 class='box-title'>Success!</h3>
+									</div>
+									<div class="box-body">
+										 <p>Employee Successfully Updated</p>
+									</div>
+							  </div>
+						  <?php } ?>
+						  <?php if (isset($my_get['deleted'])) { ?>
+							  <div class='box box-warning'>
+									<div class='box-header with-border'>
+										 <h3 class='box-title'>Success!</h3>
+									</div>
+									<div class="box-body">
+										 <p>Employee Successfully Deleted</p>
+									</div>
+							  </div>
+						  <?php } ?>
+						  <?php if (isset($my_get['error'])) { ?>
+							  <div class='box box-danger'>
+									<div class='box-header with-border'>
+										 <h3 class='box-title'>Error!</h3>
+									</div>
+									<div class="box-body">
+										 <p><?php echo str_replace('\n', '<br/>', $my_get['error']); ?></p>
+									</div>
+							  </div>
+						  <?php } ?>
+
 						  <div class="box box-primary">
 								<div class='box-header with-border'>
 									 <div class='col-xs-6'>
@@ -50,6 +100,7 @@ $result = $conn->query($query);
 													 <th>Group</th>
 													 <th>Department</th>
 													 <th>Engineer</th>
+													 <th>Manager</th>
 													 <th>Active</th>
 													 <?php
 													 if (isset($_SESSION['MM_Username']) and $_SESSION['MM_UserGroup'] == 1) {
@@ -63,24 +114,37 @@ $result = $conn->query($query);
 												while ($row = $result->fetch_assoc()) {
 													?>
 													<tr>
-														 <td><a href='employee.php?function=view&employeeID=<?php echo $row['employeeID']; ?>'><?php echo $row['displayName']; ?></a></td>
+														 <td>
+															  <a href='employee.php?function=view&employeeID=<?php echo $row['employeeID']; ?>'><?php echo $row['displayName']; ?></a>
+															  <?php
+															  if (isset($my_get['added']) && $my_get['added'] == $row['employeeID']) {
+																  echo "<span class='label label-success pull-right'><span class='glyphicon glyphicon-star'></span>&nbsp;New</span>\n";
+															  }
+															  ?>
+															  <?php
+															  if (isset($my_get['updated']) && $my_get['updated'] == $row['employeeID']) {
+																  echo "<span class='label label-info pull-right'><span class='glyphicon glyphicon-star'></span>&nbsp;Updated</span>\n";
+															  }
+															  ?>
+														 </td>
 														 <td><?php echo $row['firstName'] . '&nbsp;' . $row['lastName']; ?></td>
 														 <td><?php echo $row['title']; ?></td>
 														 <td><?php echo $row['workEmail']; ?></td>
 														 <td><?php echo $row['group']; ?></td>
 														 <td><?php echo $row['department']; ?></td>
 														 <td class='text-center'><?php echo $row['engineer'] == 'y' ? '<span class="label label-success">Yes</span>' : '<span class="label label-default">No</span>'; ?></td>
+														 <td class='text-center'><?php echo $row['manager'] == 'y' ? '<span class="label label-success">Yes</span>' : '<span class="label label-default">No</span>'; ?></td>
 														 <td class='text-center'><?php echo $row['active'] == 't' ? '<span class="label label-success">Yes</span>' : '<span class="label label-default">No</span>'; ?></td>
-															  <?php
-															  if (isset($_SESSION['MM_Username']) and $_SESSION['MM_UserGroup'] == 1) {
-																  echo "<td>"
-																  ."<a href='employee.php?function=view&employeeID={$row['employeeID']}'><i class='fa fa-eye'></i></a>"
-																  ."&nbsp;<a href='employee.php?function=update&employeeID={$row['employeeID']}'><i class='fa fa-pencil'></i></a>"
-																  ."&nbsp;<a href='employee.php?function=pass&employeeID={$row['employeeID']}'><i class='fa fa-key'></i></a>"
-																  ."&nbsp;<a href='employee.php?function=delete&employeeID={$row['employeeID']}'><i class='fa fa-remove'></i></a>"
-																  ."</td>";
-															  }
-															  ?>
+														 <?php
+														 if (isset($_SESSION['MM_Username']) and $_SESSION['MM_UserGroup'] == 1) {
+															 echo "<td>"
+															 . "<a href='employee.php?function=view&employeeID={$row['employeeID']}'><i class='fa fa-eye'></i></a>"
+															 . "&nbsp;<a href='employee.php?function=update&employeeID={$row['employeeID']}'><i class='fa fa-pencil'></i></a>"
+															 . "&nbsp;<a href='employee.php?function=pass&employeeID={$row['employeeID']}'><i class='fa fa-key'></i></a>"
+															 . "&nbsp;<a href='employee.php?function=delete&employeeID={$row['employeeID']}'><i class='fa fa-remove'></i></a>"
+															 . "</td>";
+														 }
+														 ?>
 													</tr>
 													<?php
 												}

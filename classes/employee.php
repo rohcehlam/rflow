@@ -22,10 +22,26 @@ class tEmployee {
 	private $hireDate;
 	private $active;
 	private $hash_pass;
+	public $error;
 
-	function __construct($conn = null, $id = 0) {
+	function __construct($conn = null, $id = 0, $firstName = '', $lastName = '', $displayName = '', $title = '', $cellPhone = '', $homePhone = '', $workEmail = ''
+	, $groupID = 0, $departmentID = 0, $engineer = 'n', $manager = 'n', $hireDate = '0000-00-00', $active = 'f') {
 		$this->conn = $conn;
 		$this->EmployeeID = $id;
+		$this->firstName = $firstName;
+		$this->lastName = $lastName;
+		$this->DisplayName = $displayName;
+		$this->title = $title;
+		$this->cellPhone = $cellPhone;
+		$this->homePhone = $homePhone;
+		$this->workEmail = $workEmail;
+		$this->groupID = $groupID;
+		$this->departmentID = $departmentID;
+		$this->engineer = $engineer;
+		$this->manager = $manager;
+		$this->hireDate = $hireDate;
+		$this->active = $active;
+		$this->error = '';
 	}
 
 	function load() {
@@ -64,16 +80,62 @@ EOD;
 		while ($row_groups = $rs_groups->fetch_assoc()) {
 			$array_groups[] = ['id' => $row_groups['groupID'], 'value' => $row_groups['description']];
 		}
+		$rs_departments = $this->conn->query("SELECT departmentID, department AS description FROM departments") or die($this->conn->error);
+		while ($row_departments = $rs_departments->fetch_assoc()) {
+			$array_departments[] = ['id' => $row_departments['departmentID'], 'value' => $row_departments['description']];
+		}
 
 		$writer = new thtml_writer($function);
-		$writer->draw_input('firstName', 'First Name', 'firstName', $this->firstName);
-		$writer->draw_input('lastName', 'Last Name', 'lastName', $this->lastName);
-		$writer->draw_input('displayName', 'Display Name', 'displayName', $this->DisplayName, true);
-		$writer->draw_input('title', 'Title', 'title', $this->title);
-		$writer->draw_input('cellPhone', 'Cell Phone', 'cellPhone', $this->cellPhone);
-		$writer->draw_input('homePhone', 'Home Phone', 'homePhone', $this->homePhone);
-		$writer->draw_input('workEmail', 'Work Email', 'workEmail', $this->workEmail);
+		$writer->draw_input('firstName', 'First Name', 'firstName', $this->firstName, 'First Name');
+		$writer->draw_input('lastName', 'Last Name', 'lastName', $this->lastName, 'Last Name');
+		$writer->draw_input('displayName', 'Display Name', 'displayName', $this->DisplayName, 'User Name', true);
+		$writer->draw_input('title', 'Title', 'title', $this->title, 'Title');
+		$writer->draw_input('cellPhone', 'Cell Phone', 'cellPhone', $this->cellPhone, 'Cell Phone');
+		$writer->draw_input('homePhone', 'Home Phone', 'homePhone', $this->homePhone, 'Work Phone');
+		$writer->draw_input('workEmail', 'Work Email', 'workEmail', $this->workEmail, 'Work Email');
 		$writer->draw_select('groupID', 'Group', 'groupID', $this->str_group, $array_groups, $this->groupID);
+		$writer->draw_select('departmentID', 'Department', 'departmentID', $this->str_department, $array_departments, $this->departmentID);
+		$writer->draw_check('engineer', 'Engineer', 'engineer', $this->engineer, 'Engineer', ($this->engineer == 'y'));
+		$writer->draw_check('manager', 'Manager', 'manager', $this->manager, 'Manager', ($this->manager == 'y'));
+		$writer->draw_date('hireDate', 'Hire Date', 'hireDate', $function == 'add' ? date('Y-m-d') : $this->hireDate);
+		$writer->draw_check('active', 'Active', 'active', $this->active, 'Active', ($this->active == 't'));
+	}
+
+	function get_employeeID() {
+		return $this->EmployeeID;
+	}
+
+	function chet() {
+		return $this->DisplayName;
+	}
+
+	function add() {
+		$errors = array();
+		$temp = false;
+		$result = $this->conn->query("SELECT count(*) FROM employees WHERE displayName='{$this->DisplayName}'");
+		$row = $result->fetch_row();
+		if ($row[0] > 0) {
+			$errors[] = "There's already one user with the specified username. please return and specify another.";
+		} else {
+			$this->conn->query("INSERT INTO employees (firstName, lastName, displayName, title, cellPhone, homePhone, workEmail, groupID, departmentID, engineer, manager"
+				. ", hireDate, active) VALUES ('{$this->firstName}', '{$this->lastName}', '{$this->DisplayName}', '{$this->title}', '{$this->cellPhone}', '{$this->homePhone}'"
+				. ", '{$this->workEmail}', {$this->groupID}, {$this->departmentID}, '{$this->engineer}', '{$this->manager}', '{$this->hireDate}', '{$this->active}')");
+			$rs_last_employeeID = $this->conn->query("SELECT MAX(employeeID) FROM employees");
+			$row = $rs_last_employeeID->fetch_row();
+			$this->EmployeeID = $row[0];
+			$temp = true;
+		}
+		$this->error = implode('\n', $errors);
+		return $temp;
+	}
+
+	function update() {
+		$this->conn->query("UPDATE employees SET firstName='{$this->firstName}', lastName='{$this->lastName}', displayName='{$this->DisplayName}', title='{$this->title}'"
+			. ", cellPhone='{$this->cellPhone}', homePhone='{$this->homePhone}', workEmail='{$this->workEmail}', groupID={$this->groupID}, departmentID={$this->departmentID}"
+			. ", engineer='{$this->engineer}', manager='{$this->manager}', hireDate='{$this->hireDate}', active='{$this->active}'");
+		$rs_last_employeeID = $this->conn->query("SELECT MAX(employeeID) FROM employees");
+		$row = $rs_last_employeeID->fetch_row();
+		$this->EmployeeID = $row[0];
 	}
 
 }
