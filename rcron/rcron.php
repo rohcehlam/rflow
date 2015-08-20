@@ -5,6 +5,7 @@ session_start();
 check_permission();
 $args = array(
 	'process' => FILTER_SANITIZE_SPECIAL_CHARS,
+	'datetimerange' => FILTER_SANITIZE_SPECIAL_CHARS,
 );
 
 $my_get = filter_input_array(INPUT_GET, $args);
@@ -31,18 +32,25 @@ IF(NOT ISNULL(B.datetime_event), TIMEDIFF(B.datetime_event, A.datetime_event), N
 IF(NOT ISNULL(B.datetime_event), TIMESTAMPDIFF(SECOND, A.datetime_event, B.datetime_event), NULL) AS `diff`
 FROM
 (
-SELECT procseq, datetime_event, period_proc FROM logmas_%%fecha%% WHERE `process`='%%process%%' AND type_proc='SS' ORDER BY datetime_event DESC LIMIT 500
+SELECT procseq, datetime_event, period_proc FROM logmas_%%fecha%% WHERE `process`='%%process%%' AND type_proc='SS' %%where%% ORDER BY datetime_event DESC LIMIT 500
 ) AS A
 LEFT JOIN ((
-SELECT procseq_father, datetime_event, processed_rec, total_rec, files FROM logmas_%%fecha%% WHERE `process`='%%process%%' AND type_proc='ES' ORDER BY datetime_event DESC LIMIT 500
+SELECT procseq_father, datetime_event, processed_rec, total_rec, files FROM logmas_%%fecha%% WHERE `process`='%%process%%' AND type_proc='ES' %%where%% ORDER BY datetime_event DESC LIMIT 500
 ) AS B) ON (A.procseq=B.procseq_father)
 EOD;
-
+$where = '';
+if ($my_get['datetimerange']) {
+	$temp = explode(' - ', $my_get['datetimerange']);
+	$begin_date = DateTime::createFromFormat('Y-m-d H:i:s', $temp[0]);
+	$end_date = DateTime::createFromFormat('Y-m-d H:i:s', $temp[1]);
+	$where = " AND (datetime_event BETWEEN '{$begin_date->format('Y-m-d H:i:s')}' AND '{$end_date->format('Y-m-d H:i:s')}')";
+}
 $data = new stdClass();
 $data->list = array();
 $data->cont = 0;
 $data->sum = 0;
-$rs_rCrons = $conn_dbevents->query(str_replace('%%fecha%%', date('Ym'), str_replace('%%process%%', $process, $query)));
+//echo str_replace('%%fecha%%', date('Ym'), str_replace('%%process%%', $process, str_replace('%%where%%', $where, $query)));
+$rs_rCrons = $conn_dbevents->query(str_replace('%%fecha%%', date('Ym'), str_replace('%%process%%', $process, str_replace('%%where%%', $where, $query)))) or die($conn_dbevents->error);
 while ($row_rCron = $rs_rCrons->fetch_assoc()) {
 	$temp = new stdClass();
 	$temp->begin = $row_rCron['begin'];
@@ -92,6 +100,7 @@ if ($data->cont != 0) {
 		  <title><?php buildTitle("an rCron"); ?></title>
 		  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		  <?php build_header(); ?>
+		  <link rel="stylesheet" href="../js/daterangepicker/daterangepicker-bs3.css"/>
 	 </head>
 	 <body class="skin-blue sidebar-mini">
 
@@ -105,43 +114,69 @@ if ($data->cont != 0) {
 
 					 <section class="content">
 
-						  <div class="box box-primary">
+						  <div class="box box-default">
 								<div class="box-header with-border">
-									 <h3 class="box-title">View a rCron:&nbsp;<?php echo $process; ?></h3>
-									 <div class="row">
-										  <div class="col-xs-2">Since:</div>
-										  <div class="col-xs-4"><?php echo $data->since; ?></div>
-										  <div class="col-xs-2">Until:</div>
-										  <div class="col-xs-4"><?php echo $data->until; ?></div>
-									 </div>
-									 <div class="row">
-										  <div class="col-xs-2">Minimum:</div>
-										  <div class="col-xs-4"><?php echo $data->str_min; ?></div>
-										  <div class="col-xs-2">Maximum:</div>
-										  <div class="col-xs-4"><?php echo $data->str_max; ?></div>
-									 </div>
-									 <div class="row">
-										  <div class="col-xs-2">Complete Correct Runs:</div>
-										  <div class="col-xs-4"><?php echo $data->cont; ?></div>
-										  <div class="col-xs-2">Total:</div>
-										  <div class="col-xs-4"><?php echo $data->sum; ?> Seconds</div>
-									 </div>
-									 <div class="row">
-										  <div class="col-xs-2">Average:</div>
-										  <div class="col-xs-4"><?php echo number_format($data->avg, 2); ?></div>
-									 </div>
-
+									 <h3 class="box-title">Summary</h3>
 									 <div class="pull-right box-tools">
 										  <button class="btn btn-default btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
 									 </div>
 
 								</div>
 								<div class="box-body">
-									 <!--
-									 <pre>
-									 <?php //print_r($data);  ?>
-									 </pre>
-									 -->
+									 <form class="form-horizontal">
+										  <div class="form-group">
+												<label class="control-label col-xs-2">Minimum: </label>
+												<div class="col-xs-4">
+													 <input class="form-control text-right" value="<?php echo $data->str_min; ?>" readonly/>
+												</div>
+												<label class="control-label col-xs-2">Maximum: </label>
+												<div class="col-xs-4">
+													 <input class="form-control text-right" value="<?php echo $data->str_max; ?>" readonly/>
+												</div>
+										  </div>
+										  <div class="form-group">
+												<label class="control-label col-xs-2">Complete Correct Runs: </label>
+												<div class="col-xs-4">
+													 <input class="form-control text-right" value="<?php echo $data->cont; ?>" readonly/>
+												</div>
+												<label class="control-label col-xs-2">Total in Seconds: </label>
+												<div class="col-xs-4">
+													 <input class="form-control text-right" value="<?php echo $data->sum; ?>" readonly/>
+												</div>
+										  </div>
+										  <div class="form-group">
+												<label class="control-label col-xs-2">Average: </label>
+												<div class="col-xs-4">
+													 <input class="form-control text-right" value="<?php echo number_format($data->avg, 2); ?>" readonly/>
+												</div>
+										  </div>
+									 </form>
+								</div>
+						  </div>
+						  <div class="box box-primary">
+								<div class="box-header with-border">
+									 <form class="form-horizontal">
+										  <div class="form-group">
+												<label class="control-label col-xs-2">Date &amp; Time Range</label>
+												<div class="col-xs-6">
+													 <div class="input-group">
+														  <input type="text" id="sinceuntil" value="<?php echo $data->until; ?> - <?php echo $data->since; ?>" name="datetimerange" class="form-control"></input>
+														  <input type="hidden" name="process" value="<?php echo $my_get['process']; ?>"/>
+														  <span class="input-group-btn">
+																<button class="btn btn-primary" type="submit">Go!</button>
+														  </span>
+													 </div>
+												</div>
+												<div class="col-xs-4">
+
+												</div>
+										  </div>
+									 </form>
+									 <div class="pull-right box-tools">
+										  <button class="btn btn-default btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+									 </div>
+								</div>
+								<div class="box-body">
 									 <table id="table_rcron" class='table table-striped table-bordered'>
 										  <thead>
 												<tr>
@@ -174,9 +209,12 @@ if ($data->cont != 0) {
 									 </table>
 									 <script type="text/javascript">
                                $(document).ready(function () {
+                                   $('#sinceuntil').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'YYYY-MM-DD HH:mm:ss'});
                                    $('#table_rcron').dataTable({"order": [[0, "desc"], [1, "desc"]], "displayLength": 25, });
                                });
 									 </script>
+									 <script src="../js/daterangepicker/moment.min.js"></script>
+									 <script src="../js/daterangepicker/daterangepicker.js"></script>
 								</div>
 						  </div>
 					 </section>

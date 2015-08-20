@@ -53,6 +53,7 @@ function get_date($format, $time) {
 													 <th>Files</th>
 													 <th>Records</th>
 													 <th>Idle</th>
+													 <th>&nbsp;</th>
 												</tr>
 										  </thead>
 										  <tbody>
@@ -70,6 +71,7 @@ function get_date($format, $time) {
 														 <td class='text-right'><?php echo $row['files']; ?></td>
 														 <td class='text-right'><?php echo $row['processed_rec']; ?></td>
 														 <td class='text-right'><?php echo $row['Idle']; ?></td>
+														 <td><a href="rcronGraph.php?process=<?php echo $row['id']; ?>"<span class="fa fa-bar-chart"></span></a></td>
 													</tr>
 													<?php
 												}
