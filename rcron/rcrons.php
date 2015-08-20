@@ -5,6 +5,12 @@ require_once('../inc/functions.php');
 session_start();
 check_permission();
 
+$args = array(
+	'updated' => FILTER_SANITIZE_SPECIAL_CHARS,
+);
+
+$my_get = filter_input_array(INPUT_GET, $args);
+
 $cron_query = <<<EOD
 SELECT id, `process`, `begin`, `end`, 
  IF(ISNULL(`end`), TIMEDIFF(NOW(), `begin`), TIMEDIFF(`end`, `begin`)) AS diff,
@@ -37,6 +43,17 @@ function get_date($format, $time) {
 					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'Dashboard'], ['url' => '', 'text' => 'rCrons']], 'rCrons', $filter_text) ?>
 
 					 <section class="content">
+						  
+						  <?php if (isset($my_get['updated'])) { ?>
+							  <div class='box box-info'>
+									<div class='box-header with-border'>
+										 <h3 class='box-title'>Success!</h3>
+									</div>
+									<div class="box-body">
+										 <p>rCron Successfully Updated</p>
+									</div>
+							  </div>
+						  <?php } ?>
 
 						  <div class="box box-primary">
 
@@ -62,7 +79,14 @@ function get_date($format, $time) {
 												while ($row = $result->fetch_assoc()) {
 													?>
 													<tr>
-														 <td><a href='rcron.php?process=<?php echo $row['id']; ?>'><?php echo $row['process']; ?></a></td>
+														 <td>
+															  <a href='rcron.php?process=<?php echo $row['id']; ?>'><?php echo $row['process']; ?></a>
+															  <?php
+															  if (isset($my_get['updated']) && $my_get['updated'] == $row['id']) {
+																  echo "<span class='label label-info pull-right'><span class='glyphicon glyphicon-star'></span>&nbsp;Updated</span>\n";
+															  }
+															  ?>
+														 </td>
 														 <td><?php echo get_date('m/d/Y', $row['begin']); ?></td>
 														 <td class='text-right'><?php echo get_date('H:i:s', $row['begin']); ?></td>
 														 <td class='text-right'><?php echo $row['end'] != '' ? get_date('H:i:s', $row['end']) : '-'; ?></td>
@@ -71,7 +95,12 @@ function get_date($format, $time) {
 														 <td class='text-right'><?php echo $row['files']; ?></td>
 														 <td class='text-right'><?php echo $row['processed_rec']; ?></td>
 														 <td class='text-right'><?php echo $row['Idle']; ?></td>
-														 <td><a href="rcronGraph.php?process=<?php echo $row['id']; ?>"<span class="fa fa-bar-chart"></span></a></td>
+														 <td>
+															  <a href="rcronSend.php?process=<?php echo $row['id']; ?>&function=view"<span class="fa fa-eye"></span></a>
+															  &nbsp;<a href="rcron.php?process=<?php echo $row['id']; ?>"<span class="fa fa-table"></span></a>
+															  &nbsp;<a href="rcronGraph.php?process=<?php echo $row['id']; ?>"<span class="fa fa-bar-chart"></span></a>
+															  &nbsp;<a href="rcronSend.php?process=<?php echo $row['id']; ?>&function=update"<span class="fa fa-pencil"></span></a>
+														 </td>
 													</tr>
 													<?php
 												}

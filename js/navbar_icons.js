@@ -4,11 +4,9 @@ function refresh_icons() {
     $.getJSON('../ajax/json_icons.php', function (data) {
         $('#span_maintenances').html(data.maintenances);
         if (data.maintenances > 0) {
-            $('#span_maintenances').removeClass();
-            $('#span_maintenances').addClass('label label-warning');
+            $('#span_maintenances').removeClass().addClass('label label-warning');
         } else {
-            $('#span_maintenances').removeClass();
-            $('#span_maintenances').addClass('label label-default');
+            $('#span_maintenances').removeClass().addClass('label label-default');
         }
         $('#span_alarms').html(data.alarms);
         if (data.maintenances > 0) {
