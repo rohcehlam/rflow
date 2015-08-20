@@ -38,7 +38,7 @@ $result = $conn->query($query);
 
 				<div class="content-wrapper">
 
-					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'DashBoard'], ['url' => '', 'text' => 'Employees']], 'Employees', $filter_text) ?>
+					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'Dashboard'], ['url' => '', 'text' => 'Employees']], 'Employees', $filter_text) ?>
 
 					 <section class="content">
 
@@ -86,7 +86,7 @@ $result = $conn->query($query);
 						  <div class="box box-primary">
 								<div class='box-header with-border'>
 									 <div class='col-xs-6'>
-										  <a class='btn btn-primary' href='employee.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add a Employee</a>
+										  <a class='btn btn-primary' href='employee.php?function=add'><span class='glyphicon glyphicon-plus-sign'></span>&nbsp;Add an Employee</a>
 									 </div>
 								</div>
 								<div class="box-body">
@@ -94,7 +94,7 @@ $result = $conn->query($query);
 										  <thead>
 												<tr>
 													 <th>Username</th>
-													 <th>Given Name</th>
+													 <th>Full Name</th>
 													 <th>Title</th>
 													 <th>Work Email</th>
 													 <th>Group</th>

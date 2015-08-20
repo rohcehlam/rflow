@@ -6,20 +6,11 @@ session_start();
 check_permission();
 
 $cron_query = <<<EOD
-SELECT Z.process, Z.datetime_event AS 'start_time', D.datetime_event AS 'end_time', NOW(), processed_rec, files
-	, IF(Z.datetime_event > D.datetime_event, TRUE, FALSE) AS `running`
-	, IF(Z.datetime_event > D.datetime_event, TIMEDIFF(NOW(), D.datetime_event), TIMEDIFF(D.datetime_event , Z.datetime_event)) AS `run_time`
-	, TIMESTAMPDIFF(MINUTE, D.datetime_event, NOW()) AS `idle`
---	, concat(TIMESTAMPDIFF(HOUR, D.datetime_event, NOW()), 'h ', TIMESTAMPDIFF(MINUTE, D.datetime_event, NOW()), 'm') AS `idle`
-FROM ( SELECT procseq, X.process, datetime_event FROM logmas_%%table_name%% AS X, 
-			(SELECT PROCESS, MAX(procseq) AS procseq_ss FROM logmas_%%table_name%% WHERE type_proc='SS' GROUP BY PROCESS) AS A
-		WHERE X.procseq=A.procseq_ss AND X.process = A.process ) AS Z
-LEFT JOIN (
-	( SELECT procseq, Y.process, datetime_event, processed_rec, files FROM logmas_%%table_name%% AS Y, 
-			(SELECT PROCESS, MAX(procseq) AS procseq_es FROM logmas_%%table_name%% WHERE type_proc='ES' GROUP BY PROCESS) AS B
-		WHERE Y.procseq=B.procseq_es AND Y.process = B.process ) AS D
-	)
-ON (Z.process = D.process);
+SELECT id, `process`, `begin`, `end`, 
+ IF(ISNULL(`end`), TIMEDIFF(NOW(), `begin`), TIMEDIFF(`end`, `begin`)) AS diff,
+ `min`, `max`, period, processed_rec, total_rec, files, db,
+ IF(NOT ISNULL(`end`), TIMEDIFF(NOW(), `end`), 0) AS `Idle`
+FROM rCron
 EOD;
 
 function get_date($format, $time) {
@@ -43,7 +34,7 @@ function get_date($format, $time) {
 
 				<div class="content-wrapper">
 
-					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'DashBoard'], ['url' => '', 'text' => 'rCrons']], 'rCrons', $filter_text) ?>
+					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'Dashboard'], ['url' => '', 'text' => 'rCrons']], 'rCrons', $filter_text) ?>
 
 					 <section class="content">
 
@@ -70,29 +61,15 @@ function get_date($format, $time) {
 												while ($row = $result->fetch_assoc()) {
 													?>
 													<tr>
-														 <td><a href='rcron.php?process=<?php echo $row['process']; ?>'><?php echo $row['process']; ?></a></td>
-														 <td><?php echo get_date('m/d/Y', $row['start_time']); ?></td>
-														 <td class='text-right'><?php echo get_date('H:i:s', $row['start_time']); ?></td>
-														 <td class='text-right'><?php echo get_date('H:i:s', $row['end_time']); ?></td>
-														 <td><?php echo $row['running'] ? "<span class='label label-info'>Running</span>" : "<span class='label label-success'>Finished!</span>"; ?></td>
-														 <td class='text-right'><?php echo $row['running'] ? "<span class='text-blue'>{$row['run_time']}</span>" : $row['run_time']; ?></td>
+														 <td><a href='rcron.php?process=<?php echo $row['id']; ?>'><?php echo $row['process']; ?></a></td>
+														 <td><?php echo get_date('m/d/Y', $row['begin']); ?></td>
+														 <td class='text-right'><?php echo get_date('H:i:s', $row['begin']); ?></td>
+														 <td class='text-right'><?php echo $row['end'] != '' ? get_date('H:i:s', $row['end']) : '-'; ?></td>
+														 <td><?php echo $row['end'] == '' ? "<span class='label label-info'>Running</span>" : "<span class='label label-success'>Finished!</span>"; ?></td>
+														 <td class='text-right'><?php echo $row['end'] == '' ? "<span class='text-blue'>{$row['diff']}</span>" : $row['diff']; ?></td>
 														 <td class='text-right'><?php echo $row['files']; ?></td>
 														 <td class='text-right'><?php echo $row['processed_rec']; ?></td>
-														 <?php
-														 $x = $row['idle'];
-														 $h = floor($x / 60);
-														 if ($h == 0) {
-															 $idle = "{$x}m";
-														 } else {
-															 $m = $x - ($h * 60);
-															 if ($h > 24) {
-																 $idle = "<span class='text-red'>{$h}h {$m}m</span>";
-															 } else {
-																 $idle = "{$h}h {$m}m";
-															 }
-														 }
-														 ?>
-														 <td class='text-right'><?php echo $idle; ?></td>
+														 <td class='text-right'><?php echo $row['Idle']; ?></td>
 													</tr>
 													<?php
 												}

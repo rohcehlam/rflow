@@ -165,7 +165,15 @@ function build_navbar($active = 0) {
 									<span id="span_maintenances" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
-									<li class="header">Pending Maintenances</li>
+									<li>
+										 <ul class="menu">
+											  <li><!-- start notification -->
+													<a href="../userPortals/myPortal.php#mypending_maintenances_count">
+														 <i class="fa fa-wrench"></i>&nbsp;Pending Maintenances
+													</a>
+											  </li><!-- end notification -->
+										 </ul>
+									</li>
 									<li class="footer"><a href="../maintenances/maintenances.php">View all</a></li>
 							  </ul>
 						 </li><!-- /.maintenances-menu -->
@@ -178,13 +186,11 @@ function build_navbar($active = 0) {
 									<span id="span_alarms" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
-									<li class="header">Active Alarms</li>
 									<li>
-										 <!-- Inner Menu: contains the notifications -->
 										 <ul class="menu">
 											  <li><!-- start notification -->
-													<a href="#">
-														 <i class="fa fa-bell-o"></i> 0 Active Alarms
+													<a href="../userPortals/myPortal.php#active_alarms_count">
+														 <i class="fa fa-bell-o"></i>&nbsp;Active Alarms
 													</a>
 											  </li><!-- end notification -->
 										 </ul>
@@ -200,19 +206,17 @@ function build_navbar($active = 0) {
 									<span id="span_mysupport" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
-									<li class="header">Requests for my Support</li>
 									<li>
-										 <!-- Inner Menu: contains the notifications -->
 										 <ul class="menu">
 											  <li><!-- start notification -->
-													<a href="#">
-														 <i class="fa fa-bullhorn"></i> 0 Requests for my Support
+													<a href="../userPortals/myPortal.php#mysupport_requests_count">
+														 <i class="fa fa-bullhorn"></i>&nbsp;Requests for my Support
 													</a>
 											  </li><!-- end notification -->
 										 </ul>
 									</li>
 									<li class="footer">
-										 <a href="#">View all tasks</a>
+										 <a href="../supportRequests/supportRequests.php">View all tasks</a>
 									</li>
 							  </ul>
 						 </li>
@@ -224,19 +228,18 @@ function build_navbar($active = 0) {
 									<span id="span_unassignedsupport" class="label label-default">0</span>
 							  </a>
 							  <ul class="dropdown-menu">
-									<li class="header">Unassigned Support Requests</li>
 									<li>
 										 <!-- Inner Menu: contains the notifications -->
 										 <ul class="menu">
 											  <li><!-- start notification -->
-													<a href="#">
-														 <i class="fa fa-inbox"></i> 0 Unassigned Support Requests
+													<a href="../userPortals/myPortal.php#myunassigned_support_requests_count">
+														 <i class="fa fa-inbox"></i>&nbsp;Unassigned Support Requests
 													</a>
 											  </li><!-- end notification -->
 										 </ul>
 									</li>
 									<li class="footer">
-										 <a href="#">View all tasks</a>
+										 <a href="../supportRequests/supportRequests.php">View all tasks</a>
 									</li>
 							  </ul>
 						 </li>
@@ -333,7 +336,7 @@ function build_sidebar($active = 0) {
 			  <ul class="sidebar-menu">
 					<li class="header">HEADER</li>
 					<!-- Optionally, you can add icons to the links -->
-					<li <?php echo $active == 0 ? 'class="active"' : ''; ?>><a href="../userPortals/myPortal.php"><i class="fa fa-dashboard"></i> <span>DashBoard</span></a></li>
+					<li <?php echo $active == 0 ? 'class="active"' : ''; ?>><a href="../userPortals/myPortal.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
 					<li <?php echo $active == 1 ? 'class="active"' : ''; ?>><a href="../employees/employees.php"><i class="fa fa-users"></i> <span>Employees</span></a></li>
 					<li class='treeview<?php echo ($active == 2 || $active == 3 || $active == 4 || $active == 5) ? ' active' : ''; ?>'>
 						 <a href='#'><i class='fa fa-stack-overflow'></i><span>Rflow</span> <i class="fa fa-angle-left pull-right"></i></a>

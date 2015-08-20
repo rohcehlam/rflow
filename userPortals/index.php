@@ -104,7 +104,7 @@ if (filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
             <!-- <![endif] -->
             <!-- Page layout -->
             <div id='wrapper'>
-                <div class='left-side'><img alt='' src='../images/GEE_White_logo.png'><h3>Powering business intelligence for the global aviation industry</h3>
+                <div class='left-side'><img alt='' src='../images/GEE_White_Logo.png'><h3>Powering business intelligence for the global aviation industry</h3>
                     <h3>The Complete Real-Time Package</h3>
                     <p>masFlight offers the most comprehensive set of technologies to analyze aviation operations and performance to improve efficiency, identify problems, isolate under-performing assets, central data gathering and track the competition.</p>
                     <!-- %p#copyright © Copyright 2014 masFlight. Marks Systems Inc., All Rights Reserved -->

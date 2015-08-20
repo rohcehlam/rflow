@@ -27,13 +27,13 @@ $my_get = filter_input_array(INPUT_GET, $args);
 
 				<div class="content-wrapper">
 
-					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'DashBoard'], ['url' => 'employees.php', 'text' => 'Employees'], ['url' => '#', 'text' => ucwords($my_get['function']) . ' a Employee']], ucwords($my_get['function']) . ' a Employee') ?>
+					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'Dashboard'], ['url' => 'employees.php', 'text' => 'Employees'], ['url' => '#', 'text' => ucwords($my_get['function']) . ' a Employee']], ucwords($my_get['function']) . ' an Employee') ?>
 
 					 <section class="content">
 						  <form class="form-horizontal" action="employeeSend.php" method="post" enctype="multipart/form-data" name="employeeForm">
 								<div class="box box-primary">
 									 <div class="box-header with-border">
-										  <h3 class="box-title"><?php echo ucwords($my_get['function']); ?> a Employee</h3>
+										  <h3 class="box-title"><?php echo ucwords($my_get['function']); ?> an Employee</h3>
 									 </div>
 									 <div class="box-body">
 

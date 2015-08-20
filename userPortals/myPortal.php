@@ -79,7 +79,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
 
 				<div class="content-wrapper">
 
-					 <?php breadcrumbs([['url' => '#', 'text' => 'Dashboard']], 'DashBoard', '') ?>
+					 <?php breadcrumbs([['url' => '#', 'text' => 'Dashboard']], 'Dashboard', '') ?>
 
 					 <section class="content">
 						  <div class="row">
