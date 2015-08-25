@@ -64,9 +64,6 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 
 		  <?php build_header(); ?>
 
-		  <script src="../js/bootstrap-datepicker.js"></script>
-		  <link rel="stylesheet" href="../css/datepicker.css"/>
-
 	 </head>
 	 <body class="skin-blue sidebar-mini">
 
@@ -347,6 +344,8 @@ $totalRows_rsEngineers = $rsEngineers->num_rows;
 		  </div> <!-- /content-wrapper -->
 
 		  <?php build_footer(); ?>
+		  <script src="../js/bootstrap-datepicker.js"></script>
+		  <link rel="stylesheet" href="../css/datepicker.css"/>
 
 	 </body>
 </html>
