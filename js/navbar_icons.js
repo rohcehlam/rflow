@@ -9,28 +9,22 @@ function refresh_icons() {
             $('#span_maintenances').removeClass().addClass('label label-default');
         }
         $('#span_alarms').html(data.alarms);
-        if (data.maintenances > 0) {
-            $('#span_alarms').removeClass();
-            $('#span_alarms').addClass('label label-danger');
+        if (data.alarms > 0) {
+            $('#span_alarms').removeClass().addClass('label label-danger');
         } else {
-            $('#span_alarms').removeClass();
-            $('#span_alarms').addClass('label label-default');
+            $('#span_alarms').removeClass().addClass('label label-default');
         }
         $('#span_mysupport').html(data.my_requests);
-        if (data.maintenances > 0) {
-            $('#span_mysupport').removeClass();
-            $('#span_mysupport').addClass('label label-info');
+        if (data.my_requests > 0) {
+            $('#span_mysupport').removeClass().addClass('label label-info');
         } else {
-            $('#span_mysupport').removeClass();
-            $('#span_mysupport').addClass('label label-default');
+            $('#span_mysupport').removeClass().addClass('label label-default');
         }
         $('#span_unassignedsupport').html(data.support_requests);
-        if (data.maintenances > 0) {
-            $('#span_unassignedsupport').removeClass();
-            $('#span_unassignedsupport').addClass('label label-success');
+        if (data.support_requests > 0) {
+            $('#span_unassignedsupport').removeClass().addClass('label label-success');
         } else {
-            $('#span_unassignedsupport').removeClass();
-            $('#span_unassignedsupport').addClass('label label-default');
+            $('#span_unassignedsupport').removeClass().addClass('label label-default');
         }
         $('#icons_load').hide();
         clearTimeout(to_refresh_icons);

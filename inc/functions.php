@@ -350,7 +350,7 @@ function build_sidebar($active = 0) {
 					<li class='treeview<?php echo ($active == 6 || $active == 7 || $active == 8 || $active == 9) ? ' active' : ''; ?>'>
 						 <a href='#'><i class='fa fa-bell-o'></i><span>Alarms System</span> <i class="fa fa-angle-left pull-right"></i></a>
 						 <ul class='treeview-menu'>
-							  <li<?php echo $active == 6 ? ' class="active"' : ''; ?>><a href='#'><i class='fa fa-bell-o'></i>Alarms</a></li>
+							  <li<?php echo $active == 6 ? ' class="active"' : ''; ?>><a href='../alarms/alarms.php'><i class='fa fa-bell-o'></i>Alarms</a></li>
 							  <li<?php echo $active == 7 ? ' class="active"' : ''; ?>><a href='../rcron/rcrons.php'><i class='fa fa-bolt'></i>rCron</a></li>
 							  <li<?php echo $active == 8 ? ' class="active"' : ''; ?>><a href='#'><i class='fa fa-server'></i>Servers</a></li>
 							  <li<?php echo $active == 9 ? ' class="active"' : ''; ?>><a href='#'><i class='fa fa-bomb'></i>CMQ</a></li>

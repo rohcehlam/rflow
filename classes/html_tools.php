@@ -29,19 +29,47 @@ class thtml_writer {
 		<?php
 	}
 
-	function draw_select($id = '', $label_text = '', $name = '', $value = '', $elements = [], $selected = '', $required = false) {
+	function draw_select($id = '', $label_text = '', $name = '', $value = '', $elements = [], $selected = '', $onchange = '') {
 		?>
 		<div class="form-group">
 			 <label for='<?php echo $id; ?>' class="control-label col-xs-2"><?php echo $label_text; ?></label>
 			 <?php if (($this->function == "add") || ($this->function == "update")) { ?>
 				 <div class="col-xs-10">
-					  <select name="<?php echo $name ?>" class='form-control'>
+					  <select name="<?php echo $name ?>" class='form-control'<?php echo ($onchange != '' ? " onchange=\"$onchange\"" : ''); ?> id='<?php echo $id; ?>'>
 							<?php
 							foreach ($elements as $data) {
 								echo "<option value='{$data['id']}'" . ($data['id'] == $selected ? ' selected' : '') . ">{$data['value']}</option>\n";
 							}
 							?>
 					  </select>
+				 </div>
+			 <?php } else { ?>
+				 <div class="col-xs-10">
+					  <div class="input-group">
+							<input type="text" name='<?php echo $name; ?>' value="<?php echo $value; ?>" class='form-control' readonly/>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+					  </div>
+				 </div>
+			 <?php }
+			 ?>
+		</div>
+		<?php
+	}
+
+	function draw_select_plus($id = '', $label_text = '', $name = '', $value = '', $elements = [], $selected = '', $div_name = '') {
+		?>
+		<div class="form-group">
+			 <label for='<?php echo $id; ?>' class="control-label col-xs-2"><?php echo $label_text; ?></label>
+			 <?php if (($this->function == "add") || ($this->function == "update")) { ?>
+				 <div class="col-xs-10" id="<?php echo $div_name; ?>">
+					  <select name="<?php echo $name ?>" class='form-control' id='<?php echo $id; ?>'>
+							<?php
+							foreach ($elements as $data) {
+								echo "<option value='{$data['id']}'" . ($data['id'] == $selected ? ' selected' : '') . ">{$data['value']}</option>\n";
+							}
+							?>
+					  </select>
+					  <div id="<?php echo $div_name; ?>_load" style="display: none;" class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
 				 </div>
 			 <?php } else { ?>
 				 <div class="col-xs-10">
@@ -129,6 +157,15 @@ class thtml_writer {
 				  }
 				  ?>
 			 </div>
+		</div>
+		<?php
+	}
+
+	function draw_div($id = '', $label_text = '') {
+		?>
+		<div class="form-group">
+			 <label for='<?php echo $id; ?>' class="control-label col-xs-2"><?php echo $label_text; ?></label>
+			 <div id='<?php echo $id; ?>' class="col-xs-10"></div>
 		</div>
 		<?php
 	}
