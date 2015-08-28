@@ -42,46 +42,17 @@ $result = $conn->query($query);
 
 					 <section class="content">
 
-						  <?php if (isset($my_get['added'])) { ?>
-							  <div class='box box-success'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Success!</h3>
-									</div>
-									<div class="box-body">
-										 <p>New Employee Successfully Created</p>
-									</div>
-							  </div>
-						  <?php } ?>
-						  <?php if (isset($my_get['updated'])) { ?>
-							  <div class='box box-info'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Success!</h3>
-									</div>
-									<div class="box-body">
-										 <p>Employee Successfully Updated</p>
-									</div>
-							  </div>
-						  <?php } ?>
-						  <?php if (isset($my_get['deleted'])) { ?>
-							  <div class='box box-warning'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Success!</h3>
-									</div>
-									<div class="box-body">
-										 <p>Employee Successfully Deleted</p>
-									</div>
-							  </div>
-						  <?php } ?>
-						  <?php if (isset($my_get['error'])) { ?>
-							  <div class='box box-danger'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Error!</h3>
-									</div>
-									<div class="box-body">
-										 <p><?php echo str_replace('\n', '<br/>', $my_get['error']); ?></p>
-									</div>
-							  </div>
-						  <?php } ?>
+						  <?php
+						  if (isset($my_get['added'])) {
+							  draw_message('success', 'Success!', 'New Employee Succesfully Created');
+						  }if (isset($my_get['updated'])) {
+							  draw_message('info', 'Success!', 'Employee Succesfully Updated');
+						  }if (isset($my_get['deleted'])) {
+							  draw_message('warning', 'Success!', 'Employee Succesfully Deleted');
+						  }if (isset($my_get['error'])) {
+							  draw_message('danger', 'Error!', str_replace('\n', '<br/>', $my_get['error']));
+						  }
+						  ?>
 
 						  <div class="box box-primary">
 								<div class='box-header with-border'>

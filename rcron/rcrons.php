@@ -43,17 +43,12 @@ function get_date($format, $time) {
 					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'Dashboard'], ['url' => '', 'text' => 'rCrons']], 'rCrons', $filter_text) ?>
 
 					 <section class="content">
-						  
-						  <?php if (isset($my_get['updated'])) { ?>
-							  <div class='box box-info'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Success!</h3>
-									</div>
-									<div class="box-body">
-										 <p>rCron Successfully Updated</p>
-									</div>
-							  </div>
-						  <?php } ?>
+
+						  <?php
+						  if (isset($my_get['updated'])) {
+							  draw_message('info', 'Success!', 'rCron Succesfully Updated');
+						  }
+						  ?>
 
 						  <div class="box box-primary">
 

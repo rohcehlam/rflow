@@ -64,71 +64,86 @@ EOD;
 		$writer = new thtml_writer($function);
 		$writer->draw_select('server', 'Server', 'server', $this->server_name, $array_servers, $this->server, 'load_tablenames();');
 		$writer->draw_select_plus('table_name', 'Table Name', 'table_name', $this->table_name, [['id' => $this->table_name, 'value' => $this->table_name]], $this->server_name, 'div_select_tablename');
-		$writer->draw_select('field', 'Field', 'field', $helper_trigger[$this->field], $array_trigger, $this->field);
-		$writer->draw_div('cron_expr', 'Cron Expression');
-		?>
-		<script>
-			$(document).ready(function () {
-				 var cron_expr = $('#cron_expr').cron({
-					  customValues: {
-							"5 Minutes": "*/5 * * * *",
-							"15 Minutes": "*/15 * * * *",
-							"30 Minutes": "*/30 * * * *",
-							"30 Minutes past 7": "7,37 * * * *",
-							"40 Minutes": "*/40 * * * *"
-					  }
-				 });
-				 cron_expr.cron("value", "<?php echo $this->cron_exp; ?>");
+		$writer->draw_select('field', 'Checked Field', 'field', $helper_trigger[$this->field], $array_trigger, $this->field);
+		$writer->draw_div('cron_expr', 'Cron Expression', $this->cron_exp);
+		if (($function == "add") || ($function == "update")) {
+			?>
+			<script>
+				$(document).ready(function () {
+					 var cron_expr = $('#cron_expr').cron({
+						  customValues: {
+								"5 Minutes": "*/5 * * * *",
+								"15 Minutes": "*/15 * * * *",
+								"30 Minutes": "*/30 * * * *",
+								"30 Minutes past 7": "7,37 * * * *",
+								"40 Minutes": "*/40 * * * *"
+						  }
+					 });
+					 cron_expr.cron("value", "<?php echo $this->cron_exp; ?>");
 
-				 $.widget("custom.catcompleteX", $.ui.autocomplete, {
-					  _create: function () {
-							this._super();
-							this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
-					  },
-					  _renderMenu: function (ul, items) {
-							var that = this,
-									  currentCategory = "";
-							$.each(items, function (index, item) {
-								 var li;
-								 if (item.category != currentCategory) {
-									  ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
-									  currentCategory = item.category;
-								 }
-								 li = that._renderItemData(ul, item);
-								 if (item.category) {
-									  li.attr("aria-label", item.category + " : " + item.label);
-								 }
-							});
-					  }
-				 });
+					 $.widget("custom.catcompleteX", $.ui.autocomplete, {
+						  _create: function () {
+								this._super();
+								this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+						  },
+						  _renderMenu: function (ul, items) {
+								var that = this,
+										  currentCategory = "";
+								$.each(items, function (index, item) {
+									 var li;
+									 if (item.category != currentCategory) {
+										  ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
+										  currentCategory = item.category;
+									 }
+									 li = that._renderItemData(ul, item);
+									 if (item.category) {
+										  li.attr("aria-label", item.category + " : " + item.label);
+									 }
+								});
+						  }
+					 });
 
-			});
-			function load_tablenames() {
-				 server = document.getElementById('server').value;
-				 table_name = document.getElementById('table_name').value;
-				 $("#div_select_tablename_load").show();
-				 $.ajax({
-					  url: "../ajax/alarm_table_select.php?server=" + server + "&table_name=" + table_name,
-					  success: function (data) {
-							$("#div_select_tablename").html(data);
-							$("#div_select_tablename_load").hide();
-					  }
-				 });
+				});
+				function load_tablenames() {
+					 server = document.getElementById('server').value;
+					 table_name = document.getElementById('table_name').value;
+					 $("#div_select_tablename_load").show();
+					 $.ajax({
+						  url: "../ajax/alarm_table_select.php?server=" + server + "&table_name=" + table_name,
+						  success: function (data) {
+								$("#div_select_tablename").html(data);
+								$("#div_select_tablename_load").hide();
+						  }
+					 });
+				}
+				$('#alarmForm').submit(function () {
+					 //alert('Cron: '+$("#cron_expr").cron("value"));
+					 $('#cron_exp').val($("#cron_expr").cron("value"));
+				});
+				load_tablenames();
+			</script>
+			<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+			<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+			<style>
+				 .ui-autocomplete-category {
+					  font-weight: bold;
+					  padding: .2em .4em;
+					  margin: .8em 0 .2em;
+					  line-height: 1.5;
+				 }
+			</style>
+			<?php
+		} else {
+			if ($this->last_change == '0000-00-00 00:00:00') {
+				$writer->draw_input('last_change', 'Last Time Checked', 'last_change', 'Never');
+			} else {
+				$temp = DateTime::createFromFormat('Y-m-d H:i:s', $this->last_change);
+				$writer->draw_input('last_change', 'Last Time Checked', 'last_change', $temp->format('l j \o\f M \a\t H:i:s'));
 			}
-
-			load_tablenames();
-		</script>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-		<style>
-			 .ui-autocomplete-category {
-				  font-weight: bold;
-				  padding: .2em .4em;
-				  margin: .8em 0 .2em;
-				  line-height: 1.5;
-			 }
-		</style>
-		<?php
+			$writer->draw_input('next_run', 'Next Scheduled Run', 'next_run', date('l j \o\f M \a\t H:i:s', $this->next_run()));
+			$writer->draw_input('current_state', 'Last Checked State', 'current_state', $this->current_state);
+			$writer->draw_input('previous_state', 'Previous State', 'previous_state', $this->previous_state);
+		}
 	}
 
 	function get_id() {
@@ -151,30 +166,6 @@ EOD;
 			'details' => "<a href='#' title='Current State: {$this->current_state}\nPrevious State: {$this->previous_state}\nLast Change: {$this->last_change}'>Details</a>",
 		);
 		return $temp;
-	}
-
-	private function get_server_list($conn) {
-		$result = $conn->query("SELECT id, nombre FROM mfdbserver WHERE nombre LIKE('%mf-db%') ORDER BY nombre");
-		while ($row = $result->fetch_assoc()) {
-			if ($row['id'] == $this->server) {
-				echo "<option value='{$row['id']}' selected='selected'>{$row['nombre']}</option>\n";
-			} else {
-				echo "<option value='{$row['id']}'>{$row['nombre']}</option>\n";
-			}
-		}
-	}
-
-	function del_dialog() {
-		global $helper_trigger;
-		?>
-		<fieldset>
-			 <input type='hidden' name='del_alarm_id' value='<?php echo $this->id; ?>' id='del_alarm_id'>
-			 <strong>Server: </strong><?php echo $this->server_name; ?><br/>
-			 <strong>Table: </strong><?php echo $this->table_name; ?><br/>
-			 <strong>Field: </strong><?php echo $helper_trigger[$this->field]; ?><br/>
-			 <strong>Cron Expression: </strong><?php echo $this->cron_exp; ?><br/>
-		</fieldset>
-		<?php
 	}
 
 	private function valid_cron() {
@@ -347,119 +338,66 @@ EOD;
 		return $candidate;
 	}
 
-	function save($conn = null) {
-		global $helper_trigger;
-		$temp = '';
+	function add() {
+		$errors = array();
+		$temp = true;
 		if ($this->server == '') {
-			$temp = 'You must select a server first.';
-		} else {
-			if (($this->table_name == '') or ( $this->table_name == 'null')) {
-				$temp = 'You must select a table first';
-			} else {
-				if (!$this->valid_cron()) {
-					$temp = "Syntax error in the crontab expression ({$this->cron_exp})";
-				} else {
-					$strquery = "INSERT INTO dbalarms (server, table_name, field, current_state, previous_state, last_change, cron_exp)"
-						. " VALUES ('{$this->server}', '{$this->table_name}', '{$this->field}', '{$this->current_state}', "
-						. "'{$this->previous_state}', '{$this->last_change}', '{$this->cron_exp}');";
-					$conn->query($strquery);
-					$result = $conn->query("SELECT nombre FROM mfdbserver WHERE id='{$this->server}'");
-					while ($row = mysqli_fetch_row($result)) {
-						$server = $row[0];
-					}
-				}
+			$errors[] = 'You must select a server first.';
+			$temp = false;
+		}
+		if (($this->table_name == '') or ( $this->table_name == 'null')) {
+			$errors[] = 'You must select a table first';
+			$temp = false;
+		}
+		/*
+		  if (!$this->valid_cron()) {
+		  $errors[] = "Syntax error in the crontab expression ({$this->cron_exp})";
+		  $temp = false;
+		  }
+		 */
+		if ($temp) {
+			$strquery = "INSERT INTO dbalarms (server, table_name, field, current_state, previous_state, last_change, cron_exp)"
+				. " VALUES ('{$this->server}', '{$this->table_name}', '{$this->field}', '{$this->current_state}', "
+				. "'{$this->previous_state}', '{$this->last_change}', '{$this->cron_exp}');";
+			$this->conn->query($strquery);
+			$result = $this->conn->query("SELECT MAX(id) FROM dbalarms");
+			while ($row = mysqli_fetch_row($result)) {
+				$this->id = $row[0];
 			}
 		}
-		if ($temp != '') {
-			?>
-			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
-				 <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-					  <strong>Error: </strong><br/><?php echo $temp; ?>
-				 </p>
-			</div><br/>
-			<?php
-		} else {
-			?>
-			<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
-				 <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-					  <strong>Information:</strong> New Alarm successfully created.<br/><?php
-					  echo "Table to be monitored: <strong>{$this->table_name}</strong><br/>\n";
-					  echo "In the server: <strong>$server</strong><br/>\n";
-					  echo "Cron defined: <strong>{$this->cron_exp}</strong><br/>\n";
-					  echo "Field to be Monitored: <strong>{$helper_trigger[$this->field]}</strong><br/>\n";
-					  echo "Scheduled candidate for next run: <strong>" . date('Y-m-d H:i:s', $this->next_run()) . "</strong>";
-					  ?>
-				 </p>
-			</div><br/>
-			<?php
-		}
+		$this->error = implode('\n', $errors);
+		return $temp;
 	}
 
-	function update($conn = null) {
-		global $helper_trigger;
-		$temp = '';
+	function update() {
+		$errors = array();
+		$temp = true;
 		if ($this->server == '') {
-			$temp = 'You must select a server first.';
-		} else {
-			if (($this->table_name == '') or ( $this->table_name == 'null')) {
-				$temp = 'You must select a table first';
-			} else {
-				if (!$this->valid_cron()) {
-					$temp = "Syntax error in the crontab expression ({$this->cron_exp})";
-				} else {
-					$strquery = "UPDATE dbalarms SET server='{$this->server}', table_name='{$this->table_name}',"
-						. " field='{$this->field}', cron_exp='{$this->cron_exp}' WHERE id='{$this->id}';";
-//echo "$strquery<br/>\n";
-					$conn->query($strquery);
-					$result = $conn->query("SELECT nombre FROM mfdbserver WHERE id='{$this->server}'");
-					while ($row = mysqli_fetch_row($result)) {
-						$server = $row[0];
-					}
-				}
-			}
+			$errors[] = 'You must select a server first.';
+			$temp = false;
 		}
-		if ($temp != '') {
-			?>
-			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
-				 <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-					  <strong>Error: </strong><br/><?php echo $temp; ?>
-				 </p>
-			</div><br/>
-			<?php
-		} else {
-			?>
-			<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
-				 <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-					  <strong>Information:</strong> Alarm successfully updated.<br/><?php
-					  echo "Table to be monitored: <strong>{$this->table_name}</strong><br/>\n";
-					  echo "In the server: <strong>$server</strong><br/>\n";
-					  echo "Cron defined: <strong>{$this->cron_exp}</strong><br/>\n";
-					  echo "Field to be Monitored: <strong>{$helper_trigger[$this->field]}</strong><br/>\n";
-					  echo "Scheduled candidate for next run: <strong>" . date('Y-m-d H:i:s', $this->next_run()) . "</strong>";
-					  ?>
-				 </p>
-			</div><br/>
-			<?php
+		if (($this->table_name == '') or ( $this->table_name == 'null')) {
+			$errors[] = 'You must select a table first';
+			$temp = false;
 		}
+		/*
+		  if (!$this->valid_cron()) {
+		  $errors[] = "Syntax error in the crontab expression ({$this->cron_exp})";
+		  $temp = false;
+		  }
+		 */
+		if ($temp) {
+			$strquery = "UPDATE dbalarms SET server='{$this->server}', table_name='{$this->table_name}',"
+				. " field='{$this->field}', cron_exp='{$this->cron_exp}' WHERE id='{$this->id}';";
+			$this->conn->query($strquery);
+		}
+		$this->error = implode('\n', $errors);
+		return $temp;
 	}
 
-	function delete($conn = null, $id = 0) {
-		global $helper_trigger;
-//echo "UPDATE alarms SET active=FALSE, until_timestamp=" . time() . " WHERE server='{$this->server}' AND table_name='{$this->table_name}'<br/>\n";
-//echo "DELETE FROM dbalarms WHERE id='$id'<br/>\n";
-		$conn->query("UPDATE alarms SET active=FALSE, until_timestamp=" . time() . " WHERE server='{$this->server}' AND table_name='{$this->table_name}'");
-		$conn->query("DELETE FROM dbalarms WHERE id='$id'");
-		?>
-		<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
-			 <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-				  <strong>Information:</strong> Alarm successfully deleted.<br/>
-				  <strong>Server: </strong><?php echo $this->server_name; ?><br/>
-				  <strong>Table: </strong><?php echo $this->table_name; ?><br/>
-				  <strong>Field: </strong><?php echo $helper_trigger[$this->field]; ?><br/>
-				  <strong>Cron Expression: </strong><?php echo $this->cron_exp; ?><br/>
-			 </p>
-		</div><br/>
-		<?php
+	function delete() {
+		$this->conn->query("UPDATE alarms SET active=FALSE, until_timestamp=" . time() . " WHERE server='{$this->server}' AND table_name='{$this->table_name}'");
+		$this->conn->query("DELETE FROM dbalarms WHERE id='$this->id'");
 	}
 
 	function check($conn = null, $debug = false) {

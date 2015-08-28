@@ -161,11 +161,20 @@ class thtml_writer {
 		<?php
 	}
 
-	function draw_div($id = '', $label_text = '') {
+	function draw_div($id = '', $label_text = '', $value = '') {
 		?>
 		<div class="form-group">
 			 <label for='<?php echo $id; ?>' class="control-label col-xs-2"><?php echo $label_text; ?></label>
-			 <div id='<?php echo $id; ?>' class="col-xs-10"></div>
+			 <?php if (($this->function == "add") || ($this->function == "update")) { ?>
+				 <div id='<?php echo $id; ?>' class="col-xs-10"></div>
+			 <?php } else { ?>
+				 <div class="col-xs-10">
+					  <div class="input-group">
+							<input type="text" id="<?php echo $id; ?>" class="form-control" value="<?php echo $value; ?>" readonly/>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+					  </div>
+				 </div>
+			 <?php } ?>
 		</div>
 		<?php
 	}

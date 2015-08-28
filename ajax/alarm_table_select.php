@@ -105,7 +105,7 @@ while ($row = $result->fetch_assoc()) {
 }
 ?>
 
-<input type="text" id="table_name" value="<?php echo $table_name; ?>" class="form-control">
+<input type="text" id="table_name" name="table_name" value="<?php echo $table_name; ?>" class="form-control">
 <div id="div_select_tablename_load" style="display: none;" class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
 <script>
 	$(function () {

@@ -47,46 +47,20 @@ $result = $conn_dbevents->query($query) or die($conn_dbevents->error);
 
 					 <section class="content">
 
-						  <?php if (isset($my_get['added'])) { ?>
-							  <div class='box box-success'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Success!</h3>
-									</div>
-									<div class="box-body">
-										 <p>New Alarm Successfully Created</p>
-									</div>
-							  </div>
-						  <?php } ?>
-						  <?php if (isset($my_get['updated'])) { ?>
-							  <div class='box box-info'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Success!</h3>
-									</div>
-									<div class="box-body">
-										 <p>Alarm Successfully Updated</p>
-									</div>
-							  </div>
-						  <?php } ?>
-						  <?php if (isset($my_get['deleted'])) { ?>
-							  <div class='box box-warning'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Success!</h3>
-									</div>
-									<div class="box-body">
-										 <p>Alarm Successfully Deleted</p>
-									</div>
-							  </div>
-						  <?php } ?>
-						  <?php if (isset($my_get['error'])) { ?>
-							  <div class='box box-danger'>
-									<div class='box-header with-border'>
-										 <h3 class='box-title'>Error!</h3>
-									</div>
-									<div class="box-body">
-										 <p><?php echo str_replace('\n', '<br/>', $my_get['error']); ?></p>
-									</div>
-							  </div>
-						  <?php } ?>
+						  <?php
+						  if (isset($my_get['added'])) {
+							  draw_message('success', 'Success!', 'New Alarm Succesfully Created');
+						  }
+						  if (isset($my_get['updated'])) {
+							  draw_message('info', 'Success!', 'Alarm Succesfully Updated');
+						  }
+						  if (isset($my_get['deleted'])) {
+							  draw_message('warning', 'Success!', 'Alarm Succesfully Deleted');
+						  }
+						  if (isset($my_get['error'])) {
+							  draw_message('danger', 'Error!', str_replace('\n', '<br/>', $my_get['error']));
+						  }
+						  ?>
 
 						  <div class="box box-primary">
 								<div class='box-header with-border'>
@@ -147,7 +121,7 @@ $result = $conn_dbevents->query($query) or die($conn_dbevents->error);
 
 					 </section>
 				</div>
-				<?php build_footer(); ?>
+<?php build_footer(); ?>
 		  </div>
 	 </body>
 </html>

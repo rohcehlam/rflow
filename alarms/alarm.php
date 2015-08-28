@@ -32,7 +32,7 @@ $my_get = filter_input_array(INPUT_GET, $args);
 					 <?php breadcrumbs([['url' => '../userPortals/myPortal.php', 'text' => 'Dashboard'], ['url' => 'alarms.php', 'text' => 'Alarms'], ['url' => '#', 'text' => ucwords($my_get['function']) . ' an Alarm']], ucwords($my_get['function']) . ' an Alarm') ?>
 
 					 <section class="content">
-						  <form class="form-horizontal" action="alarmSend.php" method="post" enctype="multipart/form-data" name="alarmForm">
+						  <form class="form-horizontal" action="alarmSend.php" method="post" enctype="multipart/form-data" name="alarmForm" id="alarmForm">
 								<div class="box box-primary">
 									 <div class="box-header with-border">
 										  <h3 class="box-title"><?php echo ucwords($my_get['function']); ?> an Alarm</h3>
@@ -48,6 +48,7 @@ $my_get = filter_input_array(INPUT_GET, $args);
 										  ?>
 
 									 </div><!-- /.box-body -->
+									 <input type="hidden" name="cron_exp" id="cron_exp" value=""/>
 									 <div class='box-footer'>
 										  <?php if ($my_get['function'] == 'add') { ?>
 											  <div class="col-xs-offset-2 col-xs-6"><button class="btn btn-primary" type='submit'><i class="fa fa-save"></i>&nbsp;Create new Alarm</button></div>
@@ -56,12 +57,12 @@ $my_get = filter_input_array(INPUT_GET, $args);
 										  <?php if ($my_get['function'] == 'update') { ?>
 											  <div class="col-xs-offset-2 col-xs-6"><button class="btn btn-success" type='submit'><i class="fa fa-save"></i>&nbsp;Update Alarm</button></div>
 											  <input type="hidden" name="function" value="update"/>
-											  <input type="hidden" name="employeeID" value="<?php echo $my_get['employeeID']; ?>"/>
+											  <input type="hidden" name="id" value="<?php echo $my_get['id']; ?>"/>
 										  <?php } ?>
 										  <?php if ($my_get['function'] == 'delete') { ?>
 											  <div class="col-xs-offset-2 col-xs-6"><button class="btn btn-danger" type='submit'><i class="fa fa-remove"></i>&nbsp;Delete Alarm</button></div>
 											  <input type="hidden" name="function" value="delete"/>
-											  <input type="hidden" name="employeeID" value="<?php echo $my_get['employeeID']; ?>"/>
+											  <input type="hidden" name="id" value="<?php echo $my_get['id']; ?>"/>
 										  <?php } ?>
 
 									 </div>
