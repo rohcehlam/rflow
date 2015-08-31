@@ -352,16 +352,16 @@ function build_sidebar($active = 0) {
 						 <ul class='treeview-menu'>
 							  <li<?php echo $active == 6 ? ' class="active"' : ''; ?>><a href='../alarms/alarms.php'><i class='fa fa-bell-o'></i>Alarms</a></li>
 							  <li<?php echo $active == 7 ? ' class="active"' : ''; ?>><a href='../rcron/rcrons.php'><i class='fa fa-bolt'></i>rCron</a></li>
-							  <li<?php echo $active == 8 ? ' class="active"' : ''; ?>><a href='#'><i class='fa fa-server'></i>Servers</a></li>
+							  <li<?php echo $active == 8 ? ' class="active"' : ''; ?>><a href='../servers/servers.php'><i class='fa fa-server'></i>Servers</a></li>
 							  <li<?php echo $active == 9 ? ' class="active"' : ''; ?>><a href='#'><i class='fa fa-bomb'></i>CMQ</a></li>
 						 </ul>
 					</li>
-					<li class='treeview'>
+					<li class='treeview<?php echo ($active == 10 || $active == 11 || $active == 12) ? ' active' : ''; ?>'>
 						 <a href='#'><i class='fa fa-user-plus'></i><span>Much More</span> <i class="fa fa-angle-left pull-right"></i></a>
 						 <ul class='treeview-menu'>
-							  <li><a href='#'><i class='fa fa-suitcase'></i>Projects</a></li>
-							  <li><a href='#'><i class='fa fa-ticket'></i>Tickets</a></li>
-							  <li><a href='#'><i class='fa fa-tasks'></i>Process</a></li>
+							  <li<?php echo $active == 10 ? ' class="active"' : ''; ?>><a href='http://ops.masflightbigdata.com/projects'><i class='fa fa-suitcase'></i>Projects</a></li>
+							  <li<?php echo $active == 11 ? ' class="active"' : ''; ?>><a href='http://ops.masflightbigdata.com/tickets'><i class='fa fa-ticket'></i>Tickets</a></li>
+							  <li<?php echo $active == 12 ? ' class="active"' : ''; ?>><a href='http://ops.masflightbigdata.com/masflight_process'><i class='fa fa-tasks'></i>Process</a></li>
 						 </ul>
 					</li>
 
