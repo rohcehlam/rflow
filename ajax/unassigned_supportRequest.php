@@ -7,7 +7,8 @@ $label_colors = array(
 	"Closed" => 'success',
 	"In Progress" => 'default',
 	"On Hold" => 'warning',
-	"Returned" => 'danger'
+	"Returned" => 'danger',
+	"Completed" => 'danger'
 );
 
 $query_rsUnassignedSupportRequests = "SELECT escalationID, DATE_FORMAT(dateEscalated, '%m/%d/%Y') as dateEscalated, applications.application, subject, assignedTo, status"

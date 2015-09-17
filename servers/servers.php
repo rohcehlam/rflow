@@ -21,13 +21,13 @@ FROM ms_server AS S
 LEFT JOIN (
 SELECT A.id, `server`, uptime, t_total, t_running, t_sleeping, t_stopped, t_zombie, m_total, m_used, m_free, cpuus, cpuwa, cpusy, cpuid, last_report
 FROM (
-SELECT MAX(id) AS `id` FROM ms_server_201508 GROUP BY SERVER
+SELECT MAX(id) AS `id` FROM ms_server_%%table_name%% GROUP BY SERVER
 ) AS A
-LEFT JOIN (ms_server_201508 AS B) ON (A.id = B.id)
+LEFT JOIN (ms_server_%%table_name%% AS B) ON (A.id = B.id)
 ) AS C 
 ON (S.id=C.server)
 EOD;
-$result = $conn_dbevents->query($query) or die($conn_dbevents->error);
+$result = $conn_dbevents->query(str_replace('%%table_name%%', date('Ym'), $query)) or die($conn_dbevents->error);
 
 function beautify_uptime($text) {
 	if ($text) {
@@ -78,7 +78,8 @@ function progress_memory($m_total, $m_used, $m_free) {
 
 function progress_cpu($cpuus, $cpuwa, $cpusy, $cpuid) {
 	if ($cpuus) {
-		$curr = ceil($cpuus + $cpusy + $cpuwa);
+		//$curr = ceil($cpuus + $cpusy + $cpuwa);
+		$curr = ceil($cpuus + $cpusy);
 		?>
 		<div class="progress progress-sm">
 			 <div class="progress-bar progress-bar-<?php echo color_bar($curr); ?>" role="progressbar" aria-valuenow="<?php echo $curr; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $curr; ?>%">
