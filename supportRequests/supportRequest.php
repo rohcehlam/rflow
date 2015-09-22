@@ -243,7 +243,7 @@ $rsCustomers = $conn->query($query_rsCustomers) or die("<div class='alert alert-
 																	<select name="submittedBy" id="submittedBy" class="form-control">
 																		 <?php
 																		 while ($row = $rsEmployees->fetch_assoc()) {
-																			 echo "<option " . ((($row['employeeID'] == $row_rsEscalations['submittedBy']) || ($row['employeeID'] == $_SESSION['employee'])) ? 'selected="selected"' : '') . " value='{$row['employeeID']}'>{$row['displayName']}</option>\n";
+																			 echo "<option " . ((($row['employeeID'] == $row_rsEscalations['submittedBy'])) ? 'selected="selected"' : '') . " value='{$row['employeeID']}'>{$row['displayName']}</option>\n";
 																		 }
 																		 ?>
 																	</select>
