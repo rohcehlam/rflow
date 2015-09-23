@@ -64,33 +64,41 @@ if ($my_get['groupedby']) {
 			$period = "CONCAT(date_format(A.datetime_event, '%d/%m %H:'), floor(MINUTE(A.datetime_event) / 10), '0')";
 			break;
 		case 2:
-			$period = "concat(date_format(A.datetime_event, '%d/%m %H'), ':00')";
+			$period = "CONCAT(date_format(A.datetime_event, '%d/%m %H'), ':00')";
 			break;
 		case 3:
-			$period = "DATE_FORMAT(A.datetime_event, '%d/%m')";
+			$period = "CONCAT(DATE_FORMAT(A.datetime_event, '%d/%m'), '00:00')";
 			break;
 	}
 }
 
-echo"date\tvalue\tmin\tmax\ttop\n";
+echo "date\tseconds";
+echo (isset($min) && $min != 0 ? "\tmin($min)" : '' );
+echo (isset($max) && $max != 0 ? "\tmax($max)" : '' );
+echo (isset($top) && $top != 0 ? "\ttop($top)" : '' );
+echo "\n";
 
 $curr = $begin_date;
 while ($curr->format('Ym') <= $end_date->format('Ym')) {
+	unset($labels);
+	unset($data);
 	//$rs_rCrons = $conn_dbevents->query(str_replace('%%fecha%%', date('Ym'), str_replace('%%process%%', $process, str_replace('%%where%%', $where, str_replace('%%period%%', $period, $query))))) or die($conn_dbevents->error);
 	$rs_rCrons = $conn_dbevents->query(str_replace('%%fecha%%', $curr->format('Ym'), str_replace('%%process%%', $process, str_replace('%%where%%', $where, str_replace('%%period%%', $period, $query))))) or die($conn_dbevents->error);
-	$n = $rs_rCrons->num_rows;
-	$i = $n - 1;
 	while ($row_rCron = $rs_rCrons->fetch_assoc()) {
 		if ($row_rCron['period'] != '') {
 			$temp = DateTime::createFromFormat('d/m H:i', $row_rCron['period']);
-			$labels[$i] = $temp->format('Y-m-d H:i');
-			$data[$i] = $row_rCron['diff'];
-			$i--;
+			$data[$temp->format('Y-m-d H:i')] = $row_rCron['diff'];
 		}
 	}
 
-	for ($i = 0; $i < $n; $i++) {
-		echo "{$labels[$i]}\t{$data[$i]}\t$min\t$max\t$top\n";
+	ksort($data);
+
+	foreach ($data as $key => $value) {
+		echo "$key\t$value";
+		echo (isset($min) && $min != 0 ? "\t$min" : '' );
+		echo (isset($max) && $max != 0 ? "\t$max" : '' );
+		echo (isset($top) && $top != 0 ? "\t$top" : '' );
+		echo "\n";
 	}
 
 	$curr = new DateTime(date('Y-m-d', mktime(0, 0, 0, $curr->format('n') + 1, 15, $curr->format('Y'))));
