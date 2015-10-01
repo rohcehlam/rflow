@@ -13,6 +13,15 @@ $my_get = filter_input_array(INPUT_GET, $args);
 
 $cron_query = <<<EOD
 SELECT id, `process`, `begin`, `end`, 
+ IF(ISNULL(`end`)
+-- unfinished
+, IF (NOW() > DATE_ADD(`begin`, INTERVAL `top` SECOND), 'Top Exceeded'
+, IF (NOW() > DATE_ADD(`begin`, INTERVAL `max` SECOND), 'Max Exceeded', 'Ok') )
+-- finished
+, IF (`end` < DATE_ADD(`begin`, INTERVAL `min` SECOND), 'Ended Prematurely'
+, IF (`end` > DATE_ADD(`begin`, INTERVAL `top` SECOND), 'Top Exceeded'
+, IF (`end` > DATE_ADD(`begin`, INTERVAL `max` SECOND), 'Max Exceeded', 'Ok') ) )
+) AS `Status`,
  IF(ISNULL(`end`), TIMEDIFF(NOW(), `begin`), TIMEDIFF(`end`, `begin`)) AS diff,
  `min`, `max`, period, processed_rec, total_rec, files, db,
  IF(NOT ISNULL(`end`), TIMEDIFF(NOW(), `end`), 0) AS `Idle`
@@ -57,10 +66,11 @@ function get_date($format, $time) {
 										  <thead>
 												<tr>
 													 <th>Process</th>
+													 <th>Server</th>
 													 <th>Last Run</th>
 													 <th>Start Time</th>
 													 <th>End Time</th>
-													 <th>Running</th>
+													 <th>Status</th>
 													 <th>Run Time</th>
 													 <th>Files</th>
 													 <th>Records</th>
@@ -82,10 +92,42 @@ function get_date($format, $time) {
 															  }
 															  ?>
 														 </td>
+														 <td><?php echo $row['db'] != 'db-null' ? $row['db'] : ''; ?></td>
 														 <td><?php echo get_date('m/d/Y', $row['begin']); ?></td>
 														 <td class='text-right'><?php echo get_date('H:i:s', $row['begin']); ?></td>
 														 <td class='text-right'><?php echo $row['end'] != '' ? get_date('H:i:s', $row['end']) : '-'; ?></td>
-														 <td><?php echo $row['end'] == '' ? "<span class='label label-info'>Running</span>" : "<span class='label label-success'>Finished!</span>"; ?></td>
+														 <td>
+															  <?php
+															  if ($row['end'] == '') {
+																  switch ($row['Status']) {
+																	  case 'Max Exceeded':
+																		  echo "<span class='label label-warning'><i class='fa fa-forward'></i></span>&nbsp;Max Exceeded\n";
+																		  break;
+																	  case 'Top Exceeded':
+																		  echo "<span class='label label-error'><i class='fa fa-fast-forward'></i></span>&nbsp;Top Exceeded\n";
+																		  break;
+																	  default:
+																		  echo "<span class='label label-info'><i class='fa fa-play'></i></span>&nbsp;Running\n";
+																		  break;
+																  }
+															  } else {
+																  switch ($row['Status']) {
+																	  case 'Ok':
+																		  echo "<span class='label label-success'><i class='fa fa-check'></i></span>&nbsp;Ok\n";
+																		  break;
+																	  case 'Ended Prematurely':
+																		  echo "<span class='label label-warning'><i class='fa fa-pause'></i></span>&nbsp;Ended Prematurely\n";
+																		  break;
+																	  case 'Max Exceeded':
+																		  echo "<span class='label label-warning'><i class='fa fa-forward'></i></span>&nbsp;Max Exceeded\n";
+																		  break;
+																	  case 'Top Exceeded':
+																		  echo "<span class='label label-error'><i class='fa fa-fast-forward'></i></span>&nbsp;Top Exceeded\n";
+																		  break;
+																  }
+															  }
+															  ?>
+														 </td>
 														 <td class='text-right'><?php echo $row['end'] == '' ? "<span class='text-blue'>{$row['diff']}</span>" : $row['diff']; ?></td>
 														 <td class='text-right'><?php echo $row['files']; ?></td>
 														 <td class='text-right'><?php echo $row['processed_rec']; ?></td>
@@ -113,7 +155,7 @@ function get_date($format, $time) {
 				<?php build_footer(); ?>
 				<script type="text/javascript">
                $(document).ready(function () {
-                   $('#table_rcrons').dataTable({"order": [[4, "desc"], [1, "asc"], [0, "asc"]], "displayLength": 25, });
+                   $('#table_rcrons').dataTable({"order": [[2, "desc"], [9, "asc"], [0, "asc"]], "displayLength": 25, });
                });
 				</script>
 		  </div>

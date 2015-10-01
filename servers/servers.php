@@ -140,9 +140,9 @@ function progress_cpu($cpuus, $cpuwa, $cpusy, $cpuid) {
 													 <th>Host</th>
 													 <th>Uptime</th>
 													 <th>Last report</th>
-													 <th>Tasks</th>
-													 <th>Memory</th>
 													 <th>CPU</th>
+													 <th>Memory</th>
+													 <th>Tasks</th>
 													 <th>&nbsp;</th>
 												</tr>
 										  </thead>
@@ -169,9 +169,9 @@ function progress_cpu($cpuus, $cpuwa, $cpusy, $cpuid) {
 														 <td><?php echo beautify_uptime($row['uptime']); ?></td>
 														 <td><?php echo $row['since']; ?></td>
 
-														 <td><?php echo progress_task($row['t_total'], $row['t_running'], $row['t_sleeping'], $row['t_stopped'], $row['t_zombie']); ?></td>
-														 <td><?php echo progress_memory($row['m_total'], $row['m_used'], $row['m_free']); ?></td>
 														 <td><?php echo progress_cpu($row['cpuus'], $row['cpuwa'], $row['cpusy'], $row['cpuid']); ?></td>
+														 <td><?php echo progress_memory($row['m_total'], $row['m_used'], $row['m_free']); ?></td>
+														 <td><?php echo progress_task($row['t_total'], $row['t_running'], $row['t_sleeping'], $row['t_stopped'], $row['t_zombie']); ?></td>
 
 														 <td>
 															  <a href='server.php?function=view&id=<?php echo $row['id']; ?>'><i class='fa fa-eye'></i></a>

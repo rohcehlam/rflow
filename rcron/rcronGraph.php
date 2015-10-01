@@ -11,6 +11,14 @@ $args = array(
 
 $my_get = filter_input_array(INPUT_GET, $args);
 
+$result = $conn_dbevents->query("SELECT process, `min`, `max`, `top` FROM rCron WHERE id={$my_get['process']}") or die($conn->error);
+while ($row = $result->fetch_assoc()) {
+	$process = $row['process'];
+	$min = $row['min'];
+	$max = $row['max'];
+	$top = $row['top'];
+}
+
 if (!$my_get['datetimerange']) {
 	if ($asi_frequency < 10) {
 		$my_get['datetimerange'] = date('Y-m-d H:i:s', mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 7, date('Y'))) . " - " . date('Y-m-d H:i:s');
@@ -68,9 +76,6 @@ if (!$my_get['datetimerange']) {
 								<div class="box-body">
 									 <div id="graphic_area"></div>
 									 <style>
-										  body {
-												// font: 10px sans-serif;
-										  }
 
 										  .axis path,
 										  .axis line {
@@ -182,7 +187,7 @@ if (!$my_get['datetimerange']) {
                                            .attr("y", 6)
                                            .attr("dy", ".71em")
                                            .style("text-anchor", "end")
-                                           .text("Temperature (ºF)");
+                                           .text("Time in Seconds");
 
                                    var city = svg.selectAll(".city")
                                            .data(cities)
