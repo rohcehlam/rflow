@@ -78,12 +78,21 @@ $pattern2 = "/buf|temp|tmp|old|aaa/"; // Temporal
 $table_list = array();
 
 $query_tables = <<<EOD
-SELECT `name` FROM ms_table_status_plus_%%table_name%% WHERE server=%%server%% AND timestamp=(SELECT MAX(timestamp)
+SELECT `name`
+	FROM ms_table_status_plus_last_info
+	WHERE server=%%server%%
+	ORDER BY `name`;
+EOD;
+/*
+$query_tables = <<<EOD
+ SELECT `name` FROM ms_table_status_plus_%%table_name%% WHERE server=%%server%% AND timestamp=(SELECT MAX(timestamp)
 	FROM ms_table_status_plus_%%table_name%%
 	WHERE server=%%server%%)
 	ORDER BY name;
 EOD;
-$result = $conn_dbevents->query(str_replace('%%table_name%%', date('Ym'), str_replace('%%server%%', $server, $query_tables))) or die ($conn_dbevents->error);
+ */
+//$result = $conn_dbevents->query(str_replace('%%table_name%%', date('Ym'), str_replace('%%server%%', $server, $query_tables))) or die ($conn_dbevents->error);
+$result = $conn_dbevents->query(str_replace('%%server%%', $server, $query_tables)) or die ($conn_dbevents->error);
 while ($row = $result->fetch_assoc()) {
 	if (preg_match($pattern3, $row['name'])) {
 		assign('daily', $row['name'], $pattern3, 8, 'yyyymmdd');

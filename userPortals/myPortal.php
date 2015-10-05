@@ -211,6 +211,32 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
 										  </div>
 									 </div> <!-- /.box-danger -->
 
+									 <div class="box box-warning">
+										  <div class="box-header with-border">
+												<h4 class="panel-title"><span id="hard_disk_count" class="badge">0</span>&nbsp;<strong>Hard Disk Usage</strong></h4>
+												<div class="pull-right box-tools">
+													 <button class="btn btn-sm" onclick="refresh_hard_disk();"><span class="glyphicon glyphicon-refresh"></span></button>
+													 <button class="btn btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+												</div>
+										  </div>
+										  <div class="box-body">
+												<table id="hard_disk" class="table table-striped table-condensed">
+													 <thead>
+														  <tr>
+																<th>Server</th>
+																<th>Partition</th>
+																<th>Size</th>
+																<th>In Use</th>
+														  </tr>
+													 </thead>
+													 <tbody>
+													 </tbody>
+												</table>
+												<div id="hard_disk_nodata" style="display: none;">There are no <em>Hard Disk with more than 80% of usage</em> at the moment</div>
+												<div id="hard_disk_load" style="display: none;" class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
+										  </div>
+									 </div>
+
 								</section>
 								<script>
                            var to_refresh_graph;
@@ -218,6 +244,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
                            var to_unassigned_support_request;
                            var to_pending_maintenances;
                            var to_active_alarms;
+                           var to_hard_disk;
                            $(function () {
                                //Make the dashboard widgets sortable Using jquery UI
                                $(".connectedSortable").sortable({
@@ -341,11 +368,36 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
                                    to_active_alarms = setTimeout(refresh_active_alarms, 60000);
                                });
                            }
+                           function refresh_hard_disk() {
+                               $('#hard_disk_load').show();
+                               $.getJSON('../ajax/hard_disk_usage.php', function (data) {
+                                   $('#hard_disk_count').html(data.records);
+                                   if (data.records === 0) {
+                                       $('#hard_disk').hide();
+                                       $('#hard_disk_nodata').show();
+                                   } else {
+                                       $('#hard_disk').show();
+                                       $('#hard_disk_nodata').hide();
+                                   }
+                                   var c = [];
+                                   $.each(data.list, function (i, item) {
+                                       c.push('<tr><td>' + item.server + '</td>');
+                                       c.push('<td>' + item.mounted_on + '</td>');
+                                       c.push('<td class="text-right">' + item.size + '</td>');
+                                       c.push('<td class="text-right">' + item.xinuse + '%</td></tr>');
+                                   });
+                                   $('#hard_disk tbody').html(c.join(""));
+                                   $('#hard_disk_load').hide();
+                                   clearTimeout(to_hard_disk);
+                                   to_hard_disk = setTimeout(refresh_hard_disk, 120000);
+                               });
+                           }
                            refresh_graph();
                            refresh_supportrequest();
                            refresh_unassigned_supportrequest();
                            refresh_pending_maintenances();
                            refresh_active_alarms();
+									refresh_hard_disk();
 								</script>
 								<script src="../js/Chart.min.js" type="text/javascript"></script>
 								<script src="../js/jquery.knob.js" type="text/javascript"></script>
@@ -353,9 +405,9 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
 					 </section>
 
 				</div> <!-- /container -->
-				
+
 				<?php build_footer(); ?>
-				
+
 		  </div> <!-- /content-wrapper -->
 
 	 </body>
